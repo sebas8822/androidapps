@@ -3,11 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable-v24/ic_home.focused.xml" value="0.26" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.316" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/custom_arrow_icon.xml" value="0.167" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/custom_email_icon.xml" value="0.167" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/custom_icon.xml" value="0.167" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/custom_input.xml" value="0.167" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/custom_key_icon.xml" value="0.167" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/custome_home_icon.xml" value="0.26" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/custome_person_icon.xml" value="0.167" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_arrow.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_arrow_focused.xml" value="0.168" />
@@ -15,8 +18,11 @@
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_baseline_vpn_key_24.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_email.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_email_focused.xml" value="0.168" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_home.xml" value="0.26" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_home_focused.xml" value="0.26" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_key.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_key_focused.xml" value="0.168" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_lock.xml" value="0.2595" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_person.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_person_focused.xml" value="0.168" />

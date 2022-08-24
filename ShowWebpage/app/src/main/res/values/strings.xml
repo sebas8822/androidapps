@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Implicit Intends</string>
+    <string name="edittext_uri">https://google.com/</string>
+    <string name="button_uri">Open Website</string>
+    <string name="edittext_loc">Sydney Opera House</string>
+    <string name="button_loc">Open Location</string>
+    <string name="edittext_share">This is a shared text</string>
+    <string name="button_share">Share this text</string>
+</resources>
