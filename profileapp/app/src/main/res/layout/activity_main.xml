@@ -111,7 +111,7 @@
             android:drawablePadding="12dp"
             android:ems="10"
             android:hint="Employee ID"
-            android:inputType="numberDecimal"
+            android:inputType="text"
             android:maxLength="7"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@android:color/black"/>

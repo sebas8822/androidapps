@@ -27,6 +27,8 @@
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_person.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/drawable/ic_person_focused.xml" value="0.168" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/layout/activity_view_data_base.xml" value="0.33" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/profileapp/app/src/main/res/layout/recycler_row.xml" value="0.2543822146216332" />
       </map>
     </option>
   </component>
