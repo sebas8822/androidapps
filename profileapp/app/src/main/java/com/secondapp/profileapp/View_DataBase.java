@@ -35,7 +35,7 @@ public class View_DataBase extends AppCompatActivity {
 
     private void loadEmployee(){
         //get the record from database
-        AppDatabase db = AppDatabase.getDBInstance(this.getApplicationContext());
+        AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
         List<Employee> employeeList = db.employeeDao().getAllEmployee();
         empListAdapter.setEmployeeList(employeeList);
 

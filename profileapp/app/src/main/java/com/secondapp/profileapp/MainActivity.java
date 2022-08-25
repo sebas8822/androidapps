@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         empId = w_empId.getText().toString();
         email = w_email.getText().toString();
         empAddress = w_empAddress.getText().toString();
+        Toast.makeText(this, "before to save fuction", Toast.LENGTH_SHORT).show();
         saveEmployee(firstName, lastName, empId, email, empAddress);
     }
 
@@ -203,16 +204,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void saveEmployee(String firstName, String lastName, String empId, String email, String empAddress){
         // pass the values to database
-          AppDatabase db = AppDatabase.getDBInstance(this.getApplicationContext());
-//        Employee employee = new Employee();
-//        employee.firstName = firstName;
-//        employee.lastName = lastName;
-//        employee.empId = empId;
-//        employee.email = email;
-//        employee.empAddress = empAddress;
-//        db.employeeDao().insertEmployee(employee);
-//
-//        finish();
+        AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
+        Employee employee = new Employee();
+        employee.firstName = firstName;
+        employee.lastName = lastName;
+        employee.empId = empId;
+        employee.email = email;
+        employee.empAddress = empAddress;
+        db.employeeDao().insertEmployee(employee);
+
+        finish();
         Toast.makeText(this, "Employee Added Successfully", Toast.LENGTH_SHORT).show();
 
     }
