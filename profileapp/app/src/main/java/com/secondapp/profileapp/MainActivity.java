@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+
     private EditText w_firstName;
     private EditText w_lastName;
     private EditText w_empId;
@@ -51,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_main);// set activity main
+        // call values that contain the textview to process
         w_firstName = (EditText) findViewById(R.id.et_firstName);
         w_lastName = (EditText) findViewById(R.id.et_lastName);
         w_empId = (EditText) findViewById(R.id.et_empId);
@@ -89,11 +90,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
+    // Method to reset the database call evey item in the database and it is deleted
     public void resetDatabase(){
-//
+        //Init Data Base
         AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
+        //init array list with the elements in the DB
         List<Employee> employeeList = db.employeeDao().getAllEmployee();
+        // Repository method to communicate with DAO
         EmployeeRepository repo = new EmployeeRepositoryImpl(db.employeeDao());
 
         for (Employee emp : employeeList){
@@ -108,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());// call database Instance
         EmployeeDao dao = db.employeeDao();// Call Dao Instance to query the db instance
         EmployeeRepository repo = new EmployeeRepositoryImpl(dao);// Call repository instance to communicate with dao
-        Employee employee = new Employee(); // inicializate employee (Object)
+        Employee employee = new Employee(); // initialize employee (Object)
         employee.setFirstName("Sebastian");
         employee.setLastName("Ramirez");
         employee.setEmpId("134567 ");
@@ -147,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else {
             // Validations conditions for registration
 
-            System.out.println("Input values " + " Name: " + firstName + " Last Name:" + lastName + " Employee ID" + empId + " Email:" + email);
+            //System.out.println("Input values " + " Name: " + firstName + " Last Name:" + lastName + " Employee ID" + empId + " Email:" + email);
 
             if (validName(firstName,lastName)==true && validEmpId(empId)==true && validEmail(email)== true && validEmployeeAddress(empAddress)== true) {
                 // insert values into the data base
@@ -174,31 +177,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     // Validations conditions for every input
-    public boolean validName(String firsName, String lastName) {
+    public static boolean validName(String firsName, String lastName) {
 
 
         // Variables declaration for regex function
         String valName = "[a-zA-Z. -]+";
         boolean val = true;
         if ((!(Pattern.matches(valName, firsName))) || (!(Pattern.matches(valName, lastName)))) {
-            Toast.makeText(MainActivity.this, "Fist Name is not accepted", Toast.LENGTH_LONG).show();
+            Toast.makeText(StaticContextFactory.getAppContext(), "Name is not accepted", Toast.LENGTH_LONG).show();
             val = false;
         }
         return val;
     }
-    public boolean validFirstName(String name) {
+    public static boolean validFirstName(String name) {
 
 
         // Variables declaration for regex function
         String valName = "[a-zA-Z. -]+";
         boolean val = true;
         if (!(Pattern.matches(valName, name))) {
-            Toast.makeText(MainActivity.this, "Fist Name is not accepted", Toast.LENGTH_LONG).show();
+            Toast.makeText(StaticContextFactory.getAppContext(), "Fist Name is not accepted", Toast.LENGTH_LONG).show();
             val = false;
         }
         return val;
     }
-    public boolean validLastName(String last) {
+    public static boolean validLastName(String last) {
 
         // Variables declaration for regex function
         String valName = "[a-zA-Z. -]+";
@@ -206,14 +209,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         boolean val = true;
         if (!(Pattern.matches(valName, last))) {
-            Toast.makeText(MainActivity.this, "Last Name is not accepted", Toast.LENGTH_LONG).show();
+            Toast.makeText(StaticContextFactory.getAppContext(), "Last Name is not accepted", Toast.LENGTH_LONG).show();
             val = false;
         }
 
         return val;
     }
 
-    public boolean validEmpId(String empId) {
+    public static boolean validEmpId(String empId) {
 
         // Variables declaration for regex function
         boolean val = true;
@@ -221,13 +224,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if (!(Pattern.matches(valempID,empId))) {
-            Toast.makeText(MainActivity.this, "code is invalid", Toast.LENGTH_LONG).show();
+            Toast.makeText(StaticContextFactory.getAppContext(), "code is invalid", Toast.LENGTH_LONG).show();
             val = false;
         }
 
         return val;
     }
-    public boolean validEmail(String email) {
+    public static boolean validEmail(String email) {
         // Variables declaration for regex function
 
         String valemail = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$";
@@ -235,20 +238,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean val = true;
 
         if (!(Pattern.matches(valemail,email))) {
-            Toast.makeText(MainActivity.this, "email is invalid", Toast.LENGTH_LONG).show();
+            Toast.makeText(StaticContextFactory.getAppContext(), "email is invalid", Toast.LENGTH_LONG).show();
             val = false;
         }
         return val;
     }
-    public boolean validEmployeeAddress(String empLocation)  {
+    public static boolean validEmployeeAddress(String empLocation)  {
         boolean val = true;
         // Call geocode that allow me to ask to google database if the address exits
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());// inicializate Geocoder instance
+        Geocoder geocoder = new Geocoder(StaticContextFactory.getAppContext(), Locale.getDefault());// inicializate Geocoder instance
 
         try {
             List<Address> listAddress = geocoder.getFromLocationName(empLocation, 1);
             if (!(listAddress.size() > 0)) {
-                Toast.makeText(MainActivity.this, "Address no found", Toast.LENGTH_LONG).show();
+                Toast.makeText(StaticContextFactory.getAppContext(), "Address no found", Toast.LENGTH_LONG).show();
                 val = false;
 
             }

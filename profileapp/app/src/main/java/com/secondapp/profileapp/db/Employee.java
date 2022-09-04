@@ -22,6 +22,8 @@ public class Employee {
     @ColumnInfo(name = "Employee_Address")
     public String empAddress;
 
+    //methods to interact with the table setters and getters
+
     public int getEid() {
         return eid;
     }

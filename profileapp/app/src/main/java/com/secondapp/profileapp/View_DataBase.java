@@ -24,7 +24,7 @@ public class View_DataBase extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_data_base);
-        //w_addMore = (Button) findViewById(R.id.bt_addMore);
+
         initRecyclerview();
         loadEmployee();
         /**w_addMore.setOnClickListener(new View.OnClickListener() {
@@ -55,10 +55,6 @@ public class View_DataBase extends AppCompatActivity  {
 
     }
 
-    private void showAddressMap(int position) {
-        Intent intent = new Intent(this, EmpViewMap.class);
-        startActivity(intent);
-    }
 
 
 

@@ -45,10 +45,11 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
     private Context context;
     private List<Employee> employeeList;
-    private Object EmpViewMap;
+    MyRecyclerViewAdapter adapter;
 
 
     //int listLayoutRes;
+    // determine the context
 
     public EmpListAdapter(Context context){
         this.context = context;
@@ -61,8 +62,21 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
         this.employeeList = employeeList;
 
     }
-
-
+    /**
+     * Instantiates a layout XML file into its corresponding View objects. It is never used
+     * directly. Instead, use Activity.getLayoutInflater() or Context#getSystemService to retrieve
+     * a standard LayoutInflater instance that is already hooked up to the current context and
+     * correctly configured for the device you are running on.
+     *
+     * To create a new LayoutInflater with an additional Factory for your own views, you can use
+     * cloneInContext(Context) to clone an existing ViewFactory, and then call
+     * setFactory(LayoutInflater.Factory) on it to include your Factory.
+     *
+     * For performance reasons, view inflation relies heavily on pre-processing of XML files
+     * that is done at build time. Therefore, it is not currently possible to use LayoutInflater
+     * with an XmlPullParser over a plain XML file at runtime; it only works with an XmlPullParser
+     * returned from a compiled resource (R.something file.)*/
+    // bring recycleview to the context
     @NonNull
     @Override
     public EmpListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,11 +84,30 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
         return new MyViewHolder(view);
     }
+    /**
+     * Called by RecyclerView to display the data at the specified position. This method should
+     * update the contents of the RecyclerView.ViewHolder.itemView to reflect the item at the
+     * given position.
+     *
+     * Note that unlike ListView, RecyclerView will not call this method again if the position
+     * of the item changes in the data set unless the item itself is invalidated or the new position
+     * cannot be determined. For this reason, you should only use the position parameter while
+     * acquiring the related data item inside this method and should not keep a copy of it.
+     * If you need the position of an item later on (e.g. in a click listener),
+     * use RecyclerView.ViewHolder.getBindingAdapterPosition() which will have the updated adapter
+     * position. Override onBindViewHolder(ViewHolder, int, List) instead if Adapter can handle
+     * efficient partial bind.*/
 
-
+    //holder: VH: The ViewHolder which should be updated to represent the contents of the item
+    // at the given position in the data set.
+    //int position: The position of the item within the adapter's data set.
     @Override
     public void onBindViewHolder(@NonNull EmpListAdapter.MyViewHolder holder, int position) {
-        holder.tv_Name.setText(this.employeeList.get(position).firstName);
+
+        //Obtaind specific employee to also cast to other methods
+        Employee employeeFL = employeeList.get(position);
+        // get the info in determine position in the specific item in the employee array
+        holder.tv_Name.setText(this.employeeList.get(position).getFirstName());
         holder.tv_LastN.setText(this.employeeList.get(position).lastName);
         holder.tv_EmployeeID.setText(this.employeeList.get(position).empId);
         holder.tv_Email.setText(this.employeeList.get(position).email);
@@ -86,30 +119,64 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
             @Override
             public void onClick(View view) {
 
-                updateStudent(position);
-                Toast.makeText(context.getApplicationContext(), view.getId()+"Edit Opotion", Toast.LENGTH_SHORT).show();
+                updateEmployee(employeeFL);
+                //Toast.makeText(context.getApplicationContext(), view.getId()+"Edit Option", Toast.LENGTH_SHORT).show();
             }
         });
-
+        // Delete specific employee
         holder.bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // i have to red first what we have here // next find it in the data base // and deleted
-                deleteEmployeeRecord(position);
-                Toast.makeText(context.getApplicationContext(), view.getId()+"Delete Opotion", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Are you sure?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteEmployeeRecord(employeeFL);
+                        Toast.makeText(context.getApplicationContext(), employeeFL.getFirstName() +"Employee deleted", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
+
+
         holder.bt_showAddress.setOnClickListener(new View.OnClickListener() {
+
+
+            /**An intent is an abstract description of an operation to be performed. It can be used
+             *  with startActivity to launch an Activity, broadcastIntent to send it to any
+             *  interested BroadcastReceiver components, and Context.startService(Intent)
+             *  or Context.bindService(Intent, ServiceConnection, int) to communicate with
+             *  a background Service.
+
+             An Intent provides a facility for performing late runtime binding between the code
+             in different applications. Its most significant use is in the launching of activities,
+             where it can be thought of as the glue between activities. It is basically a passive
+             data structure holding an abstract description of an action to be performed.
+             * */
+
+
+
             @Override
             public void onClick(View view) {
+                // Init intetnt
+
 
                 Intent intent = new Intent(context, EmpViewMap.class);
-                intent.putExtra("emp_address",employeeList.get(position).empAddress);
+                intent.putExtra("emp_address",employeeFL.empAddress);
                 context.startActivity(intent);
 
                 //View_DataBase.showAddressMap(position);
-                Toast.makeText(context.getApplicationContext(), employeeList.get(position).empAddress+"Show address button", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context.getApplicationContext(), employeeList.get(position).empAddress+"Show address button", Toast.LENGTH_SHORT).show();
 
 
             }
@@ -118,26 +185,7 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
     }
 
-    private void showAddressMap(int position) {
 
-
-        /**
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.emp_address, null);
-        builder.setView(view);
-        // show activity
-        final Employee employeeUpdate = employeeList.get(position);
-        final AlertDialog dialog = builder.create();
-        //String Emp_addressFDB = employeeList.get(position).empAddress;
-        //final MapView mapView = view.findViewById(R.id.map);
-
-
-        //EmpViewMap.setAddress(Emp_addressFDB);
-        dialog.show();
-        //dialog.dismiss();*/
-    }
 
     @Override
     public int getItemCount() {
@@ -176,14 +224,14 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
     }
 
-    private void updateStudent(int position) {
+    private void updateEmployee(Employee employee) {
 
         AppDatabase db = AppDatabase.getDbInstance(context);
         EmployeeDao dao = db.employeeDao();
         EmployeeRepository repo = new EmployeeRepositoryImpl(dao);
-        final Employee employeeUpdate = employeeList.get(position);
 
-        // open new activity
+
+        // open Dialog
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -201,23 +249,23 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
 
         //set current edit text with current values on current position
-        editTextName.setText(employeeList.get(position).firstName);
-        editTextLast.setText(employeeList.get(position).lastName);
-        editTextempID.setText(employeeList.get(position).empId);
-        editTextEmail.setText(employeeList.get(position).email);
-        editTextEmploAdd.setText(employeeList.get(position).empAddress);
+        editTextName.setText(employee.firstName);
+        editTextLast.setText(employee.lastName);
+        editTextempID.setText(employee.empId);
+        editTextEmail.setText(employee.email);
+        editTextEmploAdd.setText(employee.empAddress);
 
         // show activity
         final AlertDialog dialog = builder.create();
         dialog.show();
-        Toast.makeText(context.getApplicationContext(), "before click", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context.getApplicationContext(), "before click", Toast.LENGTH_SHORT).show();
 
 
 
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context.getApplicationContext(), "you are here", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context.getApplicationContext(), "you are here", Toast.LENGTH_SHORT).show();
                 // Variables declaration
                 String firstName, lastName, email, empId, empAddress;
 
@@ -228,57 +276,47 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
                 email = editTextEmail.getText().toString();
                 empAddress = editTextEmploAdd.getText().toString();
 
-                //validation code isempty data is correct
+                // Data entry Validation
+                // to use the data validation from MainActivity I change the methods to static but the Toast method is not able to get the context
+                // so to obtain the current context was necessary to create a class that makes the context static across the application
+                //Toast.makeText(context.getApplicationContext(), MainActivity.validName(firstName,lastName)+ "you are here", Toast.LENGTH_SHORT).show();
+
+                if (MainActivity.validName(firstName,lastName)==true && MainActivity.validEmpId(empId)==true && MainActivity.validEmail(email)== true && MainActivity.validEmployeeAddress(empAddress)== true) {
+                    // Update values into the data base
+                    employee.setFirstName(firstName);
+                    employee.setLastName(lastName);
+                    employee.setEmpId(empId);
+                    employee.setEmail(email);
+                    employee.setEmpAddress(empAddress);
+
+                    dao.updateEmp(employee);
+                    Toast.makeText(context.getApplicationContext(), "Data Updated", Toast.LENGTH_SHORT).show();
+                    //recreateApp((AppCompatActivity) context);
+                    dialog.dismiss();
+
+                }else{
+                    Toast.makeText(context.getApplicationContext(), "Please check data ", Toast.LENGTH_SHORT).show();
+
+                }
 
 
-                // call and update employee in the database
-                employeeUpdate.setFirstName(firstName);
-                employeeUpdate.setLastName(lastName);
-                employeeUpdate.setEmpId(empId);
-                employeeUpdate.setEmail(email);
-                employeeUpdate.setEmpAddress(empAddress);
 
-                repo.updateEmployee(employeeUpdate);
-                recreateApp((AppCompatActivity) context);
-                dialog.dismiss();
+
             }
         });
     }
-    public void deleteEmployeeRecord(int position){
+    public void deleteEmployeeRecord(Employee employee){
+        // Init DB call specific employee to be deleted
         AppDatabase db = AppDatabase.getDbInstance(context);
         EmployeeDao dao = db.employeeDao();
-        EmployeeRepository repo = new EmployeeRepositoryImpl(dao);
-        /**LayoutInflater inflater = LayoutInflater.from(context);
+        //EmployeeRepository repo = new EmployeeRepositoryImpl();
 
-        View view = inflater.inflate(listLayoutRes, null);*/
 
         //getting employee of the specified position
-        final Employee employeeDelete = employeeList.get(position);
-        repo.deleteEmployee(employeeDelete);
+
+        dao.delete(employee);
         recreateApp((AppCompatActivity) context);
 
-        /**Button buttonDelete = view.findViewById(R.id.bt_delete);
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Are you sure?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(context.getApplicationContext(), "you did it", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });*/
 
     }
 
