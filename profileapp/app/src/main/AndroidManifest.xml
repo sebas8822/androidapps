@@ -13,12 +13,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Profileapp"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDJZBug9kRypscYPUOGLQrcPHiEDu2oQyw" />
         <activity
             android:name=".View_DataBase"
             android:exported="false" />
         <activity
+            android:name=".EmpViewMap"
+            android:exported="false" />
+
+
+        <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

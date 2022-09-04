@@ -1,4 +1,9 @@
 package grahman.app.databaseapp;
+/**This manage the data in the screen view/ take the data and display in the way I want
+ *
+ * */
+
+
 
 import android.app.AlertDialog;
 import android.content.Context;

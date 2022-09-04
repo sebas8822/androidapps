@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,9 +15,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.secondapp.profileapp.db.AppDatabase;
 import com.secondapp.profileapp.db.Employee;
+import com.secondapp.profileapp.db.EmployeeDao;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -28,6 +39,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText w_empAddress;
     private Button w_submit;
     private Button w_viewDB;
+    private Button w_resetDB;
+    GoogleMap mMap;
+
+
+
+
 
 
 
@@ -43,10 +60,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         w_empAddress = (EditText) findViewById(R.id.et_address);
         w_submit = (Button) findViewById(R.id.bt_button);
         w_viewDB = (Button) findViewById(R.id.bt_buttonVDB);
+        w_resetDB = (Button) findViewById(R.id.bt_buttonRDB);
 
 
         w_submit.setOnClickListener(this);
         w_viewDB.setOnClickListener(this);
+        w_resetDB.setOnClickListener(this);
 
 
     }
@@ -54,32 +73,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_button:
-                //addEmployee();
-                addEmployee2();
+                addEmployee();
+                //testPopulateDB();
                 break;
             case R.id.bt_buttonVDB:
                 startActivity(new Intent(this, View_DataBase.class));
+                break;
+            case R.id.bt_buttonRDB:
+                resetDatabase();
+
+
+                Toast.makeText(this, "Reset button", Toast.LENGTH_SHORT).show();
                 break;
         }
 
 
     }
 
-    public void addEmployee2(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(w_submit.getApplicationWindowToken(), 0);
-        // Variables declaration
-        String firstName, lastName, email, empId, empAddress;
+    public void resetDatabase(){
+//
+        AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
+        List<Employee> employeeList = db.employeeDao().getAllEmployee();
+        EmployeeRepository repo = new EmployeeRepositoryImpl(db.employeeDao());
 
-        // conversion to string inputs
-        firstName = w_firstName.getText().toString();
-        lastName = w_lastName.getText().toString();
-        empId = w_empId.getText().toString();
-        email = w_email.getText().toString();
-        empAddress = w_empAddress.getText().toString();
-        Toast.makeText(this, "before to save fuction", Toast.LENGTH_SHORT).show();
-        saveEmployee(firstName, lastName, empId, email, empAddress);
+        for (Employee emp : employeeList){
+            repo.deleteEmployee(emp);
+        }
+        Toast.makeText(this,  employeeList.size()+"Size ", Toast.LENGTH_SHORT).show();
+
+
     }
+    // test method to populate the DataBase
+    private void testPopulateDB() {
+        AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());// call database Instance
+        EmployeeDao dao = db.employeeDao();// Call Dao Instance to query the db instance
+        EmployeeRepository repo = new EmployeeRepositoryImpl(dao);// Call repository instance to communicate with dao
+        Employee employee = new Employee(); // inicializate employee (Object)
+        employee.setFirstName("Sebastian");
+        employee.setLastName("Ramirez");
+        employee.setEmpId("134567 ");
+        employee.setEmail("sebastian@hotmail.com");
+        employee.setEmpAddress("7 Seaview Ave, Port Macquarie");
+        repo.insertEmployee(employee);
+
+
+
+    }
+
+
 
 
 
@@ -108,12 +149,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             System.out.println("Input values " + " Name: " + firstName + " Last Name:" + lastName + " Employee ID" + empId + " Email:" + email);
 
-            if (validFirstName(firstName)==true && validLastName(lastName)==true && validEmpId(empId)==true && validEmail(email)== true && validEmployeeAddress(empAddress)== true) {
+            if (validName(firstName,lastName)==true && validEmpId(empId)==true && validEmail(email)== true && validEmployeeAddress(empAddress)== true) {
                 // insert values into the data base
                 saveEmployee(firstName, lastName, empId, email, empAddress);
                 new AlertDialog.Builder(this)
                         .setTitle("Data inserted is correct")
-                        .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Employee ID: " + empId + "\n Email: " + email)
+                        .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Employee ID: " + empId + "\n Email: " + email + "\n Address: " + empAddress )
                         .show();
 
             }else{
@@ -133,6 +174,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     // Validations conditions for every input
+    public boolean validName(String firsName, String lastName) {
+
+
+        // Variables declaration for regex function
+        String valName = "[a-zA-Z. -]+";
+        boolean val = true;
+        if ((!(Pattern.matches(valName, firsName))) || (!(Pattern.matches(valName, lastName)))) {
+            Toast.makeText(MainActivity.this, "Fist Name is not accepted", Toast.LENGTH_LONG).show();
+            val = false;
+        }
+        return val;
+    }
     public boolean validFirstName(String name) {
 
 
@@ -187,33 +240,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return val;
     }
-    public boolean validEmployeeAddress(String empA) {
-
-        // Variables declaration for regex function
-        String valName = "[a-zA-Z. -]+";
-
-
+    public boolean validEmployeeAddress(String empLocation)  {
         boolean val = true;
-        if (!(Pattern.matches(valName, empA))) {
-            Toast.makeText(MainActivity.this, "Address is not accepted", Toast.LENGTH_LONG).show();
-            val = false;
+        // Call geocode that allow me to ask to google database if the address exits
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());// inicializate Geocoder instance
+
+        try {
+            List<Address> listAddress = geocoder.getFromLocationName(empLocation, 1);
+            if (!(listAddress.size() > 0)) {
+                Toast.makeText(MainActivity.this, "Address no found", Toast.LENGTH_LONG).show();
+                val = false;
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
+
 
         return val;
     }
 
     private void saveEmployee(String firstName, String lastName, String empId, String email, String empAddress){
         // pass the values to database
-        AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
-        Employee employee = new Employee();
-        employee.firstName = firstName;
+        AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());// Init database
+        Employee employee = new Employee();// Init new employee item 2 ways to input data
+
+        employee.setFirstName(firstName);
+        //employee.firstName = firstName;
         employee.lastName = lastName;
         employee.empId = empId;
         employee.email = email;
         employee.empAddress = empAddress;
         db.employeeDao().insertEmployee(employee);
 
-        finish();
+        //finish();
         Toast.makeText(this, "Employee Added Successfully", Toast.LENGTH_SHORT).show();
 
     }
