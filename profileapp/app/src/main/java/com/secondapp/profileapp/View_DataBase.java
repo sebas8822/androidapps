@@ -16,9 +16,9 @@ import com.secondapp.profileapp.db.Employee;
 
 import java.util.List;
 
-public class View_DataBase extends AppCompatActivity  {
+public class View_DataBase extends AppCompatActivity {
     private EmpListAdapter empListAdapter;
-    private Button w_addMore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +27,7 @@ public class View_DataBase extends AppCompatActivity  {
 
         initRecyclerview();
         loadEmployee();
-        /**w_addMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(View_DataBase.this, MainActivity.class));
-            }
-        });*/
+
     }
 
     private void initRecyclerview() {
@@ -46,7 +41,7 @@ public class View_DataBase extends AppCompatActivity  {
     }
 
 
-    private void loadEmployee(){
+    private void loadEmployee() {
         //get the record from database
         AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
         List<Employee> employeeList = db.employeeDao().getAllEmployee();
@@ -54,8 +49,6 @@ public class View_DataBase extends AppCompatActivity  {
 
 
     }
-
-
 
 
 }

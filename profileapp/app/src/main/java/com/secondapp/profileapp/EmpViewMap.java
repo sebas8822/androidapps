@@ -25,14 +25,12 @@ public class EmpViewMap extends FragmentActivity implements OnMapReadyCallback {
     GoogleMap mMap;
 
 
-    /**---------------------------------------------*/
+    /**-----------------Test Data------------------*/
     //String empLocation = "9 Seaview Avenue, Port Macquarie ";
     //String empLocation = "Colombia";
 
 
-
-
-    /**---------------------------------------------*/
+    /*** ------------------------------------------*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +42,6 @@ public class EmpViewMap extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-
 
 
     }
@@ -62,22 +57,24 @@ public class EmpViewMap extends FragmentActivity implements OnMapReadyCallback {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        // Default location
         mMap = googleMap;
         LatLng Sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(Sydney).title("Marker in Sydney"));
-
+        // Functions
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Sydney));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(Sydney,5);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(Sydney, 5);
         mMap.animateCamera(cameraUpdate);
-
-        if(getIntent().hasExtra("emp_address")) {
+        // Check if there is extra intent I used to pass the location to show
+        if (getIntent().hasExtra("emp_address")) {
             String empLocation = getIntent().getStringExtra("emp_address");
             Toast.makeText(this.getApplicationContext(), empLocation + "now you are in maps", Toast.LENGTH_SHORT).show();
 
-
+            // bring the location related to the address
             Geocoder geocoder = new Geocoder(EmpViewMap.this, Locale.getDefault());
 
             try {
+                // define the list address to show the first one
                 List<Address> listAddress = geocoder.getFromLocationName(empLocation, 1);
                 if (listAddress.size() > 0) {
                     LatLng addressEmp = new LatLng(listAddress.get(0).getLatitude(), listAddress.get(0).getLongitude());
@@ -96,7 +93,6 @@ public class EmpViewMap extends FragmentActivity implements OnMapReadyCallback {
         }
 
     }
-
 
 
 }

@@ -45,7 +45,7 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
     private Context context;
     private List<Employee> employeeList;
-    MyRecyclerViewAdapter adapter;
+
 
 
     //int listLayoutRes;
@@ -106,6 +106,7 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
         //Obtaind specific employee to also cast to other methods
         Employee employeeFL = employeeList.get(position);
+        int pot = position ;
         // get the info in determine position in the specific item in the employee array
         holder.tv_Name.setText(this.employeeList.get(position).getFirstName());
         holder.tv_LastN.setText(this.employeeList.get(position).lastName);
@@ -132,8 +133,15 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // remove from the database
                         deleteEmployeeRecord(employeeFL);
-                        Toast.makeText(context.getApplicationContext(), employeeFL.getFirstName() +"Employee deleted", Toast.LENGTH_SHORT).show();
+                        //remove from the list that is already charge in the adapter
+                        employeeList.remove(pot);
+                        notifyDataSetChanged();
+                        //notifyDataSetChanged();
+                        //notifyItemRemoved(pot);
+                        //notifyItemRangeChanged(pot,1);
+                        Toast.makeText(context.getApplicationContext(), "Employee "+employeeFL.getFirstName()+" deleted", Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -291,6 +299,8 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
 
                     dao.updateEmp(employee);
                     Toast.makeText(context.getApplicationContext(), "Data Updated", Toast.LENGTH_SHORT).show();
+                    //update values without recreat the whole activity
+                    notifyDataSetChanged();
                     //recreateApp((AppCompatActivity) context);
                     dialog.dismiss();
 
@@ -315,7 +325,11 @@ public class EmpListAdapter extends RecyclerView.Adapter<EmpListAdapter.MyViewHo
         //getting employee of the specified position
 
         dao.delete(employee);
-        recreateApp((AppCompatActivity) context);
+
+        //update values without recreat the whole activity
+
+        // recreate again the activity
+        //recreateApp((AppCompatActivity) context);
 
 
     }

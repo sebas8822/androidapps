@@ -41,12 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button w_submit;
     private Button w_viewDB;
     private Button w_resetDB;
-    GoogleMap mMap;
-
-
-
-
-
 
 
     @Override
@@ -70,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -82,16 +77,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_buttonRDB:
                 resetDatabase();
-
-
-                Toast.makeText(this, "Reset button", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Reset button", Toast.LENGTH_SHORT).show();
                 break;
         }
 
 
     }
+
     // Method to reset the database call evey item in the database and it is deleted
-    public void resetDatabase(){
+    public void resetDatabase() {
         //Init Data Base
         AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
         //init array list with the elements in the DB
@@ -99,37 +93,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Repository method to communicate with DAO
         EmployeeRepository repo = new EmployeeRepositoryImpl(db.employeeDao());
 
-        for (Employee emp : employeeList){
+        for (Employee emp : employeeList) {
             repo.deleteEmployee(emp);
         }
-        Toast.makeText(this,  employeeList.size()+"Size ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "All Data has been deleted from Employee Database", Toast.LENGTH_SHORT).show();
 
 
     }
+
     // test method to populate the DataBase
     private void testPopulateDB() {
+        String[] num = {"ONE", "DOS", "THREE", "FOUR","FIVE", "SIX","SEVEN", "EIGHT","NINE","TEN"};
+        String[] address = {"Colombia", "Australia", "7 Seaview Avenue, Port Macquarie", "Argentina","Call 49f #87-125, Medellin", "Canada","Sydney", "Tasmania","Nigeria","China"};
         AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());// call database Instance
         EmployeeDao dao = db.employeeDao();// Call Dao Instance to query the db instance
         EmployeeRepository repo = new EmployeeRepositoryImpl(dao);// Call repository instance to communicate with dao
-        Employee employee = new Employee(); // initialize employee (Object)
-        employee.setFirstName("Sebastian");
-        employee.setLastName("Ramirez");
-        employee.setEmpId("134567 ");
-        employee.setEmail("sebastian@hotmail.com");
-        employee.setEmpAddress("7 Seaview Ave, Port Macquarie");
-        repo.insertEmployee(employee);
+        for (int i = 0; i < 10; i++) {
 
+            Employee employee = new Employee(); // initialize employee (Object)
+            employee.setFirstName(num[i]+" Sebastian");
+            employee.setLastName("Ramirez");
+            employee.setEmpId(i+"345678");
+            employee.setEmail("sebastian"+num[i]+"@hotmail.com");
+            employee.setEmpAddress(address[i]);
+            repo.insertEmployee(employee);
+        }
 
 
     }
 
 
-
-
-
-
-
-    public void addEmployee(){
+    public void addEmployee() {
         // function to hide the keyboard immediately to press the button
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(w_submit.getApplicationWindowToken(), 0);
@@ -144,23 +138,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         empAddress = w_empAddress.getText().toString();
 
         // Condition to check if any field is empty
-        if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)||TextUtils.isEmpty(empId) ||TextUtils.isEmpty(email) ||TextUtils.isEmpty(empAddress)){
-            Toast.makeText(MainActivity.this,"All camps are required..",Toast.LENGTH_LONG).show();
-        }
-        else {
+        if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) || TextUtils.isEmpty(empId) || TextUtils.isEmpty(email) || TextUtils.isEmpty(empAddress)) {
+            Toast.makeText(MainActivity.this, "All camps are required..", Toast.LENGTH_LONG).show();
+        } else {
             // Validations conditions for registration
 
             //System.out.println("Input values " + " Name: " + firstName + " Last Name:" + lastName + " Employee ID" + empId + " Email:" + email);
 
-            if (validName(firstName,lastName)==true && validEmpId(empId)==true && validEmail(email)== true && validEmployeeAddress(empAddress)== true) {
+            if (validName(firstName, lastName) == true && validEmpId(empId) == true && validEmail(email) == true && validEmployeeAddress(empAddress) == true) {
                 // insert values into the data base
                 saveEmployee(firstName, lastName, empId, email, empAddress);
                 new AlertDialog.Builder(this)
                         .setTitle("Data inserted is correct")
-                        .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Employee ID: " + empId + "\n Email: " + email + "\n Address: " + empAddress )
+                        .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Employee ID: " + empId + "\n Email: " + email + "\n Address: " + empAddress)
                         .show();
 
-            }else{
+            } else {
                 new AlertDialog.Builder(this)
                         .setTitle("Data inserted is invalid ")
                         .setMessage("check and insert data again")
@@ -169,11 +162,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
 
-
         }
 
     }
-
 
 
     // Validations conditions for every input
@@ -189,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return val;
     }
+
     public static boolean validFirstName(String name) {
 
 
@@ -201,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return val;
     }
+
     public static boolean validLastName(String last) {
 
         // Variables declaration for regex function
@@ -223,13 +216,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String valempID = "[1-9]{7}";
 
 
-        if (!(Pattern.matches(valempID,empId))) {
+        if (!(Pattern.matches(valempID, empId))) {
             Toast.makeText(StaticContextFactory.getAppContext(), "code is invalid", Toast.LENGTH_LONG).show();
             val = false;
         }
 
         return val;
     }
+
     public static boolean validEmail(String email) {
         // Variables declaration for regex function
 
@@ -237,13 +231,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         boolean val = true;
 
-        if (!(Pattern.matches(valemail,email))) {
+        if (!(Pattern.matches(valemail, email))) {
             Toast.makeText(StaticContextFactory.getAppContext(), "email is invalid", Toast.LENGTH_LONG).show();
             val = false;
         }
         return val;
     }
-    public static boolean validEmployeeAddress(String empLocation)  {
+
+    public static boolean validEmployeeAddress(String empLocation) {
         boolean val = true;
         // Call geocode that allow me to ask to google database if the address exits
         Geocoder geocoder = new Geocoder(StaticContextFactory.getAppContext(), Locale.getDefault());// inicializate Geocoder instance
@@ -260,12 +255,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-
-
         return val;
     }
 
-    private void saveEmployee(String firstName, String lastName, String empId, String email, String empAddress){
+    private void saveEmployee(String firstName, String lastName, String empId, String email, String empAddress) {
         // pass the values to database
         AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());// Init database
         Employee employee = new Employee();// Init new employee item 2 ways to input data
@@ -282,7 +275,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "Employee Added Successfully", Toast.LENGTH_SHORT).show();
 
     }
-
 
 
 }

@@ -13,7 +13,7 @@ public class StaticContextFactory extends Application {
         StaticContextFactory.context = getApplicationContext();
     }
 
-    public static Context getAppContext(){
+    public static Context getAppContext() {
         return StaticContextFactory.context;
     }
 }

@@ -12,8 +12,6 @@ import java.util.List;
 public class EmployeeRepositoryImpl implements EmployeeRepository {
 
 
-
-
     EmployeeDao dao;
     AppDatabase db;
 
@@ -33,16 +31,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public void insertEmployee(final Employee employee)
-    {
-       /** new AsyncTask<Void, Void, Void>() {
+    public void insertEmployee(final Employee employee) {
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.employeeDao().insertEmployee(employee);
-                return null;
-            }
-        }.execute();*/
 
         dao.insertEmployee(employee);
     }
@@ -56,13 +46,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     public void deleteEmployee(Employee employee) {
         dao.delete(employee);
     }
-
-    /**@Override
-    public void deleteAll(Employee employee) {
-        dao.deleteAll();
-    }*/
-
-
 
 
 }
