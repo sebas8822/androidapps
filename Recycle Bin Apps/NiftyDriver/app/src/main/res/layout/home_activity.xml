@@ -9,21 +9,6 @@
 
 
     <TextView
-        android:id="@+id/textView19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="16dp"
-        android:text="My trips"
-        android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView18" />
-
-    <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,8 +19,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView11"
         app:layout_constraintEnd_toEndOf="@+id/textView13"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toTopOf="@+id/textView11" />
+        app:layout_constraintTop_toTopOf="@+id/textView11"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView11"
@@ -49,7 +36,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView14"
         app:layout_constraintEnd_toEndOf="@+id/textView14"
-        app:layout_constraintStart_toStartOf="@+id/textView14" />
+        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintVertical_bias="0.938" />
 
     <TextView
         android:id="@+id/textView12"
@@ -62,8 +52,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView11"
         app:layout_constraintEnd_toEndOf="@+id/textView15"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/textView11" />
+        app:layout_constraintTop_toTopOf="@+id/textView11"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/textView4"
@@ -91,52 +83,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
-        android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="16dp"
-        android:text="Home"
-        android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView17"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="93dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="16dp"
-        android:text="Record Trip"
-        android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView18"
-        app:layout_constraintStart_toEndOf="@+id/textView16" />
-
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="16dp"
-        android:text="Trip View"
-        android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView19"
-        app:layout_constraintStart_toEndOf="@+id/textView17" />
-
-    <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -154,14 +100,14 @@
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="104dp"
+        android:layout_marginBottom="96dp"
         android:text="Kilometres"
         android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="157dp" />
+        tools:layout_editor_absoluteX="166dp" />
 
     <TextView
         android:id="@+id/textView15"

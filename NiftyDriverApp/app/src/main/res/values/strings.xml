@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NiftyDriverApp</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_Profile">Profile</string>
+    <string name="title_StartTrip">Start Trip</string>
+    <string name="title_TripView">Trip View</string>
+    <string name="title_MyTrips">My Trips</string>
 </resources>
