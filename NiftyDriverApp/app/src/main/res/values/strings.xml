@@ -4,4 +4,6 @@
     <string name="title_StartTrip">Start Trip</string>
     <string name="title_TripView">Trip View</string>
     <string name="title_MyTrips">My Trips</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
+        android:textAlignment="center"
         android:hint="##"
         android:textColor="@color/blue_sky_200"
         android:textColorHint="@color/blue_sky_200"
@@ -27,6 +28,7 @@
         android:id="@+id/tv_totalTrips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:hint="##"
         android:textColor="@color/blue_sky_200"
         android:textColorHint="@color/blue_sky_200"
@@ -87,6 +89,7 @@
         android:id="@+id/tv_totalHours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:hint="##"
         android:textColor="@color/blue_sky_200"
         android:textColorHint="@color/blue_sky_200"
@@ -105,6 +108,7 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="8dp"
         android:text="Score View"
+
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="12dp"
@@ -149,6 +153,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:textAlignment="center"
         android:hint="##"
         android:textColor="@color/blue_sky_200"
         android:textColorHint="@color/blue_sky_200"
@@ -158,17 +163,45 @@
         app:layout_constraintStart_toStartOf="@+id/tv_userName"
         app:layout_constraintTop_toBottomOf="@+id/tv_userName" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/im_profile"
-        android:layout_width="97dp"
-        android:layout_height="92dp"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_mainScore"
+        android:layout_width="138dp"
+        android:layout_height="120dp"
+        app:civ_border_color="@color/blue_sky_500"
+        app:civ_border_width="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/img_1" />
+        app:layout_constraintVertical_bias="0.025" />
+
+    <ImageButton
+        android:id="@+id/bt_changeImage"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="38dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="76dp"
+        android:src="@drawable/ic_baseline_change_circle_24"
+        app:layout_constraintBottom_toTopOf="@+id/tv_userName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.648"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/im_profile"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <FrameLayout
+        android:layout_width="409dp"
+        android:layout_height="272dp"
+        android:background="@color/blue_sky_700"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.686">
+
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
