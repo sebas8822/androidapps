@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.finalproyect.niftydriverapp.ImageResizer;
 import com.finalproyect.niftydriverapp.R;
@@ -26,6 +28,8 @@ import com.finalproyect.niftydriverapp.StaticContextFactory;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.User;
+import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView;
+import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,16 +39,43 @@ public class ProfileFragment extends Fragment {
 
     private int userId = 1;
 
-
-
-
-
     private TextView tv_userName, tv_mainScore, tv_totalTrips, tv_totalKilometres, tv_totalHours;
 
     private ImageView im_profile;
 
     private ImageButton bt_changeImage;
 
+    private Button bt_scoreView,bt_graphView;
+
+    //Obtain image setup in profile view and save into database init activity to obtain a result
+    ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
+            new ActivityResultContracts
+                    .StartActivityForResult(),
+            result -> {
+                if (result.getResultCode()
+                        == Activity.RESULT_OK) {
+                    // init data obtain image
+                    Intent data = result.getData();
+                    //save data into uri variable transforme into bitmap
+                    if (data != null && data.getData() != null) {
+                        Uri selectedImageUri = data.getData();
+                        Bitmap selectedImageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.img_1);
+                        //data.putExtra(MediaStore.EXTRA_OUTPUT,)
+                        try {
+                            selectedImageBitmap
+                                    = MediaStore.Images.Media.getBitmap(
+                                    getContext().getContentResolver(),
+                                    selectedImageUri);
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        saveImageDatabase(selectedImageBitmap);
+
+                    }
+                }
+
+            });
 
 
 
@@ -63,7 +94,7 @@ public class ProfileFragment extends Fragment {
         //User Name
 
         tv_userName = (TextView) view.findViewById(R.id.tv_userName);
-        tv_userName.setText(user.getUserName());
+        tv_userName.setText(user.getUserName() + " " + user.getLastName());
 
         //Main score
 
@@ -85,7 +116,10 @@ public class ProfileFragment extends Fragment {
         tv_totalHours = (TextView) view.findViewById(R.id.tv_totalHours);
         tv_totalHours.setText(totalTripHours());
 
-
+        //Inflate Fragment in the profile fragment
+        // create the object pointing the fragment that intent to open
+        //ScoreView scoreView = new ScoreView();
+        //Creates another object that will replace the other
 
         bt_changeImage = (ImageButton) view.findViewById(R.id.bt_changeImage);
         bt_changeImage.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +129,29 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        bt_scoreView = (Button) view.findViewById(R.id.bt_scoreView);
+        bt_scoreView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(),"Score View", Toast.LENGTH_LONG).show();
+                ScoreView scoreView = new ScoreView();
+                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_profile_view,scoreView);
+                fragmentTransaction.commit();
+            }
+        });
+
+        bt_graphView = (Button) view.findViewById(R.id.bt_graphView);
+        bt_graphView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(),"Graph View View", Toast.LENGTH_LONG).show();
+                GraphView graphView = new GraphView();
+                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_profile_view,graphView);
+                fragmentTransaction.commit();
+            }
+        });
 
         return view;
     }
@@ -114,16 +171,13 @@ public class ProfileFragment extends Fragment {
     private String numTrips() {
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
-
         return String.valueOf(dao.getTotalTripsByUser(userId));
     }
 
     public String mainScore(){
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
-        dao.getScoreAverageTripByUser(userId);
         return String.valueOf(dao.getScoreAverageTripByUser(userId));
-
     }
 
 
@@ -159,37 +213,6 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    ActivityResultLauncher<Intent> launchSomeActivity
-            = registerForActivityResult(
-            new ActivityResultContracts
-                    .StartActivityForResult(),
-            result -> {
-                if (result.getResultCode()
-                        == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    // do your operation from here....
-                    if (data != null
-                            && data.getData() != null) {
-                        Uri selectedImageUri = data.getData();
-                        Bitmap selectedImageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.img_1);
-                        //data.putExtra(MediaStore.EXTRA_OUTPUT,)
-                        try {
-                            selectedImageBitmap
-                                    = MediaStore.Images.Media.getBitmap(
-                                    getContext().getContentResolver(),
-                                    selectedImageUri);
-                        }
-                        catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        saveImageDatabase(selectedImageBitmap);
-
-                    }
-                }
-
-            });
-
-
 
 
 
@@ -199,7 +222,6 @@ public class ProfileFragment extends Fragment {
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArray);
         byte[] image = byteArray.toByteArray();
-
 
         return image;
     }
@@ -222,8 +244,6 @@ public class ProfileFragment extends Fragment {
                 selectedImageBitmap);
 
     }
-
-
 
     public void populateUserTable() {
         String[] num = {"ONE", "DOS", "THREE", "FOUR","FIVE", "SIX","SEVEN", "EIGHT","NINE","TEN"};

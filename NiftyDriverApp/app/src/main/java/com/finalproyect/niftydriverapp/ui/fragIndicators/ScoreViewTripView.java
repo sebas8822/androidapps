@@ -1,23 +1,16 @@
 package com.finalproyect.niftydriverapp.ui.fragIndicators;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.fragment.app.Fragment;
+
 import com.finalproyect.niftydriverapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ScoreView#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ScoreView extends Fragment {
-
+public class ScoreViewTripView  extends Fragment {
     private int currentProgress = 0;
     private ProgressBar pg_acceleration;
 
@@ -30,7 +23,7 @@ public class ScoreView extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ScoreView() {
+    public ScoreViewTripView() {
         // Required empty public constructor
     }
 
@@ -64,12 +57,12 @@ public class ScoreView extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_score_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_score_view_trip_view, container, false);
         // Inflate the layout for this fragment
 
         pg_acceleration = (ProgressBar) view.findViewById(R.id.pg_acceleration);
 
-        pg_acceleration.setProgress(10);
+        pg_acceleration.setProgress(40);
 
 
 

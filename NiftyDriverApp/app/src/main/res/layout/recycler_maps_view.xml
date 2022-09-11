@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/custom_row_shape_trips"
+    android:paddingStart="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:layout_width="347dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_dateTripRow"
+        android:layout_width="349dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="Wen,14-Aug-2022"
+        android:textStyle="bold"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:textAlignment="center" />
+
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/tv_startTripRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="3dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="3dp"
+                    android:text="##:##"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="13dp">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_endTripRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    android:text="##:##"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="13dp">
+
+                </TextView>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="12dp"
+                android:layout_height="match_parent"
+                android:paddingStart="3dp"
+                android:src="@drawable/separator4" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/tv_startTripLocationRow"
+
+                    android:layout_width="295dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Address1"
+                    android:paddingStart="5dp"
+
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_endTripLocationRow"
+                    android:layout_width="295dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Address2"
+                    android:paddingStart="5dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_scoreTripMyTrips"
+            android:layout_width="52dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_circle"
+            android:drawablePadding="10dp"
+            android:paddingTop="8dp"
+            android:hint="##"
+            android:textColor="@color/blue_sky_200"
+            android:textColorHint="@color/blue_sky_200"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+    </LinearLayout>
+
+
+</LinearLayout>

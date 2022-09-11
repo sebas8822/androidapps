@@ -4,31 +4,186 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".ui.tripView.TripViewFragment">
 
+
     <TextView
-        android:id="@+id/text_tripView"
-        android:layout_width="match_parent"
+        android:id="@+id/tv_ScoreTripView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="1dp"
+        android:hint="##"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/blue_sky_200"
+        android:textColorHint="@color/blue_sky_200"
+        android:textSize="60dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tripViewData" />
+
+    <TextView
+        android:id="@+id/tv_totalTimeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="45dp"
+        android:hint="##"
+        android:textAlignment="center"
+        android:textColor="@color/blue_sky_200"
+        android:textColorHint="@color/blue_sky_200"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_ScoreTripView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/map"
+        android:layout_width="405dp"
+        android:layout_height="239dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include3" />
+
+
+    <TextView
+        android:id="@+id/tv_tripViewData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Wen,14-Aug-2022"
+        android:textColorHint="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/bt_testfragtripview"
+    <TextView
+        android:id="@+id/tv_totalScoreTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:layout_marginBottom="4dp"
+        android:text="Score Trip"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/include3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ScoreTripView" />
+
+    <TextView
+        android:id="@+id/tv_titleTripsView"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginEnd="36dp"
+        android:text="Minutes"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/include3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_totalTimeView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_titleTimeView"
+        android:layout_width="41dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="44dp"
+        android:text="Trips"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/include3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_totalTripsview"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_totalTripsview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="56dp"
+        android:hint="##"
+        android:textAlignment="center"
+        android:textColor="@color/blue_sky_200"
+        android:textColorHint="@color/blue_sky_200"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tv_ScoreTripView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/include3"
+        layout="@layout/current_trip_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="132dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_tripViewData" />
+
+    <Button
+        android:id="@+id/bt_scoreViewTripView"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="100dp"
+        android:layout_height="32dp"
+
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="248dp"
+        android:text="Score View"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="11dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include3" />
+
+    <Button
+        android:id="@+id/bt_graphViewTripView"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="100dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="248dp"
+        android:layout_marginEnd="45dp"
+        android:text="Graph View"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="11dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/bt_scoreViewTripView"
+        app:layout_constraintTop_toBottomOf="@+id/include3" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_tripView_view"
+        android:name="com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreViewTripView"
+        android:layout_width="match_parent"
+        android:layout_height="212dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/include3"
+        app:layout_constraintVertical_bias="0.95" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

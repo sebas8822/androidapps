@@ -24,7 +24,7 @@ import java.util.Locale;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     GoogleMap mMap;
-    private ActivityMapsBinding binding;
+
 
     /**---------------------------------------------*/
     String empLocation = "9 Se Avenue, ";

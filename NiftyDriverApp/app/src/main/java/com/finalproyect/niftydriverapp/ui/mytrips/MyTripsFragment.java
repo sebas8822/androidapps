@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.databinding.FragmentMyTripsBinding;
 
 
@@ -23,21 +24,10 @@ public class MyTripsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        MyTripsViewModel myTripsViewModel =
-                new ViewModelProvider(this).get(MyTripsViewModel.class);
+        View view = inflater.inflate(R.layout.fragment_my_trips, container, false);
 
-        binding = FragmentMyTripsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.textMyTrips;
-        myTripsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+        return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 
 }

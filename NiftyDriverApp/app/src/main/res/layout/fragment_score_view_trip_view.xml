@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="275dp"
+    android:layout_height="wrap_content"
     tools:context=".ui.fragIndicators.ScoreView">
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="392dp"
-        android:layout_height="251dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
 
         android:orientation="vertical"
@@ -19,24 +19,24 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/bt_infoAcceleration"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="31dp"
+                android:layout_width="19dp"
                 android:layout_height="match_parent"
-                android:padding="10dp"
+
                 android:src="@drawable/ic_info_indicators" />
 
             <TextView
-                android:id="@+id/tv_acceleration"
+                android:id="@+id/tv_accelerationTripView"
                 android:layout_width="393dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="10dp"
-                android:paddingTop="5dp"
+
                 android:text="Acceleration"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -50,46 +50,45 @@
             android:orientation="horizontal">
 
             <ProgressBar
-                android:id="@+id/pg_acceleration"
+                android:id="@+id/pg_accelerationTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
                 android:progressDrawable="@drawable/custom_progressbar" />
 
             <TextView
-                android:id="@+id/tv_proAcceleration"
+                android:id="@+id/tv_proAccelerationTripView"
                 android:layout_width="59dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="##"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/bt_infoBraking"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="31dp"
+                android:layout_width="19dp"
                 android:layout_height="match_parent"
-                android:padding="10dp"
+
                 android:src="@drawable/ic_info_indicators" />
 
             <TextView
-                android:id="@+id/tv_Braking"
+                android:id="@+id/tv_BrakingTripView"
                 android:layout_width="393dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="10dp"
-                android:paddingTop="5dp"
                 android:text="Braking"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -103,46 +102,45 @@
             android:orientation="horizontal">
 
             <ProgressBar
-                android:id="@+id/pg_braking"
+                android:id="@+id/pg_brakingTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
                 android:progressDrawable="@drawable/custom_progressbar" />
 
             <TextView
-                android:id="@+id/tv_proBraking"
+                android:id="@+id/tv_proBrakingTripView"
                 android:layout_width="59dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="##"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/bt_infoCornering"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="31dp"
+                android:layout_width="19dp"
                 android:layout_height="match_parent"
-                android:padding="10dp"
+
                 android:src="@drawable/ic_info_indicators" />
 
             <TextView
-                android:id="@+id/tv_cornering"
+                android:id="@+id/tv_corneringTripView"
                 android:layout_width="393dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="10dp"
-                android:paddingTop="5dp"
                 android:text="Cornering"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -156,46 +154,45 @@
             android:orientation="horizontal">
 
             <ProgressBar
-                android:id="@+id/pg_cornering"
+                android:id="@+id/pg_corneringTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
                 android:progressDrawable="@drawable/custom_progressbar" />
 
             <TextView
-                android:id="@+id/tv_proCornering"
+                android:id="@+id/tv_proCorneringTripView"
                 android:layout_width="59dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="##"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/bt_infoSpeed"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="31dp"
+                android:layout_width="19dp"
                 android:layout_height="match_parent"
-                android:padding="10dp"
+
                 android:src="@drawable/ic_info_indicators" />
 
             <TextView
-                android:id="@+id/tv_speed"
+                android:id="@+id/tv_speedTripView"
                 android:layout_width="393dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="10dp"
-                android:paddingTop="5dp"
                 android:text="Speed"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -209,23 +206,23 @@
             android:orientation="horizontal">
 
             <ProgressBar
-                android:id="@+id/pg_speed"
+                android:id="@+id/pg_speedTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
                 android:progressDrawable="@drawable/custom_progressbar" />
 
             <TextView
-                android:id="@+id/tv_proSpeed"
+                android:id="@+id/tv_proSpeedTripView"
                 android:layout_width="59dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="##"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>

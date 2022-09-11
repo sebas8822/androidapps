@@ -4,18 +4,27 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/custom_input.xml" value="0.168" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/custom_progressbar.xml" value="0.167" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/custom_row_shape.xml" value="0.338" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/custom_row_shape_trips.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/custome_person_icon.xml" value="0.299" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/custome_row_shape.xml" value="0.337" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/ic_logout.xml" value="0.168" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/ic_settings.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/on_textbuttons.xml" value="0.338" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/on_textbuttonstate.xml" value="0.337" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/drawable/round_button.xml" value="0.337" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_my_trips.xml" value="0.25" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/current_trip_view.xml" value="0.5" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_graph_view.xml" value="0.1546875" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_my_trips.xml" value="0.5" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_notifications.xml" value="0.2694746376811594" />
-        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_profile.xml" value="0.5" />
-        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_starttrip.xml" value="0.33" />
-        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_tripview.xml" value="0.1546875" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_score_view.xml" value="0.5" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_score_view_trip_view.xml" value="0.5" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_starttrip.xml" value="0.25" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/fragment_tripview.xml" value="0.5" />
+        <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/layout/recycler_maps_view.xml" value="0.5" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.32708333333333334" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/menu/top_menu.xml" value="0.5" />
         <entry key="..\:/Users/sebas/Desktop/workspace/AndroidApps/NiftyDriverApp/app/src/main/res/menu/topmenu.xml" value="0.5" />
