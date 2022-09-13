@@ -26,16 +26,56 @@ public class Trip {
     public double timeTrip;
     @ColumnInfo(name = "Score_Trip")
     public float scoreTrip;
-    @ColumnInfo(name = "Date_and_Time")
-    public String dateTime; // need be checked
+
+    @ColumnInfo(name = "Start_Date")
+    public String startDate; // need be checked
+
+    @ColumnInfo(name = "End_Date")
+    public String endDate; // need be checked
+
+    @ColumnInfo(name = "Start_Time")
+    public String startTime; // need be checked
+
+    @ColumnInfo(name = "End_Time")
+    public String endTime; // need be checked
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public long getTripId() {
         return tripId;
     }
 
-    /**public void setTripId(long tripId) {
-        this.tripId = tripId;
-    }*/
+
 
     public long getUserCreatorId() {
         return userCreatorId;
@@ -85,11 +125,6 @@ public class Trip {
         this.scoreTrip = scoreTrip;
     }
 
-    public String getDateTime() {
-        return dateTime;
-    }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
+
 }

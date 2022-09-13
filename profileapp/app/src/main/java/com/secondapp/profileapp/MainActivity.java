@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_button:
-                addEmployee();
-                //testPopulateDB();
+                //addEmployee();
+                testPopulateDB();
                 break;
             case R.id.bt_buttonVDB:
                 startActivity(new Intent(this, View_DataBase.class));

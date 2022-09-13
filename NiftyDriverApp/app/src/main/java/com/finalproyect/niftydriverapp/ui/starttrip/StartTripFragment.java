@@ -301,7 +301,10 @@ public class StartTripFragment extends Fragment {
             trip.setKilometers(1+i);
             trip.setTimeTrip(10+i);
             trip.setScoreTrip((int) ((Math.random() * (Max - Min)) + Min));
-            trip.setDateTime("10/8/1922 10:00:00");
+            trip.setStartDate("10/8/1922");
+            trip.setEndDate("10/8/1922");
+            trip.setStartTime("10:00");
+            trip.setEndTime("11:00");
 
 
             //user.setPicture("@");

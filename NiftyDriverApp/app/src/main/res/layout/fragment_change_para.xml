@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_firstNameChParameters"
+            android:layout_width="340dp"
+            android:layout_height="45dp"
+            android:background="@drawable/custom_input"
+            android:drawableStart="@drawable/custome_person_icon"
+            android:drawablePadding="12dp"
+            android:ems="10"
+            android:hint="First Name"
+            android:inputType="text"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textColor="@color/black"
+            android:textColorHint="@android:color/darker_gray" />
+
+        <EditText
+            android:id="@+id/et_lastNameChParameters"
+            android:layout_width="340dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/custom_input"
+            android:drawableStart="@drawable/custom_arrow_icon"
+            android:drawablePadding="12dp"
+            android:ems="10"
+            android:hint="Last Name"
+            android:inputType="textEmailAddress"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textColor="@color/black"
+            android:textColorHint="@android:color/darker_gray" />
+
+        <EditText
+            android:id="@+id/et_emailChParameters"
+            android:layout_width="340dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/custom_input"
+            android:drawableStart="@drawable/custom_email_icon"
+            android:drawablePadding="12dp"
+            android:ems="10"
+            android:hint="Email_address"
+            android:inputType="textEmailAddress"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textColor="@color/black"
+            android:textColorHint="@android:color/darker_gray" />
+
+        <EditText
+            android:id="@+id/et_passChParameters"
+            android:layout_width="340dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/custom_input"
+            android:drawableStart="@drawable/custom_lock_icon"
+            android:drawablePadding="12dp"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textColor="@color/black"
+            android:textColorHint="@android:color/darker_gray" />
+        <Button
+            android:id="@+id/bt_forgetPasswordChParameters"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="145dp"
+            android:layout_height="34dp"
+            android:text="Forget Password"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="11.5dp"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="309dp" />
+
+        <Button
+            android:id="@+id/bt_UpdateValuesChParameters"
+            android:layout_width="310dp"
+            android:layout_height="40dp"
+            android:text="Update Values" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

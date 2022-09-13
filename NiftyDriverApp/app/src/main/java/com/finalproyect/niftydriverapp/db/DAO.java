@@ -31,8 +31,16 @@ public interface DAO {
     void updateUser(User user);
 
 
+    // Get the list of trips
+    @Query("SELECT * FROM Trip where userCreatorId= :id")
+    List<Trip> getAllTrips(long id);
+
+
     @Query("select * from user where userId= :id")
     public User getUserById(long id);
+
+    @Query("select * from user where Email= :email")
+    public User getUserByEmail(String email);
 
     @Transaction
     @Query("SELECT * FROM User")

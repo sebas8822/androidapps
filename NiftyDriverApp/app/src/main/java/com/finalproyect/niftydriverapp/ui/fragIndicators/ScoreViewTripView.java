@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.finalproyect.niftydriverapp.R;
 
 public class ScoreViewTripView  extends Fragment {
-    private int currentProgress = 0;
+    private int currentProgress = 40;
     private ProgressBar pg_acceleration;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -60,9 +60,9 @@ public class ScoreViewTripView  extends Fragment {
         View view = inflater.inflate(R.layout.fragment_score_view_trip_view, container, false);
         // Inflate the layout for this fragment
 
-        pg_acceleration = (ProgressBar) view.findViewById(R.id.pg_acceleration);
+        pg_acceleration = (ProgressBar) view.findViewById(R.id.pg_accelerationTripView);
 
-        pg_acceleration.setProgress(40);
+        pg_acceleration.setProgress(currentProgress);
 
 
 

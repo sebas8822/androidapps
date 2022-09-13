@@ -22,9 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.finalproyect.niftydriverapp.ImageResizer;
+import com.finalproyect.niftydriverapp.ui.functions.ImageResizer;
 import com.finalproyect.niftydriverapp.R;
-import com.finalproyect.niftydriverapp.StaticContextFactory;
+import com.finalproyect.niftydriverapp.ui.functions.StaticContextFactory;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.User;
@@ -37,7 +37,8 @@ import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
 
-    private int userId = 1;
+
+    private long userId = 1;
 
     private TextView tv_userName, tv_mainScore, tv_totalTrips, tv_totalKilometres, tv_totalHours;
 
@@ -46,6 +47,8 @@ public class ProfileFragment extends Fragment {
     private ImageButton bt_changeImage;
 
     private Button bt_scoreView,bt_graphView;
+
+    Bitmap imageChoose;
 
     //Obtain image setup in profile view and save into database init activity to obtain a result
     ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
@@ -70,6 +73,8 @@ public class ProfileFragment extends Fragment {
                         catch (IOException e) {
                             e.printStackTrace();
                         }
+
+                        //imageChoose = selectedImageBitmap;
                         saveImageDatabase(selectedImageBitmap);
 
                     }
@@ -126,6 +131,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 imageChooser(user);
+                //saveImageDatabase(imageChoose);
+
             }
         });
 
@@ -156,55 +163,44 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private String totalTripHours() {
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
+
+
+    public static String totalTripHours() {
+        AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getTotalHoursByUser(userId));
+        return String.valueOf(dao.getTotalHoursByUser(1));
     }
 
-    private String numKilometres() {
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
+    public static String numKilometres() {
+        AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getTotalKilometresByUser(userId));
+        return String.valueOf(dao.getTotalKilometresByUser(1));
     }
 
-    private String numTrips() {
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
+    public static String numTrips() {
+        AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getTotalTripsByUser(userId));
+        return String.valueOf(dao.getTotalTripsByUser(1));
     }
 
-    public String mainScore(){
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
+    public static String mainScore(){
+        AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getScoreAverageTripByUser(userId));
+        return String.valueOf(dao.getScoreAverageTripByUser(1));
     }
-
-
-
-
-
-
 
     public void setProfileImageFromDatabase(User user){
         byte[] imageData = user.getPicture();
         im_profile.setImageBitmap(createBitmapFromByteArray(imageData));
-
-
     }
 
     public static Bitmap createBitmapFromByteArray(byte[] data) {
         return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
-
-
-
-
-
     // this function set profile image
-    private void imageChooser(User user)
-    {
+    public void imageChooser(User user){
+
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
@@ -212,10 +208,6 @@ public class ProfileFragment extends Fragment {
         launchSomeActivity.launch(i);
 
     }
-
-
-
-
 
     private byte[] defaultImage(){
         Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.img_1);
@@ -252,13 +244,14 @@ public class ProfileFragment extends Fragment {
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             User user = new User();
             user.setUserName(num[i]+"Sebastian");
             user.setLastName("Ramirez");
             user.setEmail(alp[i]+num[i]+"8822@hotmail.com");
             user.setPassword("S3b4st1@nR");
             user.setPicture(defaultImage());
+            user.setLoginState(true);
 
 
             //user.setPicture("@");

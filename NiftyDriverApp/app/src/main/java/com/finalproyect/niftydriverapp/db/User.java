@@ -20,7 +20,16 @@ public class User {
     public String password;
     @ColumnInfo(name = "Picture")
     public byte[] picture;
+    @ColumnInfo(name = "Log_in_state")
+    public boolean loginState;
 
+    public boolean isLoginState() {
+        return loginState;
+    }
+
+    public void setLoginState(boolean loginState) {
+        this.loginState = loginState;
+    }
 
     public long getIdUser() {
         return userId;

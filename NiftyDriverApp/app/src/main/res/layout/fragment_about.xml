@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About NiftyDriver"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="122dp"
+            android:layout_height="133dp"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/logo_niftydrive" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="296dp"
+            android:layout_height="161dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="12dp"
+            android:text="NiftyDriver is a powerful tool to who is starting to learn to drive. This application provides useful information about your driver's performance. It combines artificial intelligence to read your driving style and score every trip you do. You will be able to check and compare trips in order to learn and get feedback about your performance."
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="14dp" />
+
+        <Button
+            android:id="@+id/bt_userGuide"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="User Guide"
+            android:textAlignment="center"
+            android:textColor="@color/blue_sky_500"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/bt_ContactUs"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Contact Us"
+            android:textAlignment="center"
+            android:textColor="@color/blue_sky_500"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/bt_termsAndConditions"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Terms and Conditions"
+            android:textAlignment="center"
+            android:textColor="@color/blue_sky_500"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/link_github"
+            android:layout_width="54dp"
+            android:layout_height="66dp"
+            android:layout_marginTop="20dp"
+            app:srcCompat="@drawable/img" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

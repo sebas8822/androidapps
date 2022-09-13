@@ -1,36 +1,41 @@
 package com.finalproyect.niftydriverapp;
 
-import static android.Manifest.*;
-
-import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.finalproyect.niftydriverapp.db.AppDatabase;
+import com.finalproyect.niftydriverapp.db.DAO;
+import com.finalproyect.niftydriverapp.db.User;
+import com.finalproyect.niftydriverapp.ui.loginfragments.LoginFragment;
+import com.finalproyect.niftydriverapp.ui.loginfragments.SignUpFragment;
 import com.finalproyect.niftydriverapp.ui.mytrips.MyTripsFragment;
 import com.finalproyect.niftydriverapp.ui.profile.ProfileFragment;
+import com.finalproyect.niftydriverapp.ui.settings.ChangeParametersFragment;
+import com.finalproyect.niftydriverapp.ui.settings.SettingsFragment;
 import com.finalproyect.niftydriverapp.ui.starttrip.StartTripFragment;
 import com.finalproyect.niftydriverapp.ui.tripView.TripViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.finalproyect.niftydriverapp.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
     private ActivityMainBinding binding;
+    CallBackFragment callBackFragment;
+
 
 
     private Button bt_startTrip;
@@ -38,61 +43,59 @@ public class MainActivity extends AppCompatActivity {
     //Buttons profile fragment
     private Button bt_scoreView,bt_graphView;
 
+    SharedPreferences sp;
+
+
+
+
+
+
 
     //Global variable
     BottomNavigationView bottomNavigationView;
+    private int intLayout = 1;
+
+
+    // for save preferences like user id and user state means open session
+
+    // for save preferences like user id and user state means open session
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //disable night mode but show a bug can be better show
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        setContentView(R.layout.activity_main);
-
-        bottomNavigationView = findViewById(R.id.nav_view);
-        bottomNavigationView.setOnItemSelectedListener(item -> onBottonNavigationItemClicked(item));
-        bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
-
-
-        /** This is before class
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        //Init shared preferences
+        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        //editor.putBoolean("userState", false);
+        //editor.commit();
+        long userid = sp.getLong("userId",0);
+        boolean userState = sp.getBoolean("userState",false);
+        Toast.makeText(getApplicationContext(),"UserId "+ userid +" userState " + userState, Toast.LENGTH_LONG).show();
 
 
 
+        // depending of the user state
+        if(userState == true){
+            //disable night mode but show a bug can be better show
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_profile, R.id.navigation_startTrip, R.id.navigation_tripView, R.id.navigation_myTrips)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+            intLayout = 1;
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            setContentView(R.layout.activity_main);
 
-        //bt_scoreView = findViewById(R.id.bt_scoreView);*/
+            bottomNavigationView = findViewById(R.id.nav_view);
+            bottomNavigationView.setOnItemSelectedListener(item -> onBottonNavigationItemClicked(item));
+            bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
 
-
-
-        /**
-        bt_startTrip = findViewById(R.id.bt_startTrip);
-        bt_startTrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"This is graph view",Toast.LENGTH_LONG).show();
-                bt_startTrip.setText("another view");
-
-            }
-        });*/
+        }else {
+            setContentView(R.layout.activity_login);
+            addFragmentLogin();
+        }
 
 
 
 
-
-    }
+   }
 
     private boolean onBottonNavigationItemClicked(MenuItem item) {
         switch (item.getItemId()){
@@ -121,6 +124,52 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void loadSettingsFragment(Fragment fragment){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container_settings, fragment)
+                .commit();
+
+    }
+
+    private void addFragmentLogin(){
+        LoginFragment fragment = new LoginFragment();
+        fragment.setCallBackFragment(this);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container_login, fragment)
+                .commit();
+
+    }
+
+    private void addFragmentSetting(){
+        SettingsFragment fragment = new SettingsFragment();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+
+                .add(R.id.fragment_container_settings, fragment)
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+    private void replaceFragmentLogin(Fragment fragment){
+        getSupportFragmentManager()
+                .beginTransaction().addToBackStack(null)
+                .replace(R.id.fragment_container_login, fragment)
+                .commit();
+
+    }
+
+    private void replaceFragmentSetting(Fragment fragment){
+        getSupportFragmentManager()
+                .beginTransaction().addToBackStack(null)
+                .replace(R.id.fragment_container_settings, fragment)
+                .commit();
+
+    }
+
 
     // call top menu
     @Override
@@ -135,15 +184,79 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.bt_settings:
                 Toast.makeText(this,"Settings selected",Toast.LENGTH_LONG).show();
+                intLayout = 2;
+                setContentView(R.layout.activity_settings);
+                addFragmentSetting();
+
+
+
+
+
                 return true;
             case R.id.bt_logout:
-                Toast.makeText(this,"Logout selected",Toast.LENGTH_LONG).show();
+                //init sharedpreferences
+                closeApp();
+
 
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void closeApp(){
+        SharedPreferences.Editor editor = sp.edit();
+        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        //editor.putBoolean("userState", false);
+        //editor.commit();
+        long userId = sp.getLong("userId",0);
+        boolean userState = sp.getBoolean("userState",false);
+        Toast.makeText(this,"Logout selected",Toast.LENGTH_LONG).show();
+        AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());// Init database
+        DAO dao = db.driverDao();
+        User user = dao.getUserById(userId);
+
+        user.setLoginState(false);
+        dao.updateUser(user);
+        editor.clear();
+        editor.commit();
+        editor.apply();
+        Toast.makeText(getApplicationContext(),"Save preferences " + user.isLoginState(), Toast.LENGTH_LONG).show();
+        finish();
+        System.exit(0);
 
 
+    }
+
+
+    @Override
+    public void changeFragmentLogin() {
+        replaceFragmentLogin(new SignUpFragment());
+    }
+
+    @Override
+    public void changeFragmentSetting() {
+        replaceFragmentSetting(new ChangeParametersFragment());
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*
+        if (intLayout ==2){
+            intLayout = 1;
+            setContentView(R.layout.activity_main);
+            loadFragment(new ProfileFragment());
+        }*/
+
+
+    
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_settings);
+        if(fragment!=null){ // if is not = null means there is more fragments in the container
+            // remove fragments
+        }
+
+
+
+        super.onBackPressed();
+    }
 }

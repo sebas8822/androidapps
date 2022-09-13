@@ -9,7 +9,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@Database(entities = {User.class,Trip.class,Sensor.class}, version = 5, exportSchema = true) // between {} going the tables
+@Database(entities = {User.class,Trip.class,Sensor.class}, version = 1, exportSchema = true) // between {} going the tables
 
 public abstract class AppDatabase  extends RoomDatabase {
     // create the daos
