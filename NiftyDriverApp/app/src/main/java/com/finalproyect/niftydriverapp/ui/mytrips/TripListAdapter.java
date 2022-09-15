@@ -4,29 +4,30 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.finalproyect.niftydriverapp.R;
+import com.finalproyect.niftydriverapp.RecyclerViewInterface;
 import com.finalproyect.niftydriverapp.db.Trip;
 
 import java.util.List;
 
 public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyViewHolder> {
 
-
+    private  final RecyclerViewInterface recyclerViewInterface;
     private Context context;
     private List<Trip> tripList;
 
     // determine the context
 
-    public TripListAdapter(Context context){
+    public TripListAdapter(RecyclerViewInterface recyclerViewInterface, Context context){
+        this.recyclerViewInterface = recyclerViewInterface;
         this.context = context;
     }
+
 
 
     // I am saying put the list into this object
@@ -41,7 +42,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     public TripListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycler_maps_view,parent, false);
 
-        return new MyViewHolder(view);
+        return new MyViewHolder(view, recyclerViewInterface);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
         holder.tv_endTripLocationRow.setText(getEndAddressLocation(this.tripList.get(position)));//create the methods to convert in readable location
         holder.tv_scoreTripMyTrips.setText(String.valueOf((int)this.tripList.get(position).getScoreTrip()));
     }
-
+    /*****************************Test Data******************************/
     private String getEndAddressLocation(Trip trip) {
         trip.getStartLocation();
         return "24 Seaview avenue, Port macquarie 2444";
@@ -69,7 +70,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
         trip.getStartLocation();
         return "2 Charles Sturt University, Port Macquarie 2";
     }
-
+    /*****************************Test Data******************************/
     @Override
     public int getItemCount() {
         return this.tripList.size();
@@ -79,14 +80,29 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
         TextView tv_dateTripRow,tv_startTripRow,tv_endTripRow,tv_startTripLocationRow,tv_endTripLocationRow,tv_scoreTripMyTrips;
 
 
-        public MyViewHolder(View view) {
-            super(view);
-            tv_dateTripRow = view.findViewById(R.id.tv_dateTripRow);
-            tv_startTripRow = view.findViewById(R.id.tv_startTripRow);
-            tv_endTripRow = view.findViewById(R.id.tv_endTripRow);
-            tv_startTripLocationRow = view.findViewById(R.id.tv_startTripLocationRow);
-            tv_endTripLocationRow = view.findViewById(R.id.tv_endTripLocationRow);
-            tv_scoreTripMyTrips = view.findViewById(R.id.tv_scoreTripMyTrips);
+        public MyViewHolder(View itemView, RecyclerViewInterface recyclerViewInterface) {
+            super(itemView);
+            tv_dateTripRow = itemView.findViewById(R.id.tv_dateTripRow);
+            tv_startTripRow = itemView.findViewById(R.id.tv_startTripRow);
+            tv_endTripRow = itemView.findViewById(R.id.tv_endTripRow);
+            tv_startTripLocationRow = itemView.findViewById(R.id.tv_startTripLocationRow);
+            tv_endTripLocationRow = itemView.findViewById(R.id.tv_endTripLocationRow);
+            tv_scoreTripMyTrips = itemView.findViewById(R.id.tv_scoreTripMyTrips);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (recyclerViewInterface!=null){// make sure this is not null
+                        int pos = getAdapterPosition();//if is not null then
+                        if (pos!=RecyclerView.NO_POSITION){
+                            recyclerViewInterface.onItemClick(pos);
+                        }
+
+
+
+                    }
+                }
+            });
 
 
 

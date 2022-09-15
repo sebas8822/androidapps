@@ -65,12 +65,9 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Init shared preferences
-        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
-        //editor.putBoolean("userState", false);
-        //editor.commit();
-        long userid = sp.getLong("userId",0);
-        boolean userState = sp.getBoolean("userState",false);
+
+        long userid = getuserIdfromSP();
+        boolean userState = getUserStatefromSP();
         Toast.makeText(getApplicationContext(),"UserId "+ userid +" userState " + userState, Toast.LENGTH_LONG).show();
 
 
@@ -96,6 +93,28 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
 
    }
+
+    private boolean getUserStatefromSP() {
+        SharedPreferences sp;
+        //Init shared preferences
+        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        //editor.putBoolean("userState", false);
+        //editor.commit();
+
+        boolean userState = sp.getBoolean("userState",false);
+        return userState;
+    }
+
+    private long getuserIdfromSP() {
+        SharedPreferences sp;
+        //Init shared preferences
+        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        //editor.putBoolean("userState", false);
+        //editor.commit();
+        long userid = sp.getLong("userId",0);
+
+        return userid;
+    }
 
     private boolean onBottonNavigationItemClicked(MenuItem item) {
         switch (item.getItemId()){
@@ -248,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
         }*/
 
 
-    
+
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_settings);
         if(fragment!=null){ // if is not = null means there is more fragments in the container
@@ -259,4 +278,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
         super.onBackPressed();
     }
+
+
+
 }

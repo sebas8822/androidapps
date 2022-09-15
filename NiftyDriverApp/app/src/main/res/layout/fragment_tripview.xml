@@ -98,22 +98,22 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/tv_titleTimeView"
-        android:layout_width="41dp"
+        android:id="@+id/tv_titleKilometresView"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginStart="44dp"
-        android:text="Trips"
+        android:layout_marginStart="28dp"
+        android:text="Kilometres"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/include3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_totalTripsview"
+        app:layout_constraintTop_toBottomOf="@+id/tv_totalKilometresTripsview"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/tv_totalTripsview"
+        android:id="@+id/tv_totalKilometresTripsview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="45dp"

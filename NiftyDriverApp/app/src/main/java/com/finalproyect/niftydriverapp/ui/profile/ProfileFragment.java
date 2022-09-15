@@ -1,11 +1,14 @@
 package com.finalproyect.niftydriverapp.ui.profile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.finalproyect.niftydriverapp.MainActivity;
 import com.finalproyect.niftydriverapp.ui.functions.ImageResizer;
 import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.ui.functions.StaticContextFactory;
@@ -37,8 +41,20 @@ import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
 
+    SharedPreferences sp;//Init sharepreferences for user
 
-    private long userId = 1;
+    SharedPreferences.Editor editor;
+
+    public long getUserId() {
+        return userId;
+    }
+
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    private long userId = getUserId();
 
     private TextView tv_userName, tv_mainScore, tv_totalTrips, tv_totalKilometres, tv_totalHours;
 
@@ -82,9 +98,27 @@ public class ProfileFragment extends Fragment {
 
             });
 
-
+    // for save preferences like user id and user state means open session
+    @Override
+    public void onAttach(@NonNull Context context) {
+        sp = context.getSharedPreferences("userProfile",Context.MODE_PRIVATE );
+        editor = sp.edit(); // init sharedPreferences
+        super.onAttach(context);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+        //Init shared preferences
+        sp = getActivity().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        //editor.putBoolean("userState", false);
+        //editor.commit();
+        long userId = sp.getLong("userId",0);
+
+        /**Pass this values to the shared preference reset for trip view*/
+        editor.putInt("position", 0);
+        editor.commit();
+        setUserId(userId);
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         AppDatabase db = AppDatabase.getDbInstance(getContext());
@@ -104,22 +138,22 @@ public class ProfileFragment extends Fragment {
         //Main score
 
         tv_mainScore = (TextView) view.findViewById(R.id.tv_mainScore);
-        tv_mainScore.setText(mainScore());
+        tv_mainScore.setText(mainScore(userId));
 
         // Number of trips
 
         tv_totalTrips = (TextView) view.findViewById(R.id.tv_totalTrips);
-        tv_totalTrips.setText(numTrips());
+        tv_totalTrips.setText(numTrips(userId));
 
         //Number Kilometers
 
         tv_totalKilometres = (TextView) view.findViewById(R.id.tv_totalKilometres);
-        tv_totalKilometres.setText(numKilometres());
+        tv_totalKilometres.setText(numKilometres(userId));
 
         // Total Hours
 
         tv_totalHours = (TextView) view.findViewById(R.id.tv_totalHours);
-        tv_totalHours.setText(totalTripHours());
+        tv_totalHours.setText(totalTripHours(userId));
 
         //Inflate Fragment in the profile fragment
         // create the object pointing the fragment that intent to open
@@ -165,28 +199,28 @@ public class ProfileFragment extends Fragment {
 
 
 
-    public static String totalTripHours() {
+    public static String totalTripHours(long userId) {
         AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getTotalHoursByUser(1));
+        return String.valueOf(dao.getTotalHoursByUser(userId));
     }
 
-    public static String numKilometres() {
+    public static String numKilometres(long userId) {
         AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getTotalKilometresByUser(1));
+        return String.valueOf(dao.getTotalKilometresByUser(userId));
     }
 
-    public static String numTrips() {
+    public static String numTrips(long userId) {
         AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getTotalTripsByUser(1));
+        return String.valueOf(dao.getTotalTripsByUser(userId));
     }
 
-    public static String mainScore(){
+    public static String mainScore(long userId){
         AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getScoreAverageTripByUser(1));
+        return String.valueOf(dao.getScoreAverageTripByUser(userId));
     }
 
     public void setProfileImageFromDatabase(User user){
@@ -262,6 +296,12 @@ public class ProfileFragment extends Fragment {
 
 
     }
+
+
+
+
+
+
 
 
 }

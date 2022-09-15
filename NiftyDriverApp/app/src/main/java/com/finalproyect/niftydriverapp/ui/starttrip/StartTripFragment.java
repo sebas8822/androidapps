@@ -3,17 +3,26 @@ package com.finalproyect.niftydriverapp.ui.starttrip;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.SENSOR_SERVICE;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +35,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.finalproyect.niftydriverapp.R;
@@ -47,6 +57,14 @@ public class StartTripFragment extends Fragment {
 
     private Button bt_startTrip;
 
+    public void setUserid(long userid) {
+        this.userid = userid;
+    }
+
+    private long userid;
+
+    SharedPreferences sp;//Init sharepreferences for user
+
     private ImageView im_profile;
 
     private Button bt_populateSensorDatabase,bt_ResetTripDatabase,bt_ResetSensorDatabase;
@@ -57,12 +75,16 @@ public class StartTripFragment extends Fragment {
     private android.hardware.Sensor mAccelerometer;
     private android.hardware.Sensor mGyro;
 
+    // Variables GPS
+    private static final int REQUEST_LOCATION = 1;
+    LocationManager locationManager;
+
 
 
 
 
     // provide references
-    TextView text_accel, text_prev_acc,text_curr_acc;
+    TextView text_accel, text_prev_acc,text_curr_acc, text_latitud, text_longitud,text_speed;
     ProgressBar prog_shakebar;
     private double accelerationCurrentValue;
     private double accelerationPreviousValue; // I need it to compare with the current value if the phone move
@@ -97,6 +119,7 @@ public class StartTripFragment extends Fragment {
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
 
+
             /*********************************Start the algorithm**********************************/
             // support to calculate changes in just one value
             //accelerationCurrentValue = Math.sqrt((x*x+y*y+z*z));
@@ -116,6 +139,14 @@ public class StartTripFragment extends Fragment {
             text_prev_acc.setText("Y axis = "+ y);
             text_curr_acc.setText("Z axis = "+ z);
 
+
+            /** this lines call the object i have them before on create but i nee a contant reding so this test the constant reding */
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION);
+            locationManager =(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+            Geolocation gps = new Geolocation(locationManager, getContext());
+            text_latitud.setText("Latitud: " + gps.getLatitude());
+            text_longitud.setText("longitude: " + gps.getLongitude());
+            text_speed.setText("speed: " + gps.getSpeed());
 
             //update the graph
             pointsPlotted++;
@@ -152,12 +183,45 @@ public class StartTripFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_starttrip, container, false);
 
 
+        //Init shared preferences
+        sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        long userId = sp.getLong("userId",0);
+        setUserid(userId);
+
         /*****************************Sensor****************************************************/
+        //init GPS reading latitud, longitud and speed
+        /**
+        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION);
+        locationManager =(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        /***********Check if gps is enable or not********** *//**
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            //Fuction to enable GPS
+            turnOnGPS();
+
+        }else{
+
+            //GPS is already on
+            geolocation(view);
+        }*/
+
+        text_latitud=(TextView) view.findViewById(R.id.text_latitud);
+        text_longitud=(TextView) view.findViewById(R.id.text_longitud);
+        text_speed=(TextView) view.findViewById(R.id.text_speed);
+
+
+
+
+
+        /******************************************************************************************/
+
 
         // association with the actual id
         text_accel =(TextView) view.findViewById(R.id.text_accel);
         text_prev_acc = view.findViewById(R.id.text_prev_acc);
         text_curr_acc = view.findViewById(R.id.text_curr_acc);
+
+
 
 
 
@@ -176,7 +240,7 @@ public class StartTripFragment extends Fragment {
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Populate Trip", Toast.LENGTH_LONG).show();
                 //populateUserTable();
-                populateTripTable(1);
+                populateTripTable(userid);
                 populateTripTable(2);
             }
         });
@@ -282,7 +346,7 @@ public class StartTripFragment extends Fragment {
 
     }
 
-    public void populateTripTable(int userId) {
+    public void populateTripTable(long userId) {
         String[] num = {"ONE", "DOS", "THREE", "FOUR","FIVE", "SIX","SEVEN", "EIGHT","NINE","TEN"};
         String[] alp = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","E","W","X","Y","Z"};
 
@@ -292,7 +356,7 @@ public class StartTripFragment extends Fragment {
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
 
-        for (int i = 0; i <2; i++) {
+        for (int i = 0; i <5; i++) {
             Trip trip = new Trip();
             trip.setUserCreatorId(userId);
 
@@ -302,7 +366,7 @@ public class StartTripFragment extends Fragment {
             trip.setTimeTrip(10+i);
             trip.setScoreTrip((int) ((Math.random() * (Max - Min)) + Min));
             trip.setStartDate("10/8/1922");
-            trip.setEndDate("10/8/1922");
+            trip.setEndDate(String.valueOf(i));
             trip.setStartTime("10:00");
             trip.setEndTime("11:00");
 
@@ -364,13 +428,103 @@ public class StartTripFragment extends Fragment {
         }
     }
 
+    private void geolocation(View view) {
+
+        text_latitud=(TextView) view.findViewById(R.id.text_latitud);
+        text_longitud=(TextView) view.findViewById(R.id.text_longitud);
+        text_speed=(TextView) view.findViewById(R.id.text_speed);
+
+        //check permitions again
+        if (ActivityCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_COARSE_LOCATION)
+                !=PackageManager.PERMISSION_GRANTED){
+
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION);
+
+
+
+        }else{
+            Location LocationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location LocationNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location LocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+            if (LocationGPS !=null){
+                double latitude = LocationGPS.getLatitude();
+                double longitude = LocationGPS.getLongitude();
+                double speed = LocationGPS.getSpeed();
+
+                /**Show the values and save them**/
+                Toast.makeText(getContext(),"Latitud: " + latitude+"longitude: " + longitude+"speed: " + speed,Toast.LENGTH_LONG).show();
+                text_latitud.setText("Latitud: " + latitude);
+                text_longitud.setText("longitude: " + longitude);
+                text_speed.setText("speed: " + speed);
+
+
+                /*********************************/
+            }else if (LocationNetwork !=null){
+                double latitude = LocationNetwork.getLatitude();
+                double longitude = LocationNetwork.getLongitude();
+                double speed = LocationNetwork.getSpeed();
+
+                /**Show the values and save them**/
+                Toast.makeText(getContext(),"Latitud: " + latitude+"longitude: " + longitude+"speed: " + speed,Toast.LENGTH_LONG).show();
+                text_latitud.setText("Latitud: " + latitude);
+                text_longitud.setText("longitude: " + longitude);
+                text_speed.setText("speed: " + speed);
+                /*********************************/
+            }else if (LocationPassive !=null){
+                double latitude = LocationPassive.getLatitude();
+                double longitude = LocationPassive.getLongitude();
+                double speed = LocationPassive.getSpeed();
+
+                /**Show the values and save them**/
+                Toast.makeText(getContext(),"Latitud: " + latitude+"longitude: " + longitude+"speed: " + speed,Toast.LENGTH_LONG).show();
+                text_latitud.setText("Latitud: " + latitude);
+                text_longitud.setText("longitude: " + longitude);
+                text_speed.setText("speed: " + speed);
+                /*********************************/
+            }else{
+                Toast.makeText(getContext(),"Can't get current location",Toast.LENGTH_LONG).show();
+
+
+
+            }
+
+        }
+
+    }
+
+    private void turnOnGPS() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setMessage("Enable GPS?").setCancelable(false).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }).setNegativeButton("NOT", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        final AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+
+
+
+
+    }
+
+
 
     public void scoreTrip(){
 
 
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
-        // here i need to cal the variables form sensor data and create the scoring and feedback
+        // here i need to call the variables from sensor data and create the scoring and feedback
 
 
     }
@@ -379,36 +533,3 @@ public class StartTripFragment extends Fragment {
 
 }
 
-
-
-/**
- Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media  .EXTERNAL_CONTENT_URI);
- startActivityForResult(intent, 3);*/
-
-/**
- @Override
- public void onActivityResult(int requestCode, int resultCode, Intent data) {
- super.onActivityResult(requestCode, resultCode, data);
- if(resultCode == RESULT_OK && data!= null){
- Uri selectedImage = data.getData();
- Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.img_1);
-
- try {
- bitmap= MediaStore.Images.Media.getBitmap(
- getContext().getContentResolver(),
- selectedImage);
- } catch (IOException e) {
- e.printStackTrace();
- }
-
- ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
- bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArray);
- byte[] image = byteArray.toByteArray();
- //populateUserDataBase(image);
- im_profile.setImageBitmap(bitmap);
-
- }
-
-
-
- }*/
