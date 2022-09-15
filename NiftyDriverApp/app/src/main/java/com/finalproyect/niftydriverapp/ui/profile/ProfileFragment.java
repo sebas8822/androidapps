@@ -98,7 +98,7 @@ public class ProfileFragment extends Fragment {
 
             });
 
-    // for save preferences like user id and user state means open session
+    // for save preferences like user id and user state means open session to write
     @Override
     public void onAttach(@NonNull Context context) {
         sp = context.getSharedPreferences("userProfile",Context.MODE_PRIVATE );
@@ -117,7 +117,9 @@ public class ProfileFragment extends Fragment {
 
         /**Pass this values to the shared preference reset for trip view*/
         editor.putInt("position", 0);
+        //editor.clear();
         editor.commit();
+
         setUserId(userId);
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);

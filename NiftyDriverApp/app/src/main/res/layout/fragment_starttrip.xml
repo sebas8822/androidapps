@@ -21,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.001" />
 
+
     <Button
         android:id="@+id/bt_ResetTripDatabase"
         android:layout_width="wrap_content"
@@ -28,35 +29,10 @@
         android:text="Reset Trip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintHorizontal_bias="0.737"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.07" />
-
-    <Button
-        android:id="@+id/bt_ResetSensorDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reset Sensor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.939"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.07" />
-
-    <Button
-        android:id="@+id/bt_populateSensorDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Populate Sensor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.519"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
+        app:layout_constraintVertical_bias="0.023" />
 
     <TextView
         android:id="@+id/text_accel"

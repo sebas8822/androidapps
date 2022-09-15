@@ -1,6 +1,8 @@
 package com.finalproyect.niftydriverapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,8 +19,7 @@ import com.finalproyect.niftydriverapp.ui.loginfragments.LoginFragment;
 import com.finalproyect.niftydriverapp.ui.loginfragments.SignUpFragment;
 import com.finalproyect.niftydriverapp.ui.mytrips.MyTripsFragment;
 import com.finalproyect.niftydriverapp.ui.profile.ProfileFragment;
-import com.finalproyect.niftydriverapp.ui.settings.ChangeParametersFragment;
-import com.finalproyect.niftydriverapp.ui.settings.SettingsFragment;
+import com.finalproyect.niftydriverapp.ui.settings.Settings_Activity;
 import com.finalproyect.niftydriverapp.ui.starttrip.StartTripFragment;
 import com.finalproyect.niftydriverapp.ui.tripView.TripViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.finalproyect.niftydriverapp.databinding.ActivityMainBinding;
 
@@ -142,14 +142,14 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
                 .commit();
 
     }
-
+    /**
     private void loadSettingsFragment(Fragment fragment){
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container_settings, fragment)
                 .commit();
 
-    }
+    }*/
 
     private void addFragmentLogin(){
         LoginFragment fragment = new LoginFragment();
@@ -161,8 +161,8 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
     }
 
-    private void addFragmentSetting(){
-        SettingsFragment fragment = new SettingsFragment();
+    /**private void addFragmentSetting(){
+        Settings_Activity fragment = new Settings_Activity();
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
                 .addToBackStack(null)
                 .commit();
 
-    }
+    }*/
 
     private void replaceFragmentLogin(Fragment fragment){
         getSupportFragmentManager()
@@ -180,14 +180,14 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
                 .commit();
 
     }
-
+    /**
     private void replaceFragmentSetting(Fragment fragment){
         getSupportFragmentManager()
                 .beginTransaction().addToBackStack(null)
                 .replace(R.id.fragment_container_settings, fragment)
                 .commit();
 
-    }
+    }*/
 
 
     // call top menu
@@ -204,17 +204,37 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
             case R.id.bt_settings:
                 Toast.makeText(this,"Settings selected",Toast.LENGTH_LONG).show();
                 intLayout = 2;
-                setContentView(R.layout.activity_settings);
-                addFragmentSetting();
+                //setContentView(R.layout.activity_settings);
+                //addFragmentSetting();
+                startActivity(new Intent(this, Settings_Activity.class));
 
 
 
-
-
+                //break;
                 return true;
             case R.id.bt_logout:
-                //init sharedpreferences
-                closeApp();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Are you sure?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //init sharedpreferences
+                        closeApp();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+
+
 
 
         }
@@ -223,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
     }
 
     public void closeApp(){
+
         SharedPreferences.Editor editor = sp.edit();
         sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
         //editor.putBoolean("userState", false);
@@ -252,10 +273,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
         replaceFragmentLogin(new SignUpFragment());
     }
 
-    @Override
-    public void changeFragmentSetting() {
-        replaceFragmentSetting(new ChangeParametersFragment());
-    }
+
 
     @Override
     public void onBackPressed() {
@@ -268,11 +286,11 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
 
 
-
+        /*
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_settings);
         if(fragment!=null){ // if is not = null means there is more fragments in the container
             // remove fragments
-        }
+        }*/
 
 
 

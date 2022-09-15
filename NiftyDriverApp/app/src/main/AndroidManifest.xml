@@ -24,7 +24,36 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDJZBug9kRypscYPUOGLQrcPHiEDu2oQyw" />
         <activity
+            android:name=".ui.settings.Settings_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.settings.ChangeParameters_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.settings.ChangePassword_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.settings.about.About_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.settings.about.ContactUs_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.settings.about.TermsConditions_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.settings.about.User_Guide_Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>

@@ -17,7 +17,7 @@ public class Trip {
     public long userCreatorId;
 
     @ColumnInfo(name = "Start_Location")
-    public double startLocation;
+    public String startLocation;
     @ColumnInfo(name = "End_Location")
     public float endLocation;
     @ColumnInfo(name = "Kilometres")
@@ -85,11 +85,11 @@ public class Trip {
         this.userCreatorId = userCreatorId;
     }
 
-    public double getStartLocation() {
+    public String getStartLocation() {
         return startLocation;
     }
 
-    public void setStartLocation(double startLocation) {
+    public void setStartLocation(String startLocation) {
         this.startLocation = startLocation;
     }
 

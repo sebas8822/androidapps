@@ -77,12 +77,17 @@
             android:textSize="12dp"
             android:textStyle="bold" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/link_github"
-            android:layout_width="54dp"
-            android:layout_height="66dp"
-            android:layout_marginTop="20dp"
-            app:srcCompat="@drawable/img" />
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="82dp"
+            android:layout_height="79dp"
+            android:layout_gravity="center"
+            android:minWidth="1dp"
+            android:minHeight="1dp"
+            android:scaleType="fitXY"
+
+            android:src="@drawable/img" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

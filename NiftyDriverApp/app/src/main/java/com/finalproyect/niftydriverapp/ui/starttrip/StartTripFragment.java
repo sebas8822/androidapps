@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,10 +145,12 @@ public class StartTripFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION);
             locationManager =(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
             Geolocation gps = new Geolocation(locationManager, getContext());
-            text_latitud.setText("Latitud: " + gps.getLatitude());
+            text_latitud.setText("Latitud: " + gps.getLatitude() +"Postion: "+ pointsPlotted);
+            Log.d("onSensor",String.valueOf(gps.getLatitude()) + "Postion: "+ pointsPlotted);
             text_longitud.setText("longitude: " + gps.getLongitude());
+            Log.d("onSensor",String.valueOf(gps.getLongitude()) + "Postion: "+ pointsPlotted);
             text_speed.setText("speed: " + gps.getSpeed());
-
+            Log.d("onSensor",String.valueOf(gps.getSpeed()) + "Postion: "+ pointsPlotted);
             //update the graph
             pointsPlotted++;
 
@@ -245,16 +248,7 @@ public class StartTripFragment extends Fragment {
             }
         });
 
-        bt_populateSensorDatabase = (Button) view.findViewById(R.id.bt_populateSensorDatabase);
-        bt_populateSensorDatabase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Populate Sensor", Toast.LENGTH_LONG).show();
-                //populateUserTable();
-                populateSensorTable(1);
-                populateSensorTable(2);
-            }
-        });
+
 
         bt_ResetTripDatabase = (Button) view.findViewById(R.id.bt_ResetTripDatabase);
         bt_ResetTripDatabase.setOnClickListener(new View.OnClickListener() {
@@ -268,17 +262,7 @@ public class StartTripFragment extends Fragment {
             }
         });
 
-        bt_ResetSensorDatabase = (Button) view.findViewById(R.id.bt_ResetSensorDatabase);
-        bt_ResetSensorDatabase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AppDatabase db = AppDatabase.getDbInstance(getContext());
-                DAO dao = db.driverDao();
-                dao.deleteAllSensor();
-                Toast.makeText(getContext(), "Delete Trip", Toast.LENGTH_LONG).show();
 
-            }
-        });
         /*********************************************************************************/
 
 
@@ -353,34 +337,40 @@ public class StartTripFragment extends Fragment {
         int Max = 100;
         int Min = 0;
 
+        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION);
+        locationManager =(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Geolocation gps = new Geolocation(locationManager, getContext());
+
+
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
 
-        for (int i = 0; i <5; i++) {
+
             Trip trip = new Trip();
             trip.setUserCreatorId(userId);
 
-            trip.setStartLocation(1.1111);
+            trip.setStartLocation(gps.getLatitude()+ ", "+gps.getLongitude());
             trip.setEndLocation(1111);
-            trip.setKilometers(1+i);
-            trip.setTimeTrip(10+i);
+            trip.setKilometers(1);
+            trip.setTimeTrip(10);
             trip.setScoreTrip((int) ((Math.random() * (Max - Min)) + Min));
             trip.setStartDate("10/8/1922");
-            trip.setEndDate(String.valueOf(i));
+            trip.setEndDate(String.valueOf(345678));
             trip.setStartTime("10:00");
             trip.setEndTime("11:00");
 
 
             //user.setPicture("@");
             dao.insertTrip(trip);
+            populateSensorTable(trip.getTripId());
 
 
-        }
+
 
 
     }
 
-    public void populateSensorTable(int tripId) {
+    public void populateSensorTable(long tripId) {
         String[] num = {"ONE", "DOS", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN"};
         String[] alp = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "E", "W", "X", "Y", "Z"};
         float accMax = 0.3f;

@@ -20,12 +20,14 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     private  final RecyclerViewInterface recyclerViewInterface;
     private Context context;
     private List<Trip> tripList;
+    LayoutInflater layoutInflater;
 
     // determine the context
 
     public TripListAdapter(RecyclerViewInterface recyclerViewInterface, Context context){
         this.recyclerViewInterface = recyclerViewInterface;
         this.context = context;
+        layoutInflater = LayoutInflater.from(context);
     }
 
 
@@ -40,11 +42,12 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     @NonNull
     @Override
     public TripListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_maps_view,parent, false);
+        View view = layoutInflater.inflate(R.layout.recycler_maps_view,parent, false);
 
         return new MyViewHolder(view, recyclerViewInterface);
     }
 
+    // hold the data for a every single row
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
@@ -74,7 +77,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     @Override
     public int getItemCount() {
         return this.tripList.size();
-    }
+    }// total number of views
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_dateTripRow,tv_startTripRow,tv_endTripRow,tv_startTripLocationRow,tv_endTripLocationRow,tv_scoreTripMyTrips;

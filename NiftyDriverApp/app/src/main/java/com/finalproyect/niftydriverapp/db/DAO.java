@@ -27,6 +27,9 @@ public interface DAO {
     @Delete
     void delete(User user);
 
+    @Delete
+    void deleteAllTrips(User user);
+
     @Update
     void updateUser(User user);
 
@@ -72,9 +75,16 @@ public interface DAO {
 
     @Query("DELETE FROM Trip")
     void deleteAllTrip();
-
     @Query("DELETE FROM Sensor")
     void deleteAllSensor();
+
+    @Query("DELETE FROM Trip where userCreatorId= :id")
+    void deleteAllTripByUserId(long id);
+
+    @Query("DELETE FROM Sensor where tripCreatorId= :id")
+    void deleteAllSensorByTripId(long id);
+
+
 
 
 
