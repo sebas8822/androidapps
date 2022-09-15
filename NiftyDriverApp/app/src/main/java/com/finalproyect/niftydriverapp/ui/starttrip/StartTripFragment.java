@@ -3,6 +3,8 @@ package com.finalproyect.niftydriverapp.ui.starttrip;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.SENSOR_SERVICE;
 
+import static java.lang.System.currentTimeMillis;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -30,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +41,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.finalproyect.niftydriverapp.R;
@@ -45,6 +50,9 @@ import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.Sensor;
 import com.finalproyect.niftydriverapp.db.Trip;
 import com.finalproyect.niftydriverapp.db.User;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.LatLng;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
@@ -52,23 +60,33 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class StartTripFragment extends Fragment {
+
+    //variables
+
+    double latitude, longitude;
 
     private Button bt_startTrip;
 
     public void setUserid(long userid) {
         this.userid = userid;
     }
-
     private long userid;
 
     SharedPreferences sp;//Init sharepreferences for user
 
-    private ImageView im_profile;
 
-    private Button bt_populateSensorDatabase,bt_ResetTripDatabase,bt_ResetSensorDatabase;
+    /******+***************************************************************************************/
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
 
     /***********************************Graph staff***************************************************/
     // VARIABLES
@@ -80,13 +98,16 @@ public class StartTripFragment extends Fragment {
     private static final int REQUEST_LOCATION = 1;
     LocationManager locationManager;
 
+    //// Variables Time
+    long timeEnd, timeStart;// for start and end time
 
 
-
-
-    // provide references
+    // provide Activityreferences
     TextView text_accel, text_prev_acc,text_curr_acc, text_latitud, text_longitud,text_speed;
-    ProgressBar prog_shakebar;
+    private Button bt_ResetTripDatabase;
+
+
+    //no need it yet
     private double accelerationCurrentValue;
     private double accelerationPreviousValue; // I need it to compare with the current value if the phone move
 
@@ -95,22 +116,27 @@ public class StartTripFragment extends Fragment {
     private int graphIntervalsCounter = 0;
     //variable for view port
     private Viewport viewport;
+    //score
+    double safeScore = 0;
+    double avgScore =0;
+    double previousScore = 0;
+    List<Double> scoreList;
+    //ScoreArrayList scoreArrayList; //class that need to be created
+
+    //Array where i put the variables to point the score
+
 
     //Available in the entire application - the realtime chart
-    LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-            //new DataPoint(0, 1),
-
+    LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {//new DataPoint(0, 1),
     });
-
-
     LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(new DataPoint[] {
             //new DataPoint(0, 1),
-
     });
+
     LineGraphSeries<DataPoint> series3 = new LineGraphSeries<DataPoint>(new DataPoint[] {
             //new DataPoint(0, 1),
-
     });
+
     // trigger every time when the sensor is change
     private SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
@@ -122,19 +148,7 @@ public class StartTripFragment extends Fragment {
 
 
             /*********************************Start the algorithm**********************************/
-            // support to calculate changes in just one value
-            //accelerationCurrentValue = Math.sqrt((x*x+y*y+z*z));
 
-
-            //abs = absolute value ignore the sign values (-1) and give a value to compare
-            //double changeInAcceleration = Math.abs(accelerationCurrentValue-accelerationPreviousValue);
-            // save the change for the next read
-            //accelerationPreviousValue = accelerationCurrentValue;
-            //update the interface (show to user)
-
-            //text_accel.setText("Acceleration change val = " + (int) changeInAcceleration);
-            //text_curr_acc.setText("Current val = "+(int)accelerationCurrentValue);
-            //text_prev_acc.setText("Prev val = "+(int)accelerationPreviousValue);
 
             text_accel.setText("X axis = " + x);
             text_prev_acc.setText("Y axis = "+ y);
@@ -147,9 +161,9 @@ public class StartTripFragment extends Fragment {
             Geolocation gps = new Geolocation(locationManager, getContext());
             text_latitud.setText("Latitud: " + gps.getLatitude() +"Postion: "+ pointsPlotted);
             Log.d("onSensor",String.valueOf(gps.getLatitude()) + "Postion: "+ pointsPlotted);
-            text_longitud.setText("longitude: " + gps.getLongitude());
+            text_longitud.setText("longitude: " + gps.getLongitude()+ "Postion: "+ pointsPlotted);
             Log.d("onSensor",String.valueOf(gps.getLongitude()) + "Postion: "+ pointsPlotted);
-            text_speed.setText("speed: " + gps.getSpeed());
+            text_speed.setText("speed: " + gps.getSpeed()+ "Postion: "+ pointsPlotted);
             Log.d("onSensor",String.valueOf(gps.getSpeed()) + "Postion: "+ pointsPlotted);
             //update the graph
             pointsPlotted++;
@@ -208,6 +222,24 @@ public class StartTripFragment extends Fragment {
             geolocation(view);
         }*/
 
+        //getting the latitude and longitude of the user
+        LatLng latLng = new LatLng(latitude, longitude);
+        Log.d("NewVariables", "latLng: "+String.valueOf(latLng));
+
+
+
+
+
+        /***********************************Testing and choise of data*****************************/
+        Date currentTime = Calendar.getInstance().getTime(); // date to save
+        Log.d("NewVariables ", "currentTime: "+String.valueOf(currentTime));
+
+        timeStart = currentTimeMillis();//get the current time in milliseconds to calculate the diference this give the driving time
+
+        Log.d("NewVariables ", "timeStart: "+String.valueOf(timeStart));
+
+
+
         text_latitud=(TextView) view.findViewById(R.id.text_latitud);
         text_longitud=(TextView) view.findViewById(R.id.text_longitud);
         text_speed=(TextView) view.findViewById(R.id.text_speed);
@@ -235,6 +267,22 @@ public class StartTripFragment extends Fragment {
 
 
         /*********************************************************************************/
+        // creating list to add score
+        scoreList = new ArrayList<>();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
+
+        //Check if Google Play Services Available or not
+        if (!CheckGooglePlayServices()) {
+            Log.d("onCreate", "Finishing test case since Google Play Services are not available");
+            getActivity().finish();
+        } else {
+            Log.d("onCreate", "Google Play Services available.");
+        }
+
+
         /*********************************UI Functions************************************************/
 
         bt_startTrip = (Button) view.findViewById(R.id.bt_startTrip);
@@ -518,6 +566,59 @@ public class StartTripFragment extends Fragment {
 
 
     }
+
+    /**************************************adding new staff****************************************/
+
+    // checking location permissions
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Asking user if explanation is needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                //Prompt the user once explanation has been shown
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    // checking google play services
+    private boolean CheckGooglePlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(getContext());
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(this, result,
+                        0).show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+
+
 
 
 
