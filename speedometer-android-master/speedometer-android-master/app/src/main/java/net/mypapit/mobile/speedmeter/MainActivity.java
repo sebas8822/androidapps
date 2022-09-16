@@ -41,6 +41,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialog;
 import android.util.Log;
 import android.view.Menu;
@@ -54,7 +55,7 @@ import android.widget.Toast;
 
 import java.text.NumberFormat;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
 
     private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed;
@@ -90,17 +91,20 @@ public class MainActivity extends ActionBarActivity {
         //for handling notification
         mbuilder = new NotificationCompat.Builder(this);
         mnotice = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
+        //FOR SAVE REFERENCES
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        //SET UP UNITS PREFERENCES
         unitType = Integer.parseInt(prefs.getString("unit", "1"));
         tvUnit.setText(unit[unitType - 1]);
 
+
+        //SAVE VALUE INTO THE CURRENT ACTIVITY
         if (savedInstanceState !=null) {
             maxSpeed = savedInstanceState.getDouble("maxspeed",-100.0);
 
         }
-
+        // check if the services are available ASK TO THE USER TO ENABLE
         if (!this.isLocationEnabled(this)) {
 
 
@@ -133,46 +137,24 @@ public class MainActivity extends ActionBarActivity {
 
             });
             builder.create().show();
-
-
         }
 
 
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = pm.newWakeLock(
-                PowerManager.SCREEN_DIM_WAKE_LOCK, "My wakelook");
+        //PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
+        //keep the screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
         new SpeedTask(this).execute("string");
-
-
-        tvSpeed.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(intent);
-
-                return false;
-            }
-
-
-        });
-
-
     }
-
+    // save into the the sabe activity
     protected void onSaveInstanceState(Bundle bundle){
         super.onSaveInstanceState(bundle);
-
         bundle.putDouble("maxspeed",maxSpeed);
-
-
-
     }
 
+    // THIS BRING DE DATA WHEN THE APPLICATION RUN AGAIN
     protected void onRestoreInstanceState(Bundle bundle){
 
         super.onRestoreInstanceState(bundle);
@@ -181,7 +163,7 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-
+    // Speed Longitud and Lantitud
     protected void onResume() {
         super.onResume();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -218,19 +200,21 @@ public class MainActivity extends ActionBarActivity {
 
         }
 
-        removeNotification();
+        //removeNotification();
 
 
     }
 
+    // Speed Longitud and Lantitud CHECK MAYBE TO SAVE VARIABLES
     protected void onStop() {
         super.onStop();
 
-        displayNotification();
+        //displayNotification();
 
 
     }
 
+    // OPTIONAL TO SAVE VARIABLES OR DO SOMETHING ELSE
     protected void onPause() {
         super.onPause();
 
@@ -251,93 +235,12 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    private  void displayNotification() {
-
-        mbuilder.setSmallIcon(R.drawable.ic_stat_notification);
-        mbuilder.setContentTitle("SpeedoMeter is running...");
-        mbuilder.setContentText("Click to view");
-
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-
-        stackBuilder.addNextIntent(resultIntent);
-
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mbuilder.setContentIntent(resultPendingIntent);
-
-
-        mnotice.notify(1337, mbuilder.build());
-
-
-    }
-
-    private void removeNotification() {
-        mnotice.cancel(1337);
-    }
-
-    private void showDialog() throws NameNotFoundException {
-        final AppCompatDialog dialog = new AppCompatDialog(this);
-        dialog.setContentView(R.layout.about_dialog);
-        dialog.setTitle("About Speedometer "
-                + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-        dialog.setCancelable(true);
-
-        // text
-        TextView text = (TextView) dialog.findViewById(R.id.tvAbout);
-
-        text.setText( getString(R.string.txtLicense));
-
-        // icon image
-        ImageView img = (ImageView) dialog.findViewById(R.id.ivAbout);
-        img.setImageResource(R.drawable.ic_launcher);
-
-        dialog.show();
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-          getMenuInflater().inflate(R.menu.main, menu);
-      return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent intent = new Intent();
-                intent.setClass(this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_quit:
-                this.finish();
-                System.exit(0);
-                return true;
-            case R.id.action_about:
-                try {
-                    this.showDialog();
-                } catch (NameNotFoundException e) {
-
-                    e.printStackTrace();
-                }
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    //THIS CLASS PROVIDE THE VARIABLES SPEED lONGITUD AND lATITUD
     private class SpeedTask extends AsyncTask<String, Void, String> {
         final MainActivity activity;
         float speed = 0.0f;
         double lat;
+        double lon;
         LocationManager locationManager;
 
         public SpeedTask(MainActivity activity) {
@@ -393,12 +296,12 @@ public class MainActivity extends ActionBarActivity {
 
 
                     NumberFormat numberFormat = NumberFormat.getNumberInstance();
-                    numberFormat.setMaximumFractionDigits(0);
+                    numberFormat.setMaximumFractionDigits(2);
 
 
-
+                    lon = location.getLongitude();
                     lat = location.getLatitude();
-                    //speed=(float) location.getLatitude();
+
                     Log.d("net.mypapit.speedview", "Speed " + localspeed + "latitude: " + lat + " longitude: " + location.getLongitude());
                     tvSpeed.setText(numberFormat.format(filtSpeed));
 
@@ -442,6 +345,7 @@ public class MainActivity extends ActionBarActivity {
                         tvHeading.setText("NIL");
                     }
 
+                    // setting format latitud and log
                     NumberFormat nf = NumberFormat.getInstance();
 
                     nf.setMaximumFractionDigits(4);
@@ -463,7 +367,6 @@ public class MainActivity extends ActionBarActivity {
                 public void onProviderEnabled(String provider) {
                     tvSpeed.setText("STDBY");
                     tvMaxSpeed.setText("NIL");
-
                     tvLat.setText("LATITUDE");
                     tvLon.setText("LONGITUDE");
                     tvHeading.setText("HEADING");
@@ -512,9 +415,8 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    // VALIDATOR TO CHECK IF GPS IS ENABLE
     private boolean isLocationEnabled(Context mContext) {
-
-
         LocationManager locationManager = (LocationManager)
                 mContext.getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);

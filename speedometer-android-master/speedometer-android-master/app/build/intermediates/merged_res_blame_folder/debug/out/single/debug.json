@@ -1,0 +1,70 @@
+[
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\xml_set.xml.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\xml\\set.xml"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v11_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-hdpi-v11\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-mdpi\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-xhdpi\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\menu_main.xml.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\menu\\main.xml"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v11_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-mdpi-v11\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\layout_about_dialog.xml.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\layout\\about_dialog.xml"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v11_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-xxhdpi-v11\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-hdpi\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-xxhdpi\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v11_ic_stat_notification.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-xhdpi-v11\\ic_stat_notification.png"
+    },
+    {
+        "merged": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sebas\\Desktop\\workspace\\AndroidApps\\speedometer-android-master\\speedometer-android-master\\app\\src\\main\\res\\drawable-xhdpi\\ic_launcher.png"
+    }
+]

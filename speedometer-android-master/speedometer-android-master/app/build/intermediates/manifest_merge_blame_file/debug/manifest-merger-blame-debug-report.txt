@@ -1,0 +1,55 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="net.mypapit.mobile.speedmeter"
+4    android:versionCode="17"
+5    android:versionName="1.7" >
+6
+7    <uses-sdk
+7-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:10:5-12:41
+8        android:minSdkVersion="9"
+8-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:11:9-34
+9        android:targetSdkVersion="21" />
+9-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:12:9-38
+10
+11    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+11-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:7:5-79
+11-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:7:22-76
+12
+13    <application
+13-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:15:5-33:19
+14        android:allowBackup="true"
+14-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:16:9-35
+15        android:debuggable="true"
+16        android:icon="@drawable/ic_launcher"
+16-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:17:9-45
+17        android:label="@string/app_name"
+17-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:18:9-41
+18        android:testOnly="true"
+19        android:theme="@style/AppTheme" >
+19-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:19:9-40
+20        <activity
+20-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:20:9-28:20
+21            android:name="net.mypapit.mobile.speedmeter.MainActivity"
+21-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:21:13-41
+22            android:label="@string/app_name" >
+22-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:22:13-45
+23            <intent-filter>
+23-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:23:13-27:29
+24                <action android:name="android.intent.action.MAIN" />
+24-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:24:17-69
+24-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:24:25-66
+25
+26                <category android:name="android.intent.category.LAUNCHER" />
+26-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:26:17-77
+26-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:26:27-74
+27            </intent-filter>
+28        </activity>
+29        <activity
+29-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:30:10-32:52
+30            android:name="net.mypapit.mobile.speedmeter.SettingsActivity"
+30-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:31:13-45
+31            android:label="@string/app_settings" />
+31-->C:\Users\sebas\Desktop\workspace\AndroidApps\speedometer-android-master\speedometer-android-master\app\src\main\AndroidManifest.xml:32:13-49
+32    </application>
+33
+34</manifest>
