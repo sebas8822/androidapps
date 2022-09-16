@@ -24,10 +24,11 @@ import java.util.Locale;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     GoogleMap mMap;
+    double latitude, longitude;
 
 
     /**---------------------------------------------*/
-    String empLocation = "9 Se Avenue, ";
+    //String empLocation = "9 Seaview avenue,port macquarie  ";
     //String empLocation = "Colombia";
 
 
@@ -71,8 +72,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(Sydney,5);
         mMap.animateCamera(cameraUpdate);
 
-        Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
 
+        //Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+        /**
         try {
             List<Address>listAddress=geocoder.getFromLocationName(empLocation,1);
             if(listAddress.size()>0){
@@ -89,6 +91,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

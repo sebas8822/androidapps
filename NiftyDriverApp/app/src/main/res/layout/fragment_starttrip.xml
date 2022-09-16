@@ -13,7 +13,9 @@
         android:layout_height="121dp"
         android:background="@drawable/round_button"
         android:text="Start Trip"
-        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textSize="25dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -72,12 +74,11 @@
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
-        android:layout_width="225dp"
-        android:layout_height="129dp"
-        android:layout_marginBottom="500dp"
+        android:layout_width="395dp"
+        android:layout_height="319dp"
+        android:layout_marginBottom="68dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.747"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView

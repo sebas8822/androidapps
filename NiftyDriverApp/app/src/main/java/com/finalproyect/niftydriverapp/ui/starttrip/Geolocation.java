@@ -19,7 +19,7 @@ import com.finalproyect.niftydriverapp.MainActivity;
 
 public class Geolocation extends AppCompatActivity {
 
-    private static final int REQUEST_LOCATION = 1;
+    private static final int REQUEST_LOCATION = 99;
     LocationManager locationManager;
     Context context;
     private Activity activity;

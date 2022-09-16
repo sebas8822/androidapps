@@ -173,6 +173,7 @@ public class ProfileFragment extends Fragment {
         });
 
         bt_scoreView = (Button) view.findViewById(R.id.bt_scoreView);
+
         bt_scoreView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
