@@ -1,10 +1,10 @@
-net/mypapit/mobile/speedmeter/BuildConfig.java
- net.mypapit.mobile.speedmeter.BuildConfig
-net/mypapit/mobile/speedmeter/SettingsActivity.java
- net.mypapit.mobile.speedmeter.SettingsActivity
 net/mypapit/mobile/speedmeter/MainActivity.java
  net.mypapit.mobile.speedmeter.MainActivity
  net.mypapit.mobile.speedmeter.MainActivity$1
  net.mypapit.mobile.speedmeter.MainActivity$2
  net.mypapit.mobile.speedmeter.MainActivity$SpeedTask
  net.mypapit.mobile.speedmeter.MainActivity$SpeedTask$1
+net/mypapit/mobile/speedmeter/SettingsActivity.java
+ net.mypapit.mobile.speedmeter.SettingsActivity
+net/mypapit/mobile/speedmeter/BuildConfig.java
+ net.mypapit.mobile.speedmeter.BuildConfig

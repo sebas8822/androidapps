@@ -334,7 +334,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             scoreList.clear();
             i = 1;
 
-            checkReadings();
+            //checkReadings();
 
 
             //getting the latitude and longitude of the user
@@ -377,22 +377,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             Toast.makeText(getContext(), "Trip Score: " + result, Toast.LENGTH_LONG).show();
             onadd();
         }
-
-    }
-    int points = 0;
-    public void checkReadings() {
-        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_LOCATION);
-        locationManager =(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Geolocation gps = new Geolocation(locationManager, getContext());
-        //text_latitud.setText("Latitud: " + gps.getLatitude() +"Postion: "+ pointsPlotted);
-        Log.d("onSensor",String.valueOf(gps.getLatitude()) + "Postion: "+ points);
-        //text_longitud.setText("longitude: " + gps.getLongitude()+ "Postion: "+ pointsPlotted);
-        Log.d("onSensor",String.valueOf(gps.getLongitude()) + "Postion: "+ points);
-        //text_speed.setText("speed: " + gps.getSpeed()+ "Postion: "+ pointsPlotted);
-        Log.d("onSensor",String.valueOf(gps.getSpeed()) + "Postion: "+ points);
-        points++;
-
-
 
     }
 
@@ -627,49 +611,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 calculateAccMagOrientation();
                 //checkReadings();
 
-                Log.d("onSensor","xAccelerometer"+xAccelerometer);
-                Log.d("onSensor","yAccelerometer"+yAccelerometer);
-                Log.d("onSensor","zAccelerometer"+zAccelerometer);
-
-
-
-                /**
-                GraphView graph = (GraphView) getView().findViewById(R.id.graph);
-                LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
-
-                double y;
-                for(int x=0; x<90;x++){
-                    y=Math.sin(2*x*0.2)-2*Math.sin(x*0.2);
-                    series.appendData(new DataPoint(x,y),true, 90);
-
-                }
-
-                graph.addSeries(series);*/
-
-
-
-
-
-
-
-
-
-                /**
-
-                if (pointsPlotted > 100000){
-                    pointsPlotted = 1; // reset the variable
-                    series.resetData(new DataPoint[]{new DataPoint(1,0)});
-                    series2.resetData(new DataPoint[]{new DataPoint(1,0)});
-                    series3.resetData(new DataPoint[]{new DataPoint(1,0)});
-
-                }
-
-                series.appendData( new DataPoint(pointsPlotted,xAccelerometer ),true,pointsPlotted);
-                series2.appendData( new DataPoint(pointsPlotted,yAccelerometer),true,pointsPlotted);
-                series3.appendData( new DataPoint(pointsPlotted,zAccelerometer),true,pointsPlotted);
-                viewport.setMaxX(pointsPlotted);
-                viewport.setMinX(pointsPlotted - 20);// set to show the last 100 points*/
-
 
 
                 break;
@@ -713,6 +654,13 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
+
+        double y;
+        for(int x=0; x<90;x++) {
+            y = Math.sin(2 * x * 0.2) - 2 * Math.sin(x * 0.2);
+            series.appendData(new DataPoint(x, y), true, 90);
+        }
+
         /**
          double y;
          for(int x=0; x<90;x++){

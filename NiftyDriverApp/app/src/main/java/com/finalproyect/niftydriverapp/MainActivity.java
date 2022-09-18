@@ -261,7 +261,8 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
         editor.commit();
         editor.apply();
         Toast.makeText(getApplicationContext(),"Save preferences " + user.isLoginState(), Toast.LENGTH_LONG).show();
-        finish();
+
+        this.finish();
         System.exit(0);
 
 

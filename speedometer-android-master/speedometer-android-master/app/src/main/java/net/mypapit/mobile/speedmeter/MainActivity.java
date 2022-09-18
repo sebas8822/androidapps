@@ -1,27 +1,5 @@
 package net.mypapit.mobile.speedmeter;
-/*
-*
-*
-* Copyright 2017 Mohammad Hafiz bin Ismail <mypapit@gmail.com>
 
-Redistribution and use in source and binary forms, with or without modification, are permitted
-provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions
-and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS
-BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -30,6 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Typeface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -53,9 +35,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 import java.text.NumberFormat;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
 
     private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed;
@@ -68,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
 
+    private SensorManager mSensorManager = null;
+    private GraphView grapht;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,13 +67,7 @@ public class MainActivity extends AppCompatActivity {
         tvLon = (TextView) findViewById(R.id.tvLon);
         tvAccuracy = (TextView) findViewById(R.id.tvAccuracy);
         tvHeading = (TextView) findViewById(R.id.tvHeading);
-        Typeface font = Typeface.createFromAsset(getBaseContext().getAssets(), "font/lcdn.ttf");
-        tvSpeed.setTypeface(font);
-        tvLat.setTypeface(font);
-        tvLon.setTypeface(font);
-        tvHeading.setTypeface(font);
-        tvAccuracy.setTypeface(font);
-        tvMaxSpeed.setTypeface(font);
+
 
         activity = this;
         //for handling notification
@@ -144,6 +126,16 @@ public class MainActivity extends AppCompatActivity {
 
         //keep the screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
+        /**Init Graph*/
+        grapht = (GraphView) findViewById(R.id.graph);
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
+
+        /**Init Sensors*/// get sensorManager and initialise sensor listeners
+        mSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        initListeners();
 
 
         new SpeedTask(this).execute("string");
@@ -422,6 +414,316 @@ public class MainActivity extends AppCompatActivity {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
+    /********************************************************SENSORS******************************/
+
+    // initializing the sensors
+    public void initListeners() {
+        mSensorManager.registerListener(this,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_FASTEST);
+
+        mSensorManager.registerListener(this,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
+                SensorManager.SENSOR_DELAY_FASTEST);
+
+        mSensorManager.registerListener(this,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+                SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    float[] mGravity;
+    float[] mMagneticField;
+    float xAccelerometer;
+    float yAccelerometer;
+    float zAccelerometer;
+    private float[] accel = new float[3];
+    private float[] magnet = new float[3];
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        //updateValues();
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                mGravity = event.values;
+                xAccelerometer = event.values[0];
+                yAccelerometer = event.values[1];
+                zAccelerometer = event.values[2];
+                calibrateAccelerometer();
+                // copy new accelerometer data into accel array
+                // then calculate new orientation
+                System.arraycopy(event.values, 0, accel, 0, 3);
+                calculateAccMagOrientation();
+//                checkReadings();
+//                printArray(accel);
+//                Log.d("onSensor","mGravity"+ mGravity);
+//                Log.d("onSensor","xAccelerometer"+ xAccelerometer);
+//                Log.d("onSensor","yAccelerometer"+ yAccelerometer);
+//                Log.d("onSensor","zAccelerometer"+ zAccelerometer);
+
+
+                break;
+
+            case Sensor.TYPE_GYROSCOPE:
+                // process gyro data
+                gyroFunction(event);
+                break;
+
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                // copy new magnetometer data into magnet array
+                mMagneticField = event.values;
+                System.arraycopy(event.values, 0, magnet, 0, 3);
+                break;
+        }
+        computeQuaternion();
+    }
+
+    float xPreviousAcc;
+    float yPreviousAcc;
+    float zPreviousAcc;
+    private boolean mInitialized = false;
+    float xAccCalibrated = 0f;
+    float yAccCalibrated = 0f;
+    float zAccCalibrated = 0f;
+
+    // getting accelerometer values and calibrating the accelerometer
+    private void calibrateAccelerometer() {
+        if (!mInitialized) {
+            xPreviousAcc = xAccelerometer;
+            yPreviousAcc = yAccelerometer;
+            zPreviousAcc = zAccelerometer;
+            mInitialized = true;
+        } else {
+            xAccCalibrated = (xPreviousAcc - xAccelerometer);
+            yAccCalibrated = (yPreviousAcc - yAccelerometer);
+            zAccCalibrated = (zPreviousAcc - zAccelerometer);
+            xPreviousAcc = xAccelerometer;
+            yPreviousAcc = yAccelerometer;
+            zPreviousAcc = zAccelerometer;
+            Log.d("calibrateAccelerometer","xAccCalibrated"+ xAccCalibrated);
+            Log.d("calibrateAccelerometer","yAccCalibrated"+ yAccCalibrated);
+        }
+    }
+
+    //variables for acceleromneter calibration
+    private float[] rotationMatrix = new float[9];
+    private float[] accMagOrientation = new float[3];
+
+
+    // accelerometer
+    public void calculateAccMagOrientation() {
+        if (SensorManager.getRotationMatrix(rotationMatrix, null, accel, magnet)) {
+            SensorManager.getOrientation(rotationMatrix, accMagOrientation);
+            //printArray("rotationMatrix",rotationMatrix);
+            printArray("accMagOrientation",accMagOrientation);
+            //now after rotationMatrix and it can be defined the position of the phone
+        }
+    }
+
+    //Gyro
+
+    private boolean initState = true;
+    private float[] gyroMatrix = new float[9];
+    private float[] gyro = new float[3]; /** i thing this give the pitch roll and yaw*/
+    private float timestamp;
+    private static final float NS2S = 1.0f / 1000000000.0f;
+    private float[] gyroOrientation = new float[3];
+
+    public void gyroFunction(SensorEvent event) {
+        // don't start until first accelerometer/magnetometer orientation has been acquired
+        if (accMagOrientation == null)
+            return;
+
+        // initialisation of the gyroscope based rotation matrix
+        if (initState) {
+            float[] initMatrix = new float[9];
+            initMatrix = getRotationMatrixFromOrientation(accMagOrientation);
+            float[] test = new float[3];
+            SensorManager.getOrientation(initMatrix, test);
+            gyroMatrix = matrixMultiplication(gyroMatrix, initMatrix);
+            initState = false;
+        }
+
+        // copy the new gyro values into the gyro array
+        // convert the raw gyro data into a rotation vector
+        float[] deltaVector = new float[4];
+        if (timestamp != 0) {
+            final float dT = (event.timestamp - timestamp) * NS2S;
+            System.arraycopy(event.values, 0, gyro, 0, 3);
+            getRotationVectorFromGyro(gyro, deltaVector, dT / 2.0f);
+        }
+
+        // measurement done, save current time for next interval
+        timestamp = event.timestamp;
+
+        // convert rotation vector into rotation matrix
+        float[] deltaMatrix = new float[9];
+        SensorManager.getRotationMatrixFromVector(deltaMatrix, deltaVector);
+
+        // apply the new rotation interval on the gyroscope based rotation matrix
+        gyroMatrix = matrixMultiplication(gyroMatrix, deltaMatrix);
+
+        // get the gyroscope based orientation from the rotation matrix
+        SensorManager.getOrientation(gyroMatrix, gyroOrientation);
+    }
+
+    private float[] getRotationMatrixFromOrientation(float[] o) {
+        float[] xM = new float[9];
+        float[] yM = new float[9];
+        float[] zM = new float[9];
+
+        float sinX = (float) Math.sin(o[1]);
+        float cosX = (float) Math.cos(o[1]);
+        float sinY = (float) Math.sin(o[2]);
+        float cosY = (float) Math.cos(o[2]);
+        float sinZ = (float) Math.sin(o[0]);
+        float cosZ = (float) Math.cos(o[0]);
+
+        // rotation about x-axis (displayPitch)
+        xM[0] = 1.0f;
+        xM[1] = 0.0f;
+        xM[2] = 0.0f;
+        xM[3] = 0.0f;
+        xM[4] = cosX;
+        xM[5] = sinX;
+        xM[6] = 0.0f;
+        xM[7] = -sinX;
+        xM[8] = cosX;
+
+        // rotation about y-axis (displayRoll)
+        yM[0] = cosY;
+        yM[1] = 0.0f;
+        yM[2] = sinY;
+        yM[3] = 0.0f;
+        yM[4] = 1.0f;
+        yM[5] = 0.0f;
+        yM[6] = -sinY;
+        yM[7] = 0.0f;
+        yM[8] = cosY;
+
+        // rotation about z-axis (azimuth)
+        zM[0] = cosZ;
+        zM[1] = sinZ;
+        zM[2] = 0.0f;
+        zM[3] = -sinZ;
+        zM[4] = cosZ;
+        zM[5] = 0.0f;
+        zM[6] = 0.0f;
+        zM[7] = 0.0f;
+        zM[8] = 1.0f;
+
+        // rotation order is y, x, z (displayRoll, displayPitch, azimuth)
+        float[] resultMatrix = matrixMultiplication(xM, yM);
+        resultMatrix = matrixMultiplication(zM, resultMatrix);
+        return resultMatrix;
+    }
+    private float[] matrixMultiplication(float[] A, float[] B) {
+        float[] result = new float[9];
+
+        result[0] = A[0] * B[0] + A[1] * B[3] + A[2] * B[6];
+        result[1] = A[0] * B[1] + A[1] * B[4] + A[2] * B[7];
+        result[2] = A[0] * B[2] + A[1] * B[5] + A[2] * B[8];
+
+        result[3] = A[3] * B[0] + A[4] * B[3] + A[5] * B[6];
+        result[4] = A[3] * B[1] + A[4] * B[4] + A[5] * B[7];
+        result[5] = A[3] * B[2] + A[4] * B[5] + A[5] * B[8];
+
+        result[6] = A[6] * B[0] + A[7] * B[3] + A[8] * B[6];
+        result[7] = A[6] * B[1] + A[7] * B[4] + A[8] * B[7];
+        result[8] = A[6] * B[2] + A[7] * B[5] + A[8] * B[8];
+
+        return result;
+    }
+
+    public static final float EPSILON = 0.000000001f;
+
+    private void getRotationVectorFromGyro(float[] gyroValues,
+                                           float[] deltaRotationVector,
+                                           float timeFactor) {
+        float[] normValues = new float[3];
+
+        // Calculate the angular speed of the sample
+        float omegaMagnitude =
+                (float) Math.sqrt(gyroValues[0] * gyroValues[0] +
+                        gyroValues[1] * gyroValues[1] +
+                        gyroValues[2] * gyroValues[2]);
+
+        // Normalize the rotation vector if it's big enough to get the axis
+        if (omegaMagnitude > EPSILON) {
+            normValues[0] = gyroValues[0] / omegaMagnitude;
+            normValues[1] = gyroValues[1] / omegaMagnitude;
+            normValues[2] = gyroValues[2] / omegaMagnitude;
+        }
+
+        // Integrate around this axis with the angular speed by the timestep
+        // in order to get a delta rotation from this sample over the timestep
+        // We will convert this axis-angle representation of the delta rotation
+        // into a quaternion before turning it into the rotation matrix.
+        float thetaOverTwo = omegaMagnitude * timeFactor;
+        float sinThetaOverTwo = (float) Math.sin(thetaOverTwo);
+        float cosThetaOverTwo = (float) Math.cos(thetaOverTwo);
+        deltaRotationVector[0] = sinThetaOverTwo * normValues[0];
+        deltaRotationVector[1] = sinThetaOverTwo * normValues[1];
+        deltaRotationVector[2] = sinThetaOverTwo * normValues[2];
+        deltaRotationVector[3] = cosThetaOverTwo;
+    }
+
+
+    float mPitch, mRoll, mYaw;
+    Float newPitchOutQ = 0f;
+    Float newRollOutQ = 0f;
+    Float newYawOutQ = 0f;
+    Float getPitchQ = 0f;
+    Float getRollQ = 0f;
+    Float getYawQ = 0f;
+
+    // computing quaternion values
+    private void computeQuaternion() {
+        float R[] = new float[9];
+        float I[] = new float[9];
+        if (mMagneticField != null && mGravity != null) {
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mMagneticField);
+            if (success) {
+                float[] mOrientation = new float[3];
+                float[] mQuaternion = new float[4];
+                SensorManager.getOrientation(R, mOrientation);
+
+                SensorManager.getQuaternionFromVector(mQuaternion, mOrientation);
+
+                mYaw = mQuaternion[1]; // orientation contains: azimuth(yaw), pitch and Roll
+                mPitch = mQuaternion[2];
+                mRoll = mQuaternion[3];
+
+                newPitchOutQ = getPitchQ - mPitch;
+                newRollOutQ = getRollQ - mRoll;
+                newYawOutQ = getYawQ - mYaw;
+
+                getPitchQ = mPitch;
+                getRollQ = mRoll;
+                getYawQ = mYaw;
+
+                Log.d("oncomputeQuaternion","getPitchQ"+getPitchQ);
+                Log.d("oncomputeQuaternion","getRollQ"+getRollQ);
+                Log.d("oncomputeQuaternion","getYawQ"+getYawQ);
+            }
+        }
+    }
+
+
+
+    public void printArray(String name,float[] array){
+
+        for (int v = 0; v < accel.length; v++) {
+            Log.d("printarray","pos "+v+" "+name+": "+array[v]);
+        }
+
+    }
+
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
 
 }
 

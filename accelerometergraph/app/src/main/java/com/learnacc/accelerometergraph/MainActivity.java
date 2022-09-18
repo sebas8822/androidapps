@@ -49,11 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private Viewport viewport;
 
     //Available in the entire application - the realtime chart
-    LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-            //new DataPoint(0, 1),
-
-    });
-
+    LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
 
     LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(new DataPoint[] {
             //new DataPoint(0, 1),
@@ -164,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         viewport.setScrollable(true);
         viewport.setXAxisBoundsManual(true);
         series.setColor(Color.RED);
-        series2.setColor(Color.YELLOW);
+        series2.setColor(Color.BLUE);
         series3.setColor(Color.GREEN);
         graph.addSeries(series);
         graph.addSeries(series2);
