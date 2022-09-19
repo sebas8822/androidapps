@@ -44,11 +44,14 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
 
-    private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed, tv_Xaxis, tv_Yaxis, tv_pith,tv_yaw, tv_XaxisCali, tv_YaxisCali,tv_distance,tv_totalHours, tv_total_Current,tv_aveSpeed;
+    private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed, tv_Xaxis, tv_Yaxis, tv_pith,tv_yaw, tv_XaxisCali, tv_YaxisCali,tv_distance,tv_totalHours,
+            tv_total_Current,tv_aveSpeed,tv_finalScore,tv_safeAccel,tv_safeDesa,tv_safeLeft,tv_safeRight,tv_hardAccel,tv_hardDes,tv_sharpLeft,tv_sharpRight;
     private Button bt_startTrip;
     private static final String[] unit = {"km/h", "mph", "meter/sec", "knots"};
     private int unitType;
@@ -63,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private GraphView grapht;
 
     long previousTime = 0;
-
+    private Timer fuseTimer = new Timer();
+    public static final int TIME_CONSTANT = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tv_total_Current = (TextView) findViewById(R.id.tv_total_Current);
         tv_totalHours= (TextView) findViewById(R.id.tv_totalHours);
         tv_aveSpeed = (TextView) findViewById(R.id.tv_aveSpeed);
+        tv_finalScore= (TextView) findViewById(R.id.tv_finalScore);
+        tv_safeAccel= (TextView) findViewById(R.id.tv_safeAccel);
+        tv_safeDesa= (TextView) findViewById(R.id.tv_safeDesa);
+        tv_safeLeft= (TextView) findViewById(R.id.tv_safeLeft);
+        tv_safeRight= (TextView) findViewById(R.id.tv_safeRight);
+        tv_hardAccel= (TextView) findViewById(R.id.tv_hardAccel);
+        tv_hardDes= (TextView) findViewById(R.id.tv_hardDes);
+        tv_sharpLeft= (TextView) findViewById(R.id.tv_sharpLeft);
+        tv_sharpRight= (TextView) findViewById(R.id.tv_sharpRight);
+
+
+
+
+
+
 
         bt_startTrip =(Button) findViewById(R.id.bt_startTrip);
         bt_startTrip.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +201,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         TDOWNseries.setColor(Color.WHITE);
         graph.addSeries(TDOWNseries);
 
+        // computing sensor values
+        gyroOrientation[0] = 0.0f;
+        gyroOrientation[1] = 0.0f;
+        gyroOrientation[2] = 0.0f;
 
+        // initialise gyroMatrix with identity matrix
+        gyroMatrix[0] = 1.0f;
+        gyroMatrix[1] = 0.0f;
+        gyroMatrix[2] = 0.0f;
+        gyroMatrix[3] = 0.0f;
+        gyroMatrix[4] = 1.0f;
+        gyroMatrix[5] = 0.0f;
+        gyroMatrix[6] = 0.0f;
+        gyroMatrix[7] = 0.0f;
+        gyroMatrix[8] = 1.0f;
 
 
 
@@ -192,6 +225,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         /**Init Sensors*/// get sensorManager and initialise sensor listeners
         mSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         initListeners();
+        // wait for one second until gyroscope and magnetometer/accelerometer
+        // data is initialised then scedule the complementary filter task
+        fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
+                2000, TIME_CONSTANT);
+        // analysing behavior every 2 sec
+       // fuseTimer.scheduleAtFixedRate(new BehaviorAnalysis(), 1000, 2000);
+
+        //resetting the sensor values every 30 sec
+        fuseTimer.scheduleAtFixedRate(new ResetSensorValues(), 1000, 30000);
 
 
         new SpeedTask(this).execute("string");
@@ -248,9 +290,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             tvMaxSpeed.setText(numberFormat.format(maxSpeed * multiplier));
 
         }
-        //mSensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
-        //removeNotification();
 
 
     }
@@ -357,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
                     NumberFormat numberFormat = NumberFormat.getNumberInstance();
-                    numberFormat.setMaximumFractionDigits(1);
+                    numberFormat.setMaximumFractionDigits(0);
 
 
                     if(previousLocation!=null){
@@ -577,6 +617,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
         }
         computeQuaternion();
+        drivingAnalysis(xAccelerometer,getPitchQ,yAccelerometer,getRollQ);
         drawGraph();
 
         /**No necesesary just o display the current time runing*/
@@ -584,7 +625,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int totalMinutes = (int) (((currentTime-previousTime) / (1000*60)) % 60);
         int hours   = (int) (((currentTime-previousTime) / (1000*60*60)) % 24);
         int seconds = (int) ((currentTime-previousTime) / 1000) % 60 ;
-        tv_total_Current.setText(String.valueOf(totalMinutes)+" Minutes "+String.valueOf(seconds)+" seconds");
+        tv_total_Current.setText(String.valueOf(totalMinutes)+" Min "+String.valueOf(seconds)+" sec");
 
 
 
@@ -681,12 +722,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             zPreviousAcc = zAccelerometer;
             Log.d("calibrateAccelerometer","xAccCalibrated"+ xAccCalibrated);
             Log.d("calibrateAccelerometer","yAccCalibrated"+ yAccCalibrated);
-
-
-
-
-
-
         }
     }
 
@@ -899,7 +934,207 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-   // public void drivingAnalysis()
+
+    private float[] fusedOrientation = new float[3];
+    float pitchOut, rollOut, yawOut;
+    Float getPitch = 0f;
+    Float getRoll = 0f;
+    Float getYaw = 0f;
+    // normal - sensor fusion, Q - denotes quaternion
+    Float newPitchOut = 0f;
+    Float newRollOut = 0f;
+    Float newYawOut = 0f;
+
+    // sensor fusion values are computed at every 10 sec as initialized earlier
+    private class calculateFusedOrientationTask extends TimerTask {
+        float filter_coefficient = 0.85f;
+        float oneMinusCoeff = 1.0f - filter_coefficient;
+
+        public void run() {
+            // Azimuth
+            if (gyroOrientation[0] < -0.5 * Math.PI && accMagOrientation[0] > 0.0) {
+                fusedOrientation[0] = (float) (filter_coefficient * (gyroOrientation[0] + 2.0 * Math.PI) + oneMinusCoeff * accMagOrientation[0]);
+                fusedOrientation[0] -= (fusedOrientation[0] > Math.PI) ? 2.0 * Math.PI : 0;
+            } else if (accMagOrientation[0] < -0.5 * Math.PI && gyroOrientation[0] > 0.0) {
+                fusedOrientation[0] = (float) (filter_coefficient * gyroOrientation[0] + oneMinusCoeff * (accMagOrientation[0] + 2.0 * Math.PI));
+                fusedOrientation[0] -= (fusedOrientation[0] > Math.PI) ? 2.0 * Math.PI : 0;
+            } else
+                fusedOrientation[0] = filter_coefficient * gyroOrientation[0] + oneMinusCoeff * accMagOrientation[0];
+
+            // Pitch
+            if (gyroOrientation[1] < -0.5 * Math.PI && accMagOrientation[1] > 0.0) {
+                fusedOrientation[1] = (float) (filter_coefficient * (gyroOrientation[1] + 2.0 * Math.PI) + oneMinusCoeff * accMagOrientation[1]);
+                fusedOrientation[1] -= (fusedOrientation[1] > Math.PI) ? 2.0 * Math.PI : 0;
+            } else if (accMagOrientation[1] < -0.5 * Math.PI && gyroOrientation[1] > 0.0) {
+                fusedOrientation[1] = (float) (filter_coefficient * gyroOrientation[1] + oneMinusCoeff * (accMagOrientation[1] + 2.0 * Math.PI));
+                fusedOrientation[1] -= (fusedOrientation[1] > Math.PI) ? 2.0 * Math.PI : 0;
+            } else
+                fusedOrientation[1] = filter_coefficient * gyroOrientation[1] + oneMinusCoeff * accMagOrientation[1];
+
+            // Roll
+            if (gyroOrientation[2] < -0.5 * Math.PI && accMagOrientation[2] > 0.0) {
+                fusedOrientation[2] = (float) (filter_coefficient * (gyroOrientation[2] + 2.0 * Math.PI) + oneMinusCoeff * accMagOrientation[2]);
+                fusedOrientation[2] -= (fusedOrientation[2] > Math.PI) ? 2.0 * Math.PI : 0;
+            } else if (accMagOrientation[2] < -0.5 * Math.PI && gyroOrientation[2] > 0.0) {
+                fusedOrientation[2] = (float) (filter_coefficient * gyroOrientation[2] + oneMinusCoeff * (accMagOrientation[2] + 2.0 * Math.PI));
+                fusedOrientation[2] -= (fusedOrientation[2] > Math.PI) ? 2.0 * Math.PI : 0;
+            } else
+                fusedOrientation[2] = filter_coefficient * gyroOrientation[2] + oneMinusCoeff * accMagOrientation[2];
+
+            // Overwrite gyro matrix and orientation with fused orientation to comensate gyro drift
+            gyroMatrix = getRotationMatrixFromOrientation(fusedOrientation);
+            System.arraycopy(fusedOrientation, 0, gyroOrientation, 0, 3);
+
+            pitchOut = fusedOrientation[1];
+            rollOut = fusedOrientation[2];
+            yawOut = fusedOrientation[0];
+
+            // present instance values
+            newPitchOut = getPitch - pitchOut;
+            newRollOut = getRoll - rollOut;
+            newYawOut = getYaw - yawOut;
+
+            // saving values for calibration
+            getPitch = pitchOut;
+            getRoll = rollOut;
+            getYaw = yawOut;
+        }
+    }
+
+
+    // final pitch and yaw values
+    int finalOverYaw = 0;
+    int finalOverPitch = 0;// for 30 sec sensor values reset
+    int getFinalOverYaw = 0;
+    int getFinalOverPitch = 0;
+    int getFinalOverX = 0;
+    int getFinalOverY = 0;
+    //counter for accelerometer reading
+    int overX = 0;
+    int overY = 0;
+
+    // sensor values computed for the last 30 sec
+    private class ResetSensorValues extends TimerTask {
+
+        @Override
+        public void run() {
+            finalOverYaw = finalOverYaw - getFinalOverYaw;
+            finalOverPitch = finalOverPitch - getFinalOverPitch;
+            overX = overX - getFinalOverX;
+            overY = overY - getFinalOverY;
+
+            getFinalOverPitch = finalOverPitch;
+            getFinalOverYaw = finalOverYaw;
+            getFinalOverX = overX;
+            getFinalOverY = overY;
+            Log.i("ResetSensorValues", "final Pitch : " + finalOverPitch);
+            Log.i("ResetSensorValues", "final Yaw : " + finalOverYaw);
+            Log.i("ResetSensorValues", "final overX : " + overX);
+            Log.i("ResetSensorValues", "final overY : " + overY);
+        }
+    }
+
+
+    int finaScoreCounter=0;
+    int SAC =0;
+    int SDC =0;
+    int HAC =0;
+    int HDC =0;
+    int SLC =0;
+    int SRC =0;
+    int SHLC =0;
+    int SHRC =0;
+    float x = 0.1f;
+    float y = -2.6f;
+    float p = 0.14f;
+    float r = 0.1f;
+    double scoreTrip = 100;
+    double finalScoreTrip;
+
+    public void drivingAnalysis(float yAccelerometer, float getPitch, float xAccelerometer, float getRoll ){
+
+       if(startTripState == true){
+
+           //Safe Driving
+           if(yAccelerometer>1.3 && yAccelerometer<2.5){
+               if (getPitch<-0.08 && getPitch>-0.12){
+                   SAC++;
+                   Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccelerometer+" Pi: "+getPitch);
+               }
+           }
+           if(yAccelerometer<-1.3 && yAccelerometer>-2.5){
+               if (getPitchQ>0.08 && getPitchQ<0.12){
+                   SDC++;
+                   Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccelerometer+" Pi:"+getPitch);
+               }
+           }
+           if(xAccelerometer<-1.8 && xAccelerometer>-3.0){
+               if (getRoll>0.10 && getRoll<0.30){
+                   SLC++;
+                   Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccelerometer+" RO: "+getRoll);
+               }
+           }
+           if(xAccelerometer>1.8 && xAccelerometer<3.0){
+               if (getRoll<-0.10 && getRoll>-0.30){
+                   SRC++;
+                   Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccelerometer+" RO: "+getRoll);
+               }
+           }
+           //Hard Driving
+           if(yAccelerometer>2.5 ){
+               if (getPitch<-0.12){
+                   HAC++;
+                   Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccelerometer+" Pi:"+getPitch);
+               }
+           }
+
+
+           if(yAccelerometer<-2.5 ){
+               if (getPitch>0.12){
+                   HDC++;
+                   Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccelerometer+"Pi"+getPitch);
+               }
+           }
+           if(xAccelerometer<-3.0){
+               if (getRoll>0.30){
+                   SHLC++;
+                   Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccelerometer+" RO: "+getRoll);
+               }
+           }
+           if(xAccelerometer>3.0){
+               if (getRoll<-0.30){
+                   SHRC++;
+                   Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccelerometer+" RO: "+getRoll);
+               }
+           }
+
+       }else{
+           double reductionFactor = 0.3 * HAC + 0.2 * HDC + 0.2 * SHLC + 0.2 * SHRC ;
+           finalScoreTrip = scoreTrip-reductionFactor;
+
+           SAC =0;
+           SDC =0;
+           HAC =0;
+           HDC =0;
+           SLC =0;
+           SRC =0;
+           SHLC =0;
+           SHRC =0;
+
+       }
+
+       //tv_finalScore.setText("FSC: "+finaScoreCounter);
+       tv_safeAccel.setText(" SAC: "+ SAC);
+       tv_safeDesa.setText(" SDC: "+ SDC);
+       tv_safeLeft.setText(" SLC: "+ SLC);
+       tv_safeRight.setText(" SRC: "+ SRC);
+       tv_hardAccel.setText(" HAC: "+ HAC);
+       tv_hardDes.setText(" HDC: "+ HDC);
+       tv_sharpLeft.setText(" SHLC: "+ SHLC);
+       tv_sharpRight.setText(" SHRC: "+ SHRC);
+       tv_finalScore.setText(" FS: "+finalScoreTrip);
+
+   }
 
 
 
@@ -922,14 +1157,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //DURING THE TRIP
             // during the start of a trip, values are initialized
             // change the button to display "End" to end the trip
+            startTripState = true;
+
             bt_startTrip.setText("End Trip");
             bt_startTrip.setBackgroundColor(getResources().getColor(R.color.StateButton));
             previousLocation = null;
             StartTime = System.currentTimeMillis();
+            finalScoreTrip=0;
             //suddenBreaksCount = 0;
             //suddenAcceleration = 0;
             //scoreList.clear();
-            startTripState = true;
+
 
             //checkReadings();
 
@@ -957,13 +1195,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             int seconds = (int) ((EndTime-StartTime)  / 1000) % 60 ;
 
             //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
-            tv_totalHours.setText(time+"  "+Math.round(elapse*100)/100);
+            tv_totalHours.setText(String.format("%.2f", elapse)+"Min");
+
 
 
 
 
             double avgSpeedKM = distanceKM / totalTimeTraveledMin;
-            tv_aveSpeed.setText(String.valueOf(avgSpeedKM)+" AveSpeed ");
+            tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM)+" AveSpeed ");
 
 
             /**SAVE VALUES fuction*///Save values

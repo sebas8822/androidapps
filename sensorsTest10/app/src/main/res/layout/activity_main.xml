@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#00ee00"
-                android:textSize="80sp" />
+                android:textSize="70sp" />
 
             <TextView
                 android:id="@+id/tvUnitc"
@@ -169,7 +169,7 @@
             <Button
                 android:id="@+id/bt_startTrip"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="121dp"
+                android:layout_width="109dp"
                 android:layout_height="121dp"
                 android:backgroundTint="@color/blue_sky_500"
                 android:text="Start Trip"
@@ -196,19 +196,89 @@
                 android:id="@+id/tv_total_Current"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Current Time app runing" />
+                android:text="TTimeAppRun" />
 
             <TextView
                 android:id="@+id/tv_totalHours"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total Time Traveled" />
+                android:text="TimeTraveled" />
 
             <TextView
                 android:id="@+id/tv_aveSpeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Average Speed" />
+
+            <TextView
+                android:id="@+id/tv_finalScore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="FS"
+                android:textAlignment="center"
+                android:textColor="#11EA1A"
+                android:textSize="25dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_safeAccel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SAC" />
+
+            <TextView
+                android:id="@+id/tv_safeDesa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SDC" />
+
+            <TextView
+                android:id="@+id/tv_safeLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SLC" />
+
+            <TextView
+                android:id="@+id/tv_safeRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SRC" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_hardAccel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HAC" />
+
+            <TextView
+                android:id="@+id/tv_hardDes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HDC" />
+
+            <TextView
+                android:id="@+id/tv_sharpLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SHLC" />
+
+            <TextView
+                android:id="@+id/tv_sharpRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SHRC" />
         </LinearLayout>
 
     </LinearLayout>
