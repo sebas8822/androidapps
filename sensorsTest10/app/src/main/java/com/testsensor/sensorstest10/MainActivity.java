@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 
+import com.google.android.material.internal.NavigationMenuPresenter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
@@ -51,15 +53,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed, tv_Xaxis, tv_Yaxis, tv_pith,tv_yaw, tv_XaxisCali, tv_YaxisCali,tv_distance,tv_totalHours,
-            tv_total_Current,tv_aveSpeed,tv_finalScore,tv_safeAccel,tv_safeDesa,tv_safeLeft,tv_safeRight,tv_hardAccel,tv_hardDes,tv_sharpLeft,tv_sharpRight;
-    private Button bt_startTrip;
+            tv_total_Current,tv_aveSpeed,tv_finalScore,tv_safeAccel,tv_safeDesa,tv_safeLeft,tv_safeRight,tv_hardAccel,tv_hardDes,tv_sharpLeft,tv_sharpRight,tv_currentFilter;
+    private Button bt_startTrip, bt_update_filter;
+    private EditText et_filter_coefficient;
     private static final String[] unit = {"km/h", "mph", "meter/sec", "knots"};
     private int unitType;
     private NotificationCompat.Builder mbuilder;
     private NotificationManager mnotice;
     private double maxSpeed = -100.0;
     private MainActivity activity;
-
+    private Context context;
     private SharedPreferences prefs;
 
     private SensorManager mSensorManager = null;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     long previousTime = 0;
     private Timer fuseTimer = new Timer();
     public static final int TIME_CONSTANT = 10;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +104,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tv_hardDes= (TextView) findViewById(R.id.tv_hardDes);
         tv_sharpLeft= (TextView) findViewById(R.id.tv_sharpLeft);
         tv_sharpRight= (TextView) findViewById(R.id.tv_sharpRight);
+        tv_currentFilter= (TextView) findViewById(R.id.tv_currentFilter);
+
+        et_filter_coefficient= (EditText) findViewById(R.id.et_filter_coefficient);
+        et_filter_coefficient.setText(String.valueOf(filter_coefficient));
 
 
 
 
+        bt_update_filter=(Button) findViewById(R.id.bt_update_filter);
+        bt_update_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filter_coefficient=Float.valueOf(et_filter_coefficient.getText().toString());
 
 
+            }
+        });
 
         bt_startTrip =(Button) findViewById(R.id.bt_startTrip);
         bt_startTrip.setOnClickListener(new View.OnClickListener() {
@@ -184,21 +199,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         viewport = graph.getViewport();// the variable is declare to be used in whole app
         viewport.setScrollable(true);
         viewport.setXAxisBoundsManual(true);
-        Xseries.setColor(Color.RED);
+        Xseries.setColor(Color.MAGENTA);
         graph.addSeries(Xseries);
         Yseries.setColor(Color.GREEN);
         graph.addSeries(Yseries);
-        XCseries.setColor(Color.MAGENTA);
+        XCseries.setColor(Color.RED);
         graph.addSeries(XCseries);
-        YCseries.setColor(Color.GRAY);
+        YCseries.setColor(Color.RED);
         graph.addSeries(YCseries);
-        Pseries.setColor(Color.BLUE);
+        Pseries.setColor(Color.YELLOW);
         graph.addSeries(Pseries);
-        Rseries.setColor(Color.CYAN);
+        Rseries.setColor(Color.WHITE);
         graph.addSeries(Rseries);
-        TUPseries.setColor(Color.WHITE);
+        TUPseries.setColor(Color.RED);
         graph.addSeries(TUPseries);
-        TDOWNseries.setColor(Color.WHITE);
+        TDOWNseries.setColor(Color.RED);
         graph.addSeries(TDOWNseries);
 
         // computing sensor values
@@ -237,6 +252,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         new SpeedTask(this).execute("string");
+    }
+
+    private void updateCoeficient() {
+
     }
 
     // save into the the sabe activity
@@ -616,9 +635,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 System.arraycopy(event.values, 0, magnet, 0, 3);
                 break;
         }
+        tv_currentFilter.setText(String.valueOf(filter_coefficient));
         computeQuaternion();
-        drivingAnalysis(xAccelerometer,getPitchQ,yAccelerometer,getRollQ);
-        drawGraph();
+        //drivingAnalysisWithRoll(xAccCalibrated,newPitchOut,yAccCalibrated,newRollOut);
+        //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
+        //drivingAnalysisWithYaw(xAccCalibrated,newPitchOut,yAccCalibrated,newYawOut);
+        //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
+        drawGraphSpecific();
+        drivingAnalysisWithRoll();
 
         /**No necesesary just o display the current time runing*/
         long currentTime = System.currentTimeMillis();
@@ -639,19 +663,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    public void drawGraph(){
-        tv_Xaxis.setBackgroundColor(Color.RED);
+
+
+    public void drawGraphSpecific(){
+
+
+        tv_Xaxis.setBackgroundColor(Color.MAGENTA);
         tv_Xaxis.setText("XAccel: "+String.valueOf(xAccelerometer));
         tv_Yaxis.setBackgroundColor(Color.GREEN);
         tv_Yaxis.setText("YAccel: "+String.valueOf(yAccelerometer));
-        tv_XaxisCali.setBackgroundColor(Color.MAGENTA);
-        tv_XaxisCali.setText("XAccelCAL: "+String.valueOf(xAccCalibrated));
-        tv_YaxisCali.setBackgroundColor(Color.GRAY);
-        tv_YaxisCali.setText("YAccelCAL: "+String.valueOf(yAccCalibrated));
-        tv_pith.setBackgroundColor(Color.BLUE);
-        tv_pith.setText("Pitch: "+String.valueOf(getPitchQ));
-        tv_yaw.setBackgroundColor(Color.CYAN);
-        tv_yaw.setText("yaw: "+String.valueOf(getRollQ));
+//        tv_XaxisCali.setBackgroundColor(Color.MAGENTA);
+//        tv_XaxisCali.setText("XAccelCAL: "+String.valueOf(xAccCalibrated));
+//        tv_YaxisCali.setBackgroundColor(Color.GRAY);
+//        tv_YaxisCali.setText("YAccelCAL: "+String.valueOf(yAccCalibrated));
+        tv_pith.setBackgroundColor(Color.YELLOW);
+        tv_pith.setText("Pitch: "+String.valueOf(newPitchOut));
+        tv_yaw.setBackgroundColor(Color.WHITE);
+        tv_yaw.setText("yaw: "+String.valueOf(newRollOut));
 
 
 
@@ -682,12 +710,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-        Xseries.appendData( new DataPoint(pointsPlotted,xAccelerometer ),true,pointsPlotted);
-        Yseries.appendData( new DataPoint(pointsPlotted,yAccelerometer ),true,pointsPlotted);
-        XCseries.appendData( new DataPoint(pointsPlotted,xAccCalibrated ),true,pointsPlotted);
-        YCseries.appendData( new DataPoint(pointsPlotted,yAccCalibrated ),true,pointsPlotted);
-        Pseries.appendData(new DataPoint(pointsPlotted, getPitchQ), true, pointsPlotted);
-        Rseries.appendData(new DataPoint(pointsPlotted, getRollQ), true, pointsPlotted);
+        Xseries.appendData( new DataPoint(pointsPlotted,xAccCalibrated ),true,pointsPlotted);
+        Yseries.appendData( new DataPoint(pointsPlotted,yAccCalibrated ),true,pointsPlotted);
+        XCseries.appendData( new DataPoint(pointsPlotted,3.0 ),true,pointsPlotted);
+        YCseries.appendData( new DataPoint(pointsPlotted,-3.0 ),true,pointsPlotted);
+        Pseries.appendData(new DataPoint(pointsPlotted, newPitchOut), true, pointsPlotted);
+        Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
         TUPseries.appendData( new DataPoint(pointsPlotted,0.12 ),true,pointsPlotted);
         TDOWNseries.appendData( new DataPoint(pointsPlotted,-0.12 ),true,pointsPlotted);
 
@@ -725,11 +753,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    boolean writeCheck = false;
+    Boolean yAccChange = false;
+    Boolean xAccChange = false;
+    int count = 1;
+    int overYaw = 0;
+    int overPitch = 0;
+    //counter for quaternion
+    int overYawQ = 0;
+    int overPitchQ = 0;
+
+
+
+
     //variables for acceleromneter calibration
     private float[] rotationMatrix = new float[9];
     private float[] accMagOrientation = new float[3];
 
-
+    //The low-pass filtering of the noisy accelerometer/magnetometer signal accMagOrientation  are
+    // orientation angles averaged over time within a constant time window.
     // accelerometer
     public void calculateAccMagOrientation() {
         if (SensorManager.getRotationMatrix(rotationMatrix, null, accel, magnet)) {
@@ -944,10 +986,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Float newPitchOut = 0f;
     Float newRollOut = 0f;
     Float newYawOut = 0f;
-
+    float filter_coefficient = 0.45f;
     // sensor fusion values are computed at every 10 sec as initialized earlier
     private class calculateFusedOrientationTask extends TimerTask {
-        float filter_coefficient = 0.85f;
+        //float filter_coefficient = 0.50f;
+
         float oneMinusCoeff = 1.0f - filter_coefficient;
 
         public void run() {
@@ -1051,90 +1094,162 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     double scoreTrip = 100;
     double finalScoreTrip;
 
-    public void drivingAnalysis(float yAccelerometer, float getPitch, float xAccelerometer, float getRoll ){
+    public void drivingAnalysisWithRoll(){
 
        if(startTripState == true){
 
            //Safe Driving
-           if(yAccelerometer>1.3 && yAccelerometer<2.5){
-               if (getPitch<-0.08 && getPitch>-0.12){
+           if(yAccCalibrated>1.3 && yAccCalibrated<2.5){
+               if (newPitchOut<-0.08 && newPitchOut>-0.12){
                    SAC++;
-                   Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccelerometer+" Pi: "+getPitch);
+                   Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccCalibrated+" Pi: "+newPitchOut);
                }
            }
-           if(yAccelerometer<-1.3 && yAccelerometer>-2.5){
-               if (getPitchQ>0.08 && getPitchQ<0.12){
+           if(yAccCalibrated<-1.3 && yAccCalibrated>-2.5){
+               if (newPitchOut>0.08 && newPitchOut<0.12){
                    SDC++;
-                   Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccelerometer+" Pi:"+getPitch);
+                   Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
                }
            }
-           if(xAccelerometer<-1.8 && xAccelerometer>-3.0){
-               if (getRoll>0.10 && getRoll<0.30){
+           if(xAccCalibrated<-1.8 && xAccCalibrated>-3.0){
+               if (newRollOut>0.10 && newRollOut<0.30){
                    SLC++;
-                   Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccelerometer+" RO: "+getRoll);
+                   Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                }
            }
-           if(xAccelerometer>1.8 && xAccelerometer<3.0){
-               if (getRoll<-0.10 && getRoll>-0.30){
+           if(xAccCalibrated>1.8 && xAccCalibrated<3.0){
+               if (newRollOut<-0.10 && newRollOut>-0.30){
                    SRC++;
-                   Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccelerometer+" RO: "+getRoll);
+                   Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                }
            }
            //Hard Driving
-           if(yAccelerometer>2.5 ){
-               if (getPitch<-0.12){
+           if(yAccCalibrated>2.5 ){
+               if (newPitchOut<-0.12){
                    HAC++;
-                   Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccelerometer+" Pi:"+getPitch);
+                   Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
                }
            }
 
 
-           if(yAccelerometer<-2.5 ){
-               if (getPitch>0.12){
+           if(yAccCalibrated<-2.5 ){
+               if (newPitchOut>0.12){
                    HDC++;
-                   Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccelerometer+"Pi"+getPitch);
+                   Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccCalibrated+"Pi: "+newPitchOut);
                }
            }
-           if(xAccelerometer<-3.0){
-               if (getRoll>0.30){
+           if(xAccCalibrated<-3.0){
+               if (newRollOut>0.30){
                    SHLC++;
-                   Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccelerometer+" RO: "+getRoll);
+                   Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                }
            }
-           if(xAccelerometer>3.0){
-               if (getRoll<-0.30){
+           if(xAccCalibrated>3.0){
+               if (newRollOut<-0.30){
                    SHRC++;
-                   Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccelerometer+" RO: "+getRoll);
+                   Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccCalibrated+" RO: "+newRollOut);
                }
            }
-
-       }else{
-           double reductionFactor = 0.3 * HAC + 0.2 * HDC + 0.2 * SHLC + 0.2 * SHRC ;
-           finalScoreTrip = scoreTrip-reductionFactor;
-
-           SAC =0;
-           SDC =0;
-           HAC =0;
-           HDC =0;
-           SLC =0;
-           SRC =0;
-           SHLC =0;
-           SHRC =0;
 
        }
 
        //tv_finalScore.setText("FSC: "+finaScoreCounter);
-       tv_safeAccel.setText(" SAC: "+ SAC);
-       tv_safeDesa.setText(" SDC: "+ SDC);
-       tv_safeLeft.setText(" SLC: "+ SLC);
-       tv_safeRight.setText(" SRC: "+ SRC);
+       tv_safeAccel.setText("SAC: "+ SAC);
+       tv_safeDesa.setText("SDC: "+ SDC);
+       tv_safeLeft.setText("SLC: "+ SLC);
+       tv_safeRight.setText("SRC: "+ SRC);
        tv_hardAccel.setText(" HAC: "+ HAC);
        tv_hardDes.setText(" HDC: "+ HDC);
        tv_sharpLeft.setText(" SHLC: "+ SHLC);
        tv_sharpRight.setText(" SHRC: "+ SHRC);
-       tv_finalScore.setText(" FS: "+finalScoreTrip);
+
 
    }
+
+    public void drivingAnalysisWithYaw(float xAccel, float Pitch, float yAccel, float yaw ){
+
+        if(startTripState == true){
+
+            //Safe Driving
+            if(yAccel>1.3 && yAccel<2.5){
+                if (Pitch<-0.08 && Pitch>-0.12){
+                    SAC++;
+                    Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccel+" Pi: "+Pitch);
+                }
+            }
+            if(yAccel<-1.3 && yAccel>-2.5){
+                if (Pitch>0.08 && Pitch<0.12){
+                    SDC++;
+                    Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccel+" Pi:"+Pitch);
+                }
+            }
+            if(xAccel<-1.8 && xAccel>-3.0){
+                if (yaw>0.10 && yaw<0.30){
+                    SLC++;
+                    Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccel+" RO: "+yaw);
+                }
+            }
+            if(xAccel>1.8 && xAccel<3.0){
+                if (yaw<-0.10 && yaw>-0.30){
+                    SRC++;
+                    Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccel+" RO: "+yaw);
+                }
+            }
+            //Hard Driving
+            if(yAccel>2.5 ){
+                if (Pitch<-0.12){
+                    HAC++;
+                    Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccel+" Pi:"+Pitch);
+                }
+            }
+
+
+            if(yAccel<-2.5 ){
+                if (Pitch>0.12){
+                    HDC++;
+                    Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccel+"Pi: "+Pitch);
+                }
+            }
+            if(xAccel<-3.0){
+                if (yaw>0.30){
+                    SHLC++;
+                    Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccel+" RO: "+yaw);
+                }
+            }
+            if(xAccel>3.0){
+                if (yaw<-0.30){
+                    SHRC++;
+                    Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccel+" RO: "+yaw);
+                }
+            }
+
+        }else{
+            double reductionFactor = 0.3 * HAC + 0.2 * HDC + 0.2 * SHLC + 0.2 * SHRC ;
+            finalScoreTrip = scoreTrip-reductionFactor;
+
+            SAC =0;
+            SDC =0;
+            HAC =0;
+            HDC =0;
+            SLC =0;
+            SRC =0;
+            SHLC =0;
+            SHRC =0;
+
+        }
+
+        //tv_finalScore.setText("FSC: "+finaScoreCounter);
+        tv_safeAccel.setText(" SAC: "+ SAC);
+        tv_safeDesa.setText(" SDC: "+ SDC);
+        tv_safeLeft.setText(" SLC: "+ SLC);
+        tv_safeRight.setText(" SRC: "+ SRC);
+        tv_hardAccel.setText(" HAC: "+ HAC);
+        tv_hardDes.setText(" HDC: "+ HDC);
+        tv_sharpLeft.setText(" SHLC: "+ SHLC);
+        tv_sharpRight.setText(" SHRC: "+ SHRC);
+        tv_finalScore.setText(" FS: "+finalScoreTrip);
+
+    }
 
 
 
@@ -1175,7 +1290,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //getting the latitude and longitude of the user
 
             // making changes to the UI
-
+            Log.d("Score","finalScoreTrip"+finalScoreTrip);
         } else {
             // END OF THE TRIP
             startTripState = false;
@@ -1197,12 +1312,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
             tv_totalHours.setText(String.format("%.2f", elapse)+"Min");
 
+            double reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC ;
+            finalScoreTrip = scoreTrip-reductionFactor;
+            Log.d("Score","reductionFactor"+reductionFactor);
+            Log.d("Score","finalScoreTrip"+finalScoreTrip);
+            tv_finalScore.setText(" FS: "+finalScoreTrip);
+            SAC =0;
+            SDC =0;
+            HAC =0;
+            HDC =0;
+            SLC =0;
+            SRC =0;
+            SHLC =0;
+            SHRC =0;
+
 
 
 
 
             double avgSpeedKM = distanceKM / totalTimeTraveledMin;
-            tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM)+" AveSpeed ");
+            tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM)+" ASp ");
 
 
             /**SAVE VALUES fuction*///Save values

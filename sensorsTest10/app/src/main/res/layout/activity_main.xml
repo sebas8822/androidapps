@@ -279,6 +279,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="SHRC" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/et_filter_coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Filter"
+                android:textAlignment="center"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/bt_update_filter"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+
+                android:drawableLeft="@drawable/ic_baseline_restart_alt_24" />
+
+            <TextView
+                android:id="@+id/tv_currentFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="current filter" />
         </LinearLayout>
 
     </LinearLayout>
