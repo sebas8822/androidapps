@@ -97,18 +97,21 @@
                 android:id="@+id/tv_YaxisCali"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:text="tv_YaxisCali" />
 
             <TextView
                 android:id="@+id/tv_pith"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="pitch" />
 
             <TextView
                 android:id="@+id/tv_yaw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="yaw" />
 
         </LinearLayout>
@@ -144,16 +147,58 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_height="414dp"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
-            android:layout_width="wrap_content"
-            android:layout_height="333dp"
-            android:layout_marginBottom="68dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="372dp"
+            android:orientation="vertical">
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph"
+                android:layout_width="wrap_content"
+                android:layout_height="332dp"
+                android:layout_marginBottom="68dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/et_threshold_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Filter"
+                android:inputType="number"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/bt_update_threshold"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_baseline_restart_alt_24"
+
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/tv_current_threshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="current filter"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout

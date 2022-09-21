@@ -42,6 +42,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -52,10 +53,13 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
 
-    private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed, tv_Xaxis, tv_Yaxis, tv_pith,tv_yaw, tv_XaxisCali, tv_YaxisCali,tv_distance,tv_totalHours,
-            tv_total_Current,tv_aveSpeed,tv_finalScore,tv_safeAccel,tv_safeDesa,tv_safeLeft,tv_safeRight,tv_hardAccel,tv_hardDes,tv_sharpLeft,tv_sharpRight,tv_currentFilter;
-    private Button bt_startTrip, bt_update_filter;
-    private EditText et_filter_coefficient;
+    private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed,
+            tv_Xaxis, tv_Yaxis, tv_pith,tv_yaw, tv_XaxisCali, tv_YaxisCali,tv_distance,
+            tv_totalHours, tv_total_Current,tv_aveSpeed,tv_finalScore,tv_safeAccel,
+            tv_safeDesa,tv_safeLeft,tv_safeRight,tv_hardAccel,tv_hardDes,tv_sharpLeft,
+            tv_sharpRight,tv_currentFilter, tv_current_threshold;
+    private Button bt_startTrip, bt_update_filter,bt_update_threshold;
+    private EditText et_filter_coefficient, et_threshold_up;
     private static final String[] unit = {"km/h", "mph", "meter/sec", "knots"};
     private int unitType;
     private NotificationCompat.Builder mbuilder;
@@ -105,12 +109,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tv_sharpLeft= (TextView) findViewById(R.id.tv_sharpLeft);
         tv_sharpRight= (TextView) findViewById(R.id.tv_sharpRight);
         tv_currentFilter= (TextView) findViewById(R.id.tv_currentFilter);
+        tv_current_threshold= (TextView) findViewById(R.id.tv_currentFilter);
+        tv_current_threshold.setText(String.valueOf(thresholdOut));
 
         et_filter_coefficient= (EditText) findViewById(R.id.et_filter_coefficient);
         et_filter_coefficient.setText(String.valueOf(filter_coefficient));
 
+        et_threshold_up= (EditText) findViewById(R.id.et_threshold_up);
+        et_threshold_up.setText(String.valueOf(thresholdOut));
 
 
+        bt_update_threshold=(Button) findViewById(R.id.bt_update_threshold);
+        bt_update_threshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                thresholdOut=Double.valueOf(et_filter_coefficient.getText().toString());
+
+
+            }
+        });
 
         bt_update_filter=(Button) findViewById(R.id.bt_update_filter);
         bt_update_filter.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             }
         });
+
 
         bt_startTrip =(Button) findViewById(R.id.bt_startTrip);
         bt_startTrip.setOnClickListener(new View.OnClickListener() {
@@ -203,18 +221,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         graph.addSeries(Xseries);
         Yseries.setColor(Color.GREEN);
         graph.addSeries(Yseries);
-        XCseries.setColor(Color.RED);
-        graph.addSeries(XCseries);
-        YCseries.setColor(Color.RED);
-        graph.addSeries(YCseries);
         Pseries.setColor(Color.YELLOW);
         graph.addSeries(Pseries);
         Rseries.setColor(Color.WHITE);
         graph.addSeries(Rseries);
-        TUPseries.setColor(Color.RED);
-        graph.addSeries(TUPseries);
-        TDOWNseries.setColor(Color.RED);
-        graph.addSeries(TDOWNseries);
+
+        //Thresholds
+        yUPsafe1.setColor(Color.RED);
+        graph.addSeries(yUPsafe1);
+        yUPsafe2.setColor(Color.RED);
+        graph.addSeries(yUPsafe2);
+        yDownsafe1.setColor(Color.RED);
+        graph.addSeries(yDownsafe1);
+        yDownsafe2.setColor(Color.RED);
+        graph.addSeries(yDownsafe2);
+        XUPsafe1.setColor(Color.RED);
+        graph.addSeries(XUPsafe1);
+        XUPsafe2.setColor(Color.RED);
+        graph.addSeries(XUPsafe2);
+        XDownsafe1.setColor(Color.RED);
+        graph.addSeries(XDownsafe1);
+        XDownsafe2.setColor(Color.RED);
+        graph.addSeries(XDownsafe2);
+        yUPHard.setColor(Color.RED);
+        graph.addSeries(yUPHard);
+        yDownHard.setColor(Color.RED);
+        graph.addSeries(yDownHard);
+        XUPHard.setColor(Color.RED);
+        graph.addSeries(XUPHard);
+
+
+
+
+
+
 
         // computing sensor values
         gyroOrientation[0] = 0.0f;
@@ -590,12 +630,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Viewport viewport;
     LineGraphSeries<DataPoint> Xseries = new LineGraphSeries<DataPoint>();
     LineGraphSeries<DataPoint> Yseries = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> XCseries = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> YCseries = new LineGraphSeries<DataPoint>();
     LineGraphSeries<DataPoint> Pseries = new LineGraphSeries<DataPoint>();
     LineGraphSeries<DataPoint> Rseries = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> TUPseries = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> TDOWNseries = new LineGraphSeries<DataPoint>();
+
+    LineGraphSeries<DataPoint> yUPsafe1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> yUPsafe2 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> yDownsafe1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> yDownsafe2 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> XUPsafe1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> XUPsafe2 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> XDownsafe1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> XDownsafe2 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> yUPHard = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> yDownHard = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> XUPHard = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> XDownHard = new LineGraphSeries<DataPoint>();
+
+
     private int pointsPlotted = 10;
 
     @Override
@@ -636,6 +687,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
         }
         tv_currentFilter.setText(String.valueOf(filter_coefficient));
+        tv_current_threshold.setText(String.valueOf(thresholdOut));
         computeQuaternion();
         //drivingAnalysisWithRoll(xAccCalibrated,newPitchOut,yAccCalibrated,newRollOut);
         //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
@@ -695,12 +747,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             pointsPlotted = 1; // reset the variable
             Xseries.resetData(new DataPoint[]{new DataPoint(1,0)});
             Yseries.resetData(new DataPoint[]{new DataPoint(1,0)});
-            XCseries.resetData(new DataPoint[]{new DataPoint(1,0)});
-            YCseries.resetData(new DataPoint[]{new DataPoint(1,0)});
             Pseries.resetData(new DataPoint[]{new DataPoint(1,0)});
             Rseries.resetData(new DataPoint[]{new DataPoint(1,0)});
-            TUPseries.resetData(new DataPoint[]{new DataPoint(1,0)});
-            TDOWNseries.resetData(new DataPoint[]{new DataPoint(1,0)});
+
+            yUPsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
+            yUPsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
+            yDownsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
+            yDownsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
+            XUPsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
+            XUPsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
+            XDownsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
+            XDownsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
+            yUPHard.resetData(new DataPoint[]{new DataPoint(1,0)});
+            yDownHard.resetData(new DataPoint[]{new DataPoint(1,0)});
+            XUPHard.resetData(new DataPoint[]{new DataPoint(1,0)});
+            XDownHard.resetData(new DataPoint[]{new DataPoint(1,0)});
+
+
+
+
+
+
         }
 
 
@@ -712,12 +779,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Xseries.appendData( new DataPoint(pointsPlotted,xAccCalibrated ),true,pointsPlotted);
         Yseries.appendData( new DataPoint(pointsPlotted,yAccCalibrated ),true,pointsPlotted);
-        XCseries.appendData( new DataPoint(pointsPlotted,3.0 ),true,pointsPlotted);
-        YCseries.appendData( new DataPoint(pointsPlotted,-3.0 ),true,pointsPlotted);
         Pseries.appendData(new DataPoint(pointsPlotted, newPitchOut), true, pointsPlotted);
         Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
-        TUPseries.appendData( new DataPoint(pointsPlotted,0.12 ),true,pointsPlotted);
-        TDOWNseries.appendData( new DataPoint(pointsPlotted,-0.12 ),true,pointsPlotted);
+
+
+        yUPsafe1.appendData( new DataPoint(pointsPlotted, 1.3-thresholdOut),true,pointsPlotted);
+        yUPsafe2.appendData( new DataPoint(pointsPlotted, 2.5-thresholdOut),true,pointsPlotted);
+        yDownsafe1.appendData(new DataPoint(pointsPlotted, -1.3+thresholdOut), true, pointsPlotted);
+        yDownsafe2.appendData(new DataPoint(pointsPlotted,-2.5+thresholdOut ), true, pointsPlotted);
+        XUPsafe1.appendData( new DataPoint(pointsPlotted, -1.8+thresholdOut),true,pointsPlotted);
+        XUPsafe2.appendData( new DataPoint(pointsPlotted, -3.0+thresholdOut),true,pointsPlotted);
+        XDownsafe1.appendData(new DataPoint(pointsPlotted, 1.8-thresholdOut), true, pointsPlotted);
+        XDownsafe2.appendData(new DataPoint(pointsPlotted, 3.0-thresholdOut), true, pointsPlotted);
+        yUPHard.appendData( new DataPoint(pointsPlotted, -0.12),true,pointsPlotted);
+        yDownHard.appendData( new DataPoint(pointsPlotted, 0.12),true,pointsPlotted);
+        XUPHard.appendData(new DataPoint(pointsPlotted, -3.0+thresholdOut), true, pointsPlotted);
+        XDownHard.appendData(new DataPoint(pointsPlotted, 3.0-thresholdOut), true, pointsPlotted);
+
+
+
+
 
 
 
@@ -986,7 +1067,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Float newPitchOut = 0f;
     Float newRollOut = 0f;
     Float newYawOut = 0f;
-    float filter_coefficient = 0.45f;
+    float filter_coefficient = 0.45f;// works well
     // sensor fusion values are computed at every 10 sec as initialized earlier
     private class calculateFusedOrientationTask extends TimerTask {
         //float filter_coefficient = 0.50f;
@@ -1093,38 +1174,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float r = 0.1f;
     double scoreTrip = 100;
     double finalScoreTrip;
+    double thresholdOut = 0;
 
     public void drivingAnalysisWithRoll(){
 
        if(startTripState == true){
 
            //Safe Driving
-           if(yAccCalibrated>1.3 && yAccCalibrated<2.5){
+           if(yAccCalibrated>1.3-thresholdOut && yAccCalibrated<2.5-thresholdOut){
                if (newPitchOut<-0.08 && newPitchOut>-0.12){
                    SAC++;
                    Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccCalibrated+" Pi: "+newPitchOut);
                }
            }
-           if(yAccCalibrated<-1.3 && yAccCalibrated>-2.5){
+           if(yAccCalibrated<-1.3 + thresholdOut && yAccCalibrated>-2.5+thresholdOut){
                if (newPitchOut>0.08 && newPitchOut<0.12){
                    SDC++;
                    Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
                }
            }
-           if(xAccCalibrated<-1.8 && xAccCalibrated>-3.0){
+           if(xAccCalibrated<-1.8 +thresholdOut && xAccCalibrated>-3.0 +thresholdOut){
                if (newRollOut>0.10 && newRollOut<0.30){
                    SLC++;
                    Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                }
            }
-           if(xAccCalibrated>1.8 && xAccCalibrated<3.0){
+           if(xAccCalibrated>1.8-thresholdOut && xAccCalibrated<3.0-thresholdOut){
                if (newRollOut<-0.10 && newRollOut>-0.30){
                    SRC++;
                    Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                }
            }
            //Hard Driving
-           if(yAccCalibrated>2.5 ){
+           if(yAccCalibrated>2.5 -thresholdOut){
                if (newPitchOut<-0.12){
                    HAC++;
                    Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
@@ -1132,19 +1214,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
            }
 
 
-           if(yAccCalibrated<-2.5 ){
+           if(yAccCalibrated<-2.5 +thresholdOut){
                if (newPitchOut>0.12){
                    HDC++;
                    Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccCalibrated+"Pi: "+newPitchOut);
                }
            }
-           if(xAccCalibrated<-3.0){
+           if(xAccCalibrated<-3.0+thresholdOut){
                if (newRollOut>0.30){
                    SHLC++;
                    Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                }
            }
-           if(xAccCalibrated>3.0){
+           if(xAccCalibrated>3.0-thresholdOut){
                if (newRollOut<-0.30){
                    SHRC++;
                    Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccCalibrated+" RO: "+newRollOut);
