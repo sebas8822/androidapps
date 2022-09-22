@@ -35,8 +35,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+
+/**https://www.youtube.com/watch?v=wRDLjUK8nyU    https://www.youtube.com/watch?v=b5U8WZM45aY https://www.youtube.com/watch?v=NOVacL7ZPrc  https://www.youtube.com/watch?v=xl0GwkLNpNI */ // to draw the route
 
 public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
@@ -256,8 +262,8 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
     public void settingView(Trip lastTrip){
         /**Set values*/
-        tv_startTrip.setText(lastTrip.getStartTime());
-        tv_endTrip.setText(lastTrip.getEndTime());
+        tv_startTrip.setText(getTimeFromMillis(lastTrip.getStartTime()));
+        tv_endTrip.setText(getTimeFromMillis(lastTrip.getEndTime()));
         tv_startTripLocation.setText(getStartAddressLocation(lastTrip));
         tv_endTripLocation.setText(getEndAddressLocation(lastTrip));
         tv_tripViewData.setText("Position: "+String.valueOf(position)+ "Record "+lastTrip.getEndDate());
@@ -279,6 +285,21 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     private String getStartAddressLocation(Trip trip) {
         trip.getStartLocation();
         return "2 Charles Sturt University, Port Macquarie 2";
+    }
+
+    private String getDateFromMillis(long dateMillis) {
+        Date startDate = new Date(dateMillis);
+        DateFormat df = new SimpleDateFormat("dd:MM:yy");
+
+
+        return df.format(startDate);
+    }
+    private String getTimeFromMillis(long timeMillis) {
+        Date millis = new Date(timeMillis);
+
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+
+        return df.format(millis);
     }
     /**************************************************************/
 

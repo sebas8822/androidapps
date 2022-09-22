@@ -420,7 +420,7 @@ public class StartTripFragment2 extends Fragment {
         super.onPause();
         mSensorManager.unregisterListener(sensorEventListener);
     }
-
+/**
     public void populateTripTable(long userId) {
         String[] num = {"ONE", "DOS", "THREE", "FOUR","FIVE", "SIX","SEVEN", "EIGHT","NINE","TEN"};
         String[] alp = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","E","W","X","Y","Z"};
@@ -459,7 +459,7 @@ public class StartTripFragment2 extends Fragment {
 
 
 
-    }
+    }*/
 
     public void populateSensorTable(long tripId) {
         String[] num = {"ONE", "DOS", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN"};

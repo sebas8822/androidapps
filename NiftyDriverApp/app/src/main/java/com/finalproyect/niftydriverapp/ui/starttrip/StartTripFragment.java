@@ -46,6 +46,9 @@ import androidx.fragment.app.Fragment;
 
 import com.finalproyect.niftydriverapp.MainActivity;
 import com.finalproyect.niftydriverapp.R;
+import com.finalproyect.niftydriverapp.db.AppDatabase;
+import com.finalproyect.niftydriverapp.db.DAO;
+import com.finalproyect.niftydriverapp.db.Trip;
 import com.google.android.material.internal.NavigationMenuPresenter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
@@ -56,6 +59,7 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -85,10 +89,30 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     private Timer fuseTimer = new Timer();
     public static final int TIME_CONSTANT = 10;
 
+    public void setUserid(long userid) {
+        this.userid = userid;
+    }
+    private long userid;
+
+    public void setTripID(long tripID) {
+        this.tripID = tripID;
+    }
+    private long tripID;
+
+    SharedPreferences sp;//Init sharepreferences for user
+
+    AppDatabase db = AppDatabase.getDbInstance(getContext());
+    DAO dao = db.driverDao();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.start_trip_test_fragment, container, false);
+
+        //Init shared preferences
+        sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        long userId = sp.getLong("userId",0);
+        setUserid(userId);
 
 
         tvSpeed = (TextView) view.findViewById(R.id.tvSpeed);
@@ -169,11 +193,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tvUnit.setText(unit[unitType - 1]);
 
 
-        //SAVE VALUE INTO THE CURRENT ACTIVITY
-        if (savedInstanceState != null) {
-            maxSpeed = savedInstanceState.getDouble("maxspeed", -100.0);
-
-        }
         // check if the services are available ASK TO THE USER TO ENABLE
         if (!this.isLocationEnabled(getContext())) {
 
@@ -399,12 +418,14 @@ public void onResume() {
 
     Location previousLocation = null;
     float distanceTraveled = 0;
+    double lat;
+    double lon;
+
     //THIS CLASS PROVIDE THE VARIABLES SPEED lONGITUD AND lATITUD
     private class SpeedTask extends AsyncTask<String, Void, String> {
         Context context;
         float speed = 0.0f;
-        double lat;
-        double lon;
+
         double distance;
         LocationManager locationManager;
 
@@ -1346,15 +1367,7 @@ public void onResume() {
             previousLocation = null;
             StartTime = System.currentTimeMillis();
             finalScoreTrip=0;
-            //suddenBreaksCount = 0;
-            //suddenAcceleration = 0;
-            //scoreList.clear();
 
-
-            //checkReadings();
-
-
-            //getting the latitude and longitude of the user
 
             // making changes to the UI
             Log.d("Score","finalScoreTrip"+finalScoreTrip);
@@ -1410,6 +1423,82 @@ public void onResume() {
             Toast.makeText(getContext(), "Trip End final Trip Score: ", Toast.LENGTH_LONG).show();
 
         }
+
+    }
+    /**
+    public void saveData(long tripId) {
+
+
+
+
+
+
+
+        AppDatabase db = AppDatabase.getDbInstance(getContext());
+        DAO dao = db.driverDao();
+
+        for (int i = 0; i < 10; i++) {
+            com.finalproyect.niftydriverapp.db.Sensor sensor = new com.finalproyect.niftydriverapp.db.Sensor();
+
+            sensor.setTripCreatorId(tripId);
+            sensor.setxAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
+            sensor.setyAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
+            sensor.setzAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
+            sensor.setPitch((float) ((Math.random() * (accMax - accMin)) + accMin));
+            sensor.setYaw((float) ((Math.random() * (accMax - accMin)) + accMin));
+            sensor.setCarSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
+            sensor.setGoogleCurSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
+            sensor.setCurLocationLong(41.40338f);
+            sensor.setCurLocationLat(2.17403f);
+            sensor.setValSpeed(random.nextBoolean());
+            sensor.setSafeAcc(random.nextBoolean());
+            sensor.setSafeDes(random.nextBoolean());
+            sensor.setSafeLeft(random.nextBoolean());
+            sensor.setSafeRight(random.nextBoolean());
+            sensor.setHardAcc(random.nextBoolean());
+            sensor.setHardDes(random.nextBoolean());
+            sensor.setSharpLeft(random.nextBoolean());
+            sensor.setSharpRight(random.nextBoolean());
+
+
+            //user.setPicture;
+            dao.insertSensor(sensor);
+
+
+        }
+    }*/
+
+    public void saveTripInitial(long userId) {
+
+
+
+
+
+
+
+
+        Trip trip = new Trip();
+        trip.setUserCreatorId(userId);
+
+        trip.setStartLocation(lat+ ", "+lon);
+        //trip.setEndLocation();
+        //trip.setKilometers(1);
+        //trip.setTimeTrip(10);
+        //trip.setScoreTrip((int) ((Math.random() * (Max - Min)) + Min));
+        trip.setStartDate(StartTime);
+        //trip.setEndDate(String.valueOf(345678));
+        trip.setStartTime(StartTime);
+        //trip.setEndTime("11:00");
+
+
+        //user.setPicture("@");
+        dao.insertTrip(trip);
+
+        setTripID(trip.getTripId());
+
+
+
+
 
     }
 

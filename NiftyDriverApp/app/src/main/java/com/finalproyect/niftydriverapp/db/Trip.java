@@ -28,46 +28,46 @@ public class Trip {
     public float scoreTrip;
 
     @ColumnInfo(name = "Start_Date")
-    public String startDate; // need be checked
+    public long startDate; // need be checked
 
     @ColumnInfo(name = "End_Date")
-    public String endDate; // need be checked
+    public long endDate; // need be checked
 
     @ColumnInfo(name = "Start_Time")
-    public String startTime; // need be checked
+    public long startTime; // need be checked
 
     @ColumnInfo(name = "End_Time")
-    public String endTime; // need be checked
+    public long endTime; // need be checked
 
-    public String getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(long endDate) {
         this.endDate = endDate;
     }
 
-    public String getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 

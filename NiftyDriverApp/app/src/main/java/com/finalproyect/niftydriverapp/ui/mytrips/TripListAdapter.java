@@ -13,6 +13,9 @@ import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.RecyclerViewInterface;
 import com.finalproyect.niftydriverapp.db.Trip;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyViewHolder> {
@@ -56,9 +59,9 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
         int pot = position ;
         // get the info in determine position in the specific item in the employee array
 
-        holder.tv_dateTripRow.setText(this.tripList.get(position).getStartDate());
-        holder.tv_startTripRow.setText(this.tripList.get(position).getStartTime());
-        holder.tv_endTripRow.setText(this.tripList.get(position).getEndTime());
+        holder.tv_dateTripRow.setText(getDateFromMillis(this.tripList.get(position).getStartDate()));
+        holder.tv_startTripRow.setText(getTimeFromMillis(this.tripList.get(position).getStartTime()));
+        holder.tv_endTripRow.setText(getTimeFromMillis(this.tripList.get(position).getEndTime()));
         holder.tv_startTripLocationRow.setText(getStartAddressLocation(this.tripList.get(position)));
         holder.tv_endTripLocationRow.setText(getEndAddressLocation(this.tripList.get(position)));//create the methods to convert in readable location
         holder.tv_scoreTripMyTrips.setText(String.valueOf((int)this.tripList.get(position).getScoreTrip()));
@@ -73,6 +76,23 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
         trip.getStartLocation();
         return "2 Charles Sturt University, Port Macquarie 2";
     }
+
+    private String getDateFromMillis(long dateMillis) {
+        Date startDate = new Date(dateMillis);
+        DateFormat df = new SimpleDateFormat("dd:MM:yy");
+
+
+        return df.format(startDate);
+    }
+    private String getTimeFromMillis(long timeMillis) {
+        Date millis = new Date(timeMillis);
+
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+
+        return df.format(millis);
+    }
+
+
     /*****************************Test Data******************************/
     @Override
     public int getItemCount() {
