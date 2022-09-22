@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
 
         long userid = getuserIdfromSP();

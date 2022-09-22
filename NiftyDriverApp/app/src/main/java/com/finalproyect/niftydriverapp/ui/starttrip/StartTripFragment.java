@@ -1,6 +1,9 @@
 package com.finalproyect.niftydriverapp.ui.starttrip;
 
+import static android.content.Context.SENSOR_SERVICE;
+
 import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,22 +25,27 @@ import android.preference.PreferenceManager;
 
 import android.util.Log;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
 import com.finalproyect.niftydriverapp.MainActivity;
+import com.finalproyect.niftydriverapp.R;
 import com.google.android.material.internal.NavigationMenuPresenter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
@@ -51,7 +59,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StartTripFragment extends Fragment {
+public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
     private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed,
@@ -66,7 +74,7 @@ public class StartTripFragment extends Fragment {
     private NotificationCompat.Builder mbuilder;
     private NotificationManager mnotice;
     private double maxSpeed = -100.0;
-    private MainActivity activity;
+    private StartTripFragment activity;
     private Context context;
     private SharedPreferences prefs;
 
@@ -78,49 +86,49 @@ public class StartTripFragment extends Fragment {
     public static final int TIME_CONSTANT = 10;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        setContentView(R.layout.activity_main);
-        tvSpeed = (TextView) findViewById(R.id.tvSpeed);
-        tvMaxSpeed = (TextView) findViewById(R.id.tvMaxSpeed);
-        tvUnit = (TextView) findViewById(R.id.tvUnitc);
-        tvLat = (TextView) findViewById(R.id.tvLat);
-        tvLon = (TextView) findViewById(R.id.tvLon);
-        tvAccuracy = (TextView) findViewById(R.id.tvAccuracy);
-        tvHeading = (TextView) findViewById(R.id.tvHeading);
-        tv_Xaxis = (TextView) findViewById(R.id.tv_Xaxis);
-        tv_Yaxis = (TextView) findViewById(R.id.tv_Yaxis);
-        tv_XaxisCali= (TextView) findViewById(R.id.tv_XaxisCali);
-        tv_YaxisCali= (TextView) findViewById(R.id.tv_YaxisCali);
-        tv_pith= (TextView) findViewById(R.id.tv_pith);
-        tv_yaw= (TextView) findViewById(R.id.tv_yaw);
-        tv_distance = (TextView) findViewById(R.id.tv_distance);
-        tv_total_Current = (TextView) findViewById(R.id.tv_total_Current);
-        tv_totalHours= (TextView) findViewById(R.id.tv_totalHours);
-        tv_aveSpeed = (TextView) findViewById(R.id.tv_aveSpeed);
-        tv_finalScore= (TextView) findViewById(R.id.tv_finalScore);
-        tv_safeAccel= (TextView) findViewById(R.id.tv_safeAccel);
-        tv_safeDesa= (TextView) findViewById(R.id.tv_safeDesa);
-        tv_safeLeft= (TextView) findViewById(R.id.tv_safeLeft);
-        tv_safeRight= (TextView) findViewById(R.id.tv_safeRight);
-        tv_hardAccel= (TextView) findViewById(R.id.tv_hardAccel);
-        tv_hardDes= (TextView) findViewById(R.id.tv_hardDes);
-        tv_sharpLeft= (TextView) findViewById(R.id.tv_sharpLeft);
-        tv_sharpRight= (TextView) findViewById(R.id.tv_sharpRight);
-        tv_currentFilter= (TextView) findViewById(R.id.tv_currentFilter);
-        tv_current_threshold= (TextView) findViewById(R.id.tv_currentFilter);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.start_trip_test_fragment, container, false);
+
+
+        tvSpeed = (TextView) view.findViewById(R.id.tvSpeed);
+        tvMaxSpeed = (TextView) view.findViewById(R.id.tvMaxSpeed);
+        tvUnit = (TextView) view.findViewById(R.id.tvUnitc);
+        tvLat = (TextView) view.findViewById(R.id.tvLat);
+        tvLon = (TextView) view.findViewById(R.id.tvLon);
+        tvAccuracy = (TextView) view.findViewById(R.id.tvAccuracy);
+        tvHeading = (TextView) view.findViewById(R.id.tvHeading);
+        tv_Xaxis = (TextView) view.findViewById(R.id.tv_Xaxis);
+        tv_Yaxis = (TextView) view.findViewById(R.id.tv_Yaxis);
+        tv_XaxisCali= (TextView) view.findViewById(R.id.tv_XaxisCali);
+        tv_YaxisCali= (TextView) view.findViewById(R.id.tv_YaxisCali);
+        tv_pith= (TextView) view.findViewById(R.id.tv_pith);
+        tv_yaw= (TextView) view.findViewById(R.id.tv_yaw);
+        tv_distance = (TextView) view.findViewById(R.id.tv_distance);
+        tv_total_Current = (TextView) view.findViewById(R.id.tv_total_Current);
+        tv_totalHours= (TextView) view.findViewById(R.id.tv_totalHours);
+        tv_aveSpeed = (TextView) view.findViewById(R.id.tv_aveSpeed);
+        tv_finalScore= (TextView) view.findViewById(R.id.tv_finalScore);
+        tv_safeAccel= (TextView) view.findViewById(R.id.tv_safeAccel);
+        tv_safeDesa= (TextView) view.findViewById(R.id.tv_safeDesa);
+        tv_safeLeft= (TextView) view.findViewById(R.id.tv_safeLeft);
+        tv_safeRight= (TextView) view.findViewById(R.id.tv_safeRight);
+        tv_hardAccel= (TextView) view.findViewById(R.id.tv_hardAccel);
+        tv_hardDes= (TextView) view.findViewById(R.id.tv_hardDes);
+        tv_sharpLeft= (TextView) view.findViewById(R.id.tv_sharpLeft);
+        tv_sharpRight= (TextView) view.findViewById(R.id.tv_sharpRight);
+        tv_currentFilter= (TextView) view.findViewById(R.id.tv_currentFilter);
+        tv_current_threshold= (TextView) view.findViewById(R.id.tv_current_threshold);
         tv_current_threshold.setText(String.valueOf(thresholdOut));
 
-        et_filter_coefficient= (EditText) findViewById(R.id.et_filter_coefficient);
+        et_filter_coefficient= (EditText) view.findViewById(R.id.et_filter_coefficient);
         et_filter_coefficient.setText(String.valueOf(filter_coefficient));
 
-        et_threshold_up= (EditText) findViewById(R.id.et_threshold_up);
+        et_threshold_up= (EditText) view.findViewById(R.id.et_threshold_up);
         et_threshold_up.setText(String.valueOf(thresholdOut));
 
 
-        bt_update_threshold=(Button) findViewById(R.id.bt_update_threshold);
+        bt_update_threshold=(Button) view.findViewById(R.id.bt_update_threshold);
         bt_update_threshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +138,7 @@ public class StartTripFragment extends Fragment {
             }
         });
 
-        bt_update_filter=(Button) findViewById(R.id.bt_update_filter);
+        bt_update_filter=(Button) view.findViewById(R.id.bt_update_filter);
         bt_update_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,7 +149,7 @@ public class StartTripFragment extends Fragment {
         });
 
 
-        bt_startTrip =(Button) findViewById(R.id.bt_startTrip);
+        bt_startTrip =(Button) view.findViewById(R.id.bt_startTrip);
         bt_startTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,10 +159,10 @@ public class StartTripFragment extends Fragment {
 
 
 
-        activity = this;
+
         previousTime = System.currentTimeMillis();
         //FOR SAVE REFERENCES
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         //SET UP UNITS PREFERENCES
         unitType = Integer.parseInt(prefs.getString("unit", "1"));
@@ -167,13 +175,13 @@ public class StartTripFragment extends Fragment {
 
         }
         // check if the services are available ASK TO THE USER TO ENABLE
-        if (!this.isLocationEnabled(this)) {
+        if (!this.isLocationEnabled(getContext())) {
 
 
             //show dialog if Location Services is not enabled
 
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("GPS not found");  // GPS not found
             builder.setMessage("This app requires GPS or Location Service.\\n\\nWould you like to enable Location Service now?"); // Want to enable?
             builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
@@ -191,7 +199,7 @@ public class StartTripFragment extends Fragment {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(activity, "Please enable Location-based service / GPS", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Please enable Location-based service / GPS", Toast.LENGTH_LONG).show();
 
 
                 }
@@ -205,15 +213,15 @@ public class StartTripFragment extends Fragment {
         //PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         //keep the screen on
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+      // getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
         /**Init Graph*/
-        grapht = (GraphView) findViewById(R.id.graph);
+        grapht = (GraphView) view.findViewById(R.id.graph);
 
 
         // Add graphs set up
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        GraphView graph = (GraphView) view.findViewById(R.id.graph);
         //to set some properties to use the graph
         viewport = graph.getViewport();// the variable is declare to be used in whole app
         viewport.setScrollable(true);
@@ -279,7 +287,7 @@ public class StartTripFragment extends Fragment {
 
 
         /**Init Sensors*/// get sensorManager and initialise sensor listeners
-        mSensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         initListeners();
         // wait for one second until gyroscope and magnetometer/accelerometer
         // data is initialised then scedule the complementary filter task
@@ -292,20 +300,22 @@ public class StartTripFragment extends Fragment {
         fuseTimer.scheduleAtFixedRate(new ResetSensorValues(), 1000, 30000);
 
 
-        new SpeedTask(this).execute("string");
+        new SpeedTask(getActivity()).execute("string");
+
+        return view;
     }
 
     private void updateCoeficient() {
 
     }
-
+/**
     // save into the the sabe activity
     protected void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putDouble("maxspeed", maxSpeed);
     }
 
-    // THIS BRING DE DATA WHEN THE APPLICATION RUN AGAIN
+   // THIS BRING DE DATA WHEN THE APPLICATION RUN AGAIN
     protected void onRestoreInstanceState(Bundle bundle) {
 
         super.onRestoreInstanceState(bundle);
@@ -313,11 +323,11 @@ public class StartTripFragment extends Fragment {
         maxSpeed = bundle.getDouble("maxspeed", -100.0);
 
     }
-
+ */
     // Speed Longitud and Lantitud
-    protected void onResume() {
+public void onResume() {
         super.onResume();
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         unitType = Integer.parseInt(prefs.getString("unit", "1"));
         maxSpeed = prefs.getFloat("maxspeed", -100.0f);
 
@@ -356,7 +366,7 @@ public class StartTripFragment extends Fragment {
     }
 
     // Speed Longitud and Lantitud CHECK MAYBE TO SAVE VARIABLES
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
 
         //displayNotification();
@@ -365,7 +375,7 @@ public class StartTripFragment extends Fragment {
     }
 
     // OPTIONAL TO SAVE VARIABLES OR DO SOMETHING ELSE
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
 
         float tempMaxpeed = 0.0f;
@@ -391,20 +401,20 @@ public class StartTripFragment extends Fragment {
     float distanceTraveled = 0;
     //THIS CLASS PROVIDE THE VARIABLES SPEED lONGITUD AND lATITUD
     private class SpeedTask extends AsyncTask<String, Void, String> {
-        final MainActivity activity;
+        Context context;
         float speed = 0.0f;
         double lat;
         double lon;
         double distance;
         LocationManager locationManager;
 
-        public SpeedTask(MainActivity activity) {
-            this.activity = activity;
+        public SpeedTask(Context context) {
+            this.context = context;
         }
 
         @Override
         protected String doInBackground(String... params) {
-            locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
 
             return null;
@@ -429,22 +439,7 @@ public class StartTripFragment extends Fragment {
                     //multiplaer to show the units standar Km/h
                     float multiplier = 3.6f;
 
-                    switch (unitType) {
-                        case 1:
-                            multiplier = 3.6f;
-                            break;
-                        case 2:
-                            multiplier = 2.25f;
-                            break;
-                        case 3:
-                            multiplier = 1.0f;
-                            break;
 
-                        case 4:
-                            multiplier = 1.943856f;
-                            break;
-
-                    }
 
                     if (maxSpeed < speed) {
                         maxSpeed = speed;
@@ -558,12 +553,14 @@ public class StartTripFragment extends Fragment {
             };
 
 
-            if (ActivityCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION)
+            if (ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_COARSE_LOCATION)
+                    && ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_COARSE_LOCATION)
                     !=PackageManager.PERMISSION_GRANTED){
 
-                ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+                ActivityCompat.requestPermissions((Activity) context,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        1);
 
 
 
@@ -1306,22 +1303,9 @@ public class StartTripFragment extends Fragment {
                 }
             }
 
-        }else{
-            double reductionFactor = 0.3 * HAC + 0.2 * HDC + 0.2 * SHLC + 0.2 * SHRC ;
-            finalScoreTrip = scoreTrip-reductionFactor;
-
-            SAC =0;
-            SDC =0;
-            HAC =0;
-            HDC =0;
-            SLC =0;
-            SRC =0;
-            SHLC =0;
-            SHRC =0;
-
         }
 
-        //tv_finalScore.setText("FSC: "+finaScoreCounter);
+
         tv_safeAccel.setText(" SAC: "+ SAC);
         tv_safeDesa.setText(" SDC: "+ SDC);
         tv_safeLeft.setText(" SLC: "+ SLC);
@@ -1330,7 +1314,7 @@ public class StartTripFragment extends Fragment {
         tv_hardDes.setText(" HDC: "+ HDC);
         tv_sharpLeft.setText(" SHLC: "+ SHLC);
         tv_sharpRight.setText(" SHRC: "+ SHRC);
-        tv_finalScore.setText(" FS: "+finalScoreTrip);
+
 
     }
 
@@ -1399,7 +1383,7 @@ public class StartTripFragment extends Fragment {
             finalScoreTrip = scoreTrip-reductionFactor;
             Log.d("Score","reductionFactor"+reductionFactor);
             Log.d("Score","finalScoreTrip"+finalScoreTrip);
-            tv_finalScore.setText(" FS: "+finalScoreTrip);
+            tv_finalScore.setText(String.valueOf((int)finalScoreTrip));
             SAC =0;
             SDC =0;
             HAC =0;
@@ -1423,7 +1407,7 @@ public class StartTripFragment extends Fragment {
             //avgScore = scoreArrayList.getAverage();
             //double result = Math.round(avgScore * 100) / 100.0;
 
-            Toast.makeText(getApplicationContext(), "Trip End final Trip Score: ", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Trip End final Trip Score: ", Toast.LENGTH_LONG).show();
 
         }
 
