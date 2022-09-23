@@ -545,6 +545,7 @@ public void onResume() {
                     /**Latitud and Longitud*******************************************************/
                     tvLat.setText(nf.format(location.getLatitude()));
                     tvLon.setText(nf.format(location.getLongitude()));
+                    saveFusionSensor();
 
 
                 }
@@ -1278,15 +1279,19 @@ public void onResume() {
                     Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccCalibrated+" RO: "+newRollOut);
                 }
             }
-            saveFusionSensor();
-            SA = false;
-            SD = false;
-            HA = false;
-            HD = false;
-            SL = false;
-            SR = false;
-            SHL= false;
-            SHR= false;
+
+            // to create the the google maps marks
+            if(SA == true|| SD == true||  HA == true|| HD == true||SL == true|| SR == true|| SHL== true||SHR== true) {
+                saveFusionSensor();
+                SA = false;
+                SD = false;
+                HA = false;
+                HD = false;
+                SL = false;
+                SR = false;
+                SHL = false;
+                SHR = false;
+            }
 
         }
 
