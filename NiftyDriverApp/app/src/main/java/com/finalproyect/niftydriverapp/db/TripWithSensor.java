@@ -13,5 +13,5 @@ public class TripWithSensor {
             parentColumn = "tripId",
             entityColumn = "tripCreatorId"
     )
-    public List<Sensor> sensors;
+    public List<FusionSensor> fusionSensors;
 }

@@ -189,11 +189,28 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_currentNumDta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#RDatabase"
+                android:textSize="20dp"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/bt_resetFusionDatabase"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_baseline_restart_alt_24"
+
+                android:textAlignment="center" />
 
 
             <EditText
                 android:id="@+id/et_threshold_up"
-                android:layout_width="wrap_content"
+                android:layout_width="113dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Filter"
@@ -212,7 +229,7 @@
 
             <TextView
                 android:id="@+id/tv_current_threshold"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="current filter"
                 android:textAlignment="center" />

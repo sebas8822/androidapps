@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.finalproyect.niftydriverapp.R;
@@ -24,7 +23,6 @@ import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.Trip;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView;
-import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreViewTripView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -112,7 +110,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
-        List<Trip> tripList =dao.getAllTrips(userId);
+        List<Trip> tripList =dao.getAllTripsByUser(userId);
 
 
         /**Set the views*/
@@ -297,7 +295,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     private String getTimeFromMillis(long timeMillis) {
         Date millis = new Date(timeMillis);
 
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("HH:mm");
 
         return df.format(millis);
     }

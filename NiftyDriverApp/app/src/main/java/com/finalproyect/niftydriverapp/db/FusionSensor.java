@@ -5,13 +5,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
-
-@Entity(tableName="Sensor") // identifier required
-public class Sensor {
+@Entity(tableName="FusionSensor") // identifier required
+public class FusionSensor {
 
     @PrimaryKey(autoGenerate = true)
-    public long sensorId; // for database purposes
+    public long fusionSensorID; // for database purposes
 
 
     @ColumnInfo(name = "tripCreatorId")
@@ -31,27 +29,8 @@ public class Sensor {
     public float carSpeed;
     @ColumnInfo(name = "Google_Speed")
     public float googleCurSpeed;
-    @ColumnInfo(name = "Current_Location_long")
-    public float curLocationLong;
-
-    public float getCurLocationLong() {
-        return curLocationLong;
-    }
-
-    public void setCurLocationLong(float curLocationLong) {
-        this.curLocationLong = curLocationLong;
-    }
-
-    public float getCurLocationLat() {
-        return curLocationLat;
-    }
-
-    public void setCurLocationLat(float curLocationLat) {
-        this.curLocationLat = curLocationLat;
-    }
-
-    @ColumnInfo(name = "Current_Location_Lat")
-    public float curLocationLat;
+    @ColumnInfo(name = "Current_Location")
+    public String curLocation;
     @ColumnInfo(name = "Val_Speed")
     public boolean valSpeed;
     @ColumnInfo(name = "Safe_acceleration")
@@ -71,12 +50,12 @@ public class Sensor {
     @ColumnInfo(name = "Sharp_Right")
     public boolean sharpRight;
 
-    public long getSensorId() {
-        return sensorId;
+    public long getFusionSensorID() {
+        return fusionSensorID;
     }
 
-    public void setSensorId(long sensorId) {
-        this.sensorId = sensorId;
+    public void setFusionSensorID(long fusionSensorID) {
+        this.fusionSensorID = fusionSensorID;
     }
 
     public long getTripCreatorId() {
@@ -126,6 +105,16 @@ public class Sensor {
     public void setYaw(float yaw) {
         this.yaw = yaw;
     }
+
+    public String getCurLocation() {
+        return curLocation;
+    }
+
+    public void setCurLocation(String curLocation) {
+        this.curLocation = curLocation;
+    }
+
+
 
     public float getCarSpeed() {
         return carSpeed;

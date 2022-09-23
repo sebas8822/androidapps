@@ -108,7 +108,7 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
     private void loadTrip() {
         //get the record from database
         AppDatabase db = AppDatabase.getDbInstance(getContext());
-        List<Trip> tripList = db.driverDao().getAllTrips(userId);
+        List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
         tripListAdapter.setTripList(tripList);
 
 

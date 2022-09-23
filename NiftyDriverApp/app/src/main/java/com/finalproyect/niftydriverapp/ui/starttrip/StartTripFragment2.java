@@ -1,44 +1,30 @@
 package com.finalproyect.niftydriverapp.ui.starttrip;
 
-import static android.app.Activity.RESULT_OK;
-import static android.content.Context.SENSOR_SERVICE;
-
 import static java.lang.System.currentTimeMillis;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,31 +33,21 @@ import androidx.fragment.app.Fragment;
 import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
-import com.finalproyect.niftydriverapp.db.Sensor;
-import com.finalproyect.niftydriverapp.db.Trip;
-import com.finalproyect.niftydriverapp.db.User;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.google.android.gms.maps.model.LatLng;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class StartTripFragment2 extends Fragment {
 
@@ -479,31 +455,30 @@ public class StartTripFragment2 extends Fragment {
         DAO dao = db.driverDao();
 
         for (int i = 0; i < 10; i++) {
-            Sensor sensor = new Sensor();
+            FusionSensor fusionSensor = new FusionSensor();
 
-            sensor.setTripCreatorId(tripId);
-            sensor.setxAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setyAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setzAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setPitch((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setYaw((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setCarSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
-            sensor.setGoogleCurSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
-            sensor.setCurLocationLong(41.40338f);
-            sensor.setCurLocationLat(2.17403f);
-            sensor.setValSpeed(random.nextBoolean());
-            sensor.setSafeAcc(random.nextBoolean());
-            sensor.setSafeDes(random.nextBoolean());
-            sensor.setSafeLeft(random.nextBoolean());
-            sensor.setSafeRight(random.nextBoolean());
-            sensor.setHardAcc(random.nextBoolean());
-            sensor.setHardDes(random.nextBoolean());
-            sensor.setSharpLeft(random.nextBoolean());
-            sensor.setSharpRight(random.nextBoolean());
+            fusionSensor.setTripCreatorId(tripId);
+            fusionSensor.setxAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
+            fusionSensor.setyAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
+            fusionSensor.setzAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
+            fusionSensor.setPitch((float) ((Math.random() * (accMax - accMin)) + accMin));
+            fusionSensor.setYaw((float) ((Math.random() * (accMax - accMin)) + accMin));
+            fusionSensor.setCarSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
+            fusionSensor.setGoogleCurSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
+
+            fusionSensor.setValSpeed(random.nextBoolean());
+            fusionSensor.setSafeAcc(random.nextBoolean());
+            fusionSensor.setSafeDes(random.nextBoolean());
+            fusionSensor.setSafeLeft(random.nextBoolean());
+            fusionSensor.setSafeRight(random.nextBoolean());
+            fusionSensor.setHardAcc(random.nextBoolean());
+            fusionSensor.setHardDes(random.nextBoolean());
+            fusionSensor.setSharpLeft(random.nextBoolean());
+            fusionSensor.setSharpRight(random.nextBoolean());
 
 
             //user.setPicture;
-            dao.insertSensor(sensor);
+            dao.insertFusionSensor(fusionSensor);
 
 
         }

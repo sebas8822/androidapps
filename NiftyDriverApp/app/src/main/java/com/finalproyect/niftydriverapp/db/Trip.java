@@ -19,11 +19,11 @@ public class Trip {
     @ColumnInfo(name = "Start_Location")
     public String startLocation;
     @ColumnInfo(name = "End_Location")
-    public float endLocation;
+    public String endLocation;
     @ColumnInfo(name = "Kilometres")
     public float kilometers;
     @ColumnInfo(name = "Time_Trip")
-    public double timeTrip;
+    public long timeTrip;
     @ColumnInfo(name = "Score_Trip")
     public float scoreTrip;
 
@@ -93,11 +93,11 @@ public class Trip {
         this.startLocation = startLocation;
     }
 
-    public float getEndLocation() {
+    public String getEndLocation() {
         return endLocation;
     }
 
-    public void setEndLocation(float endLocation) {
+    public void setEndLocation(String endLocation) {
         this.endLocation = endLocation;
     }
 
@@ -109,11 +109,11 @@ public class Trip {
         this.kilometers = kilometers;
     }
 
-    public double getTimeTrip() {
+    public long getTimeTrip() {
         return timeTrip;
     }
 
-    public void setTimeTrip(double timeTrip) {
+    public void setTimeTrip(long timeTrip) {
         this.timeTrip = timeTrip;
     }
 

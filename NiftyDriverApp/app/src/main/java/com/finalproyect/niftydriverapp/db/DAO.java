@@ -21,7 +21,7 @@ public interface DAO {
     void insertTrip(Trip...trip);
 
     @Insert
-    void insertSensor(Sensor...sensor);
+    void insertFusionSensor(FusionSensor... fusionSensor);
 
 
     @Delete
@@ -33,10 +33,13 @@ public interface DAO {
     @Update
     void updateUser(User user);
 
+    @Update
+    void updateTrip(Trip trip);
+
 
     // Get the list of trips
     @Query("SELECT * FROM Trip where userCreatorId= :id")
-    List<Trip> getAllTrips(long id);
+    List<Trip> getAllTripsByUser(long id);
 
 
     @Query("select * from user where userId= :id")
@@ -56,6 +59,9 @@ public interface DAO {
     @Query("SELECT COUNT(userId) FROM User")
     int getUserCount();
 
+    @Query("select * from trip where tripId= :id")
+    public Trip getTripById(long id);
+
     @Query("SELECT AVG(Score_Trip) FROM Trip where userCreatorId= :id")
     int getScoreAverageTripByUser(long id);
 
@@ -69,19 +75,24 @@ public interface DAO {
     int getTotalHoursByUser(long id);
 
 
+    @Query("SELECT * FROM FusionSensor ")
+    List<FusionSensor> getAllFusionSensor();
+
+
 
     @Query("DELETE FROM User")
     void deleteAllUsers();
 
     @Query("DELETE FROM Trip")
     void deleteAllTrip();
-    @Query("DELETE FROM Sensor")
-    void deleteAllSensor();
+
+    @Query("DELETE FROM FusionSensor")
+    void deleteAllFusionSensor();
 
     @Query("DELETE FROM Trip where userCreatorId= :id")
     void deleteAllTripByUserId(long id);
 
-    @Query("DELETE FROM Sensor where tripCreatorId= :id")
+    @Query("DELETE FROM FusionSensor where tripCreatorId= :id")
     void deleteAllSensorByTripId(long id);
 
 

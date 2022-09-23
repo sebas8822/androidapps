@@ -28,7 +28,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,30 +35,24 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
-import com.finalproyect.niftydriverapp.MainActivity;
 import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
+import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.finalproyect.niftydriverapp.db.Trip;
-import com.google.android.material.internal.NavigationMenuPresenter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,8 +63,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_Xaxis, tv_Yaxis, tv_pith,tv_yaw, tv_XaxisCali, tv_YaxisCali,tv_distance,
             tv_totalHours, tv_total_Current,tv_aveSpeed,tv_finalScore,tv_safeAccel,
             tv_safeDesa,tv_safeLeft,tv_safeRight,tv_hardAccel,tv_hardDes,tv_sharpLeft,
-            tv_sharpRight,tv_currentFilter, tv_current_threshold;
-    private Button bt_startTrip, bt_update_filter,bt_update_threshold;
+            tv_sharpRight,tv_currentFilter, tv_current_threshold,tv_currentNumDta;
+
+    private Button bt_startTrip, bt_update_filter,bt_update_threshold,bt_resetFusionDatabase;
     private EditText et_filter_coefficient, et_threshold_up;
     private static final String[] unit = {"km/h", "mph", "meter/sec", "knots"};
     private int unitType;
@@ -144,7 +138,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tv_currentFilter= (TextView) view.findViewById(R.id.tv_currentFilter);
         tv_current_threshold= (TextView) view.findViewById(R.id.tv_current_threshold);
         tv_current_threshold.setText(String.valueOf(thresholdOut));
-
+        tv_currentNumDta= (TextView) view.findViewById(R.id.tv_currentNumDta);
+        tv_currentNumDta.setText(String.valueOf(dao.getAllFusionSensor().size()));
         et_filter_coefficient= (EditText) view.findViewById(R.id.et_filter_coefficient);
         et_filter_coefficient.setText(String.valueOf(filter_coefficient));
 
@@ -157,6 +152,17 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             @Override
             public void onClick(View view) {
                 thresholdOut=Double.valueOf(et_filter_coefficient.getText().toString());
+
+
+            }
+        });
+
+        bt_resetFusionDatabase=(Button) view.findViewById(R.id.bt_resetFusionDatabase);
+        bt_resetFusionDatabase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dao.deleteAllFusionSensor();
+                tv_currentNumDta.setText(String.valueOf(dao.getAllFusionSensor().size()));
 
 
             }
@@ -420,6 +426,7 @@ public void onResume() {
     float distanceTraveled = 0;
     double lat;
     double lon;
+    float currentSpeed;
 
     //THIS CLASS PROVIDE THE VARIABLES SPEED lONGITUD AND lATITUD
     private class SpeedTask extends AsyncTask<String, Void, String> {
@@ -471,7 +478,7 @@ public void onResume() {
                     /******************************Speed*******************************************/
                     filtSpeed = filter(filtSpeed, localspeed, 2);
 
-
+                    currentSpeed = filtSpeed;
                     NumberFormat numberFormat = NumberFormat.getNumberInstance();
                     numberFormat.setMaximumFractionDigits(0);
 
@@ -1187,13 +1194,25 @@ public void onResume() {
     int SRC =0;
     int SHLC =0;
     int SHRC =0;
+
+    boolean SA =false;
+    boolean SD =false;
+    boolean HA =false;
+    boolean HD =false;
+    boolean SL =false;
+    boolean SR =false;
+    boolean SHL =false;
+    boolean SHR =false;
+
+
     float x = 0.1f;
     float y = -2.6f;
     float p = 0.14f;
     float r = 0.1f;
-    double scoreTrip = 100;
-    double finalScoreTrip;
+    float scoreTrip = 100;
+    float finalScoreTrip;
     double thresholdOut = 0;
+
 
     public void drivingAnalysisWithRoll(){
 
@@ -1203,24 +1222,28 @@ public void onResume() {
             if(yAccCalibrated>1.3-thresholdOut && yAccCalibrated<2.5-thresholdOut){
                 if (newPitchOut<-0.08 && newPitchOut>-0.12){
                     SAC++;
+                    SA = true;
                     Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccCalibrated+" Pi: "+newPitchOut);
                 }
             }
             if(yAccCalibrated<-1.3 + thresholdOut && yAccCalibrated>-2.5+thresholdOut){
                 if (newPitchOut>0.08 && newPitchOut<0.12){
                     SDC++;
+                    SD=true;
                     Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
                 }
             }
             if(xAccCalibrated<-1.8 +thresholdOut && xAccCalibrated>-3.0 +thresholdOut){
                 if (newRollOut>0.10 && newRollOut<0.30){
                     SLC++;
+                    SL=true;
                     Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                 }
             }
             if(xAccCalibrated>1.8-thresholdOut && xAccCalibrated<3.0-thresholdOut){
                 if (newRollOut<-0.10 && newRollOut>-0.30){
                     SRC++;
+                    SR=true;
                     Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                 }
             }
@@ -1228,6 +1251,7 @@ public void onResume() {
             if(yAccCalibrated>2.5 -thresholdOut){
                 if (newPitchOut<-0.12){
                     HAC++;
+                    HA=true;
                     Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
                 }
             }
@@ -1236,21 +1260,33 @@ public void onResume() {
             if(yAccCalibrated<-2.5 +thresholdOut){
                 if (newPitchOut>0.12){
                     HDC++;
+                    HD=true;
                     Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccCalibrated+"Pi: "+newPitchOut);
                 }
             }
             if(xAccCalibrated<-3.0+thresholdOut){
                 if (newRollOut>0.30){
                     SHLC++;
+                    SHL=true;
                     Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
                 }
             }
             if(xAccCalibrated>3.0-thresholdOut){
                 if (newRollOut<-0.30){
                     SHRC++;
+                    SHR=true;
                     Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccCalibrated+" RO: "+newRollOut);
                 }
             }
+            saveFusionSensor();
+            SA = false;
+            SD = false;
+            HA = false;
+            HD = false;
+            SL = false;
+            SR = false;
+            SHL= false;
+            SHR= false;
 
         }
 
@@ -1263,6 +1299,9 @@ public void onResume() {
         tv_hardDes.setText(" HDC: "+ HDC);
         tv_sharpLeft.setText(" SHLC: "+ SHLC);
         tv_sharpRight.setText(" SHRC: "+ SHRC);
+
+
+
 
 
     }
@@ -1352,11 +1391,13 @@ public void onResume() {
 
     boolean startTripState = false;
     long EndTime, StartTime;
+    long timeTrip;
 
     public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
 
         if (startTripState == false) {
+            Trip trip = new Trip();
             //DURING THE TRIP
             // during the start of a trip, values are initialized
             // change the button to display "End" to end the trip
@@ -1367,6 +1408,9 @@ public void onResume() {
             previousLocation = null;
             StartTime = System.currentTimeMillis();
             finalScoreTrip=0;
+            saveTripInitial(userid, trip);
+            //trip.getTripId();
+            Log.d("saveTripInitial", "TripID" + trip.getTripId());
 
 
             // making changes to the UI
@@ -1379,7 +1423,7 @@ public void onResume() {
             bt_startTrip.setBackgroundColor(getResources().getColor(R.color.blue_sky_500));
             /*****************************calculating time*********************************/
             EndTime = System.currentTimeMillis();
-            long timeTrip = EndTime - StartTime;
+            timeTrip = EndTime - StartTime;
             double  distanceKM = distanceTraveled / 1000.0;// it is show in real-Time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -1392,7 +1436,7 @@ public void onResume() {
             //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
             tv_totalHours.setText(String.format("%.2f", elapse)+"Min");
 
-            double reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC ;
+            float reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC ;
             finalScoreTrip = scoreTrip-reductionFactor;
             Log.d("Score","reductionFactor"+reductionFactor);
             Log.d("Score","finalScoreTrip"+finalScoreTrip);
@@ -1412,6 +1456,8 @@ public void onResume() {
 
             double avgSpeedKM = distanceKM / totalTimeTraveledMin;
             tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM)+" ASp ");
+
+            saveTripEnd();
 
 
             /**SAVE VALUES fuction*///Save values
@@ -1468,37 +1514,61 @@ public void onResume() {
         }
     }*/
 
-    public void saveTripInitial(long userId) {
-
-
-
-
-
-
-
-
-        Trip trip = new Trip();
+    public void saveTripInitial(long userId, Trip trip) {
         trip.setUserCreatorId(userId);
-
         trip.setStartLocation(lat+ ", "+lon);
-        //trip.setEndLocation();
-        //trip.setKilometers(1);
-        //trip.setTimeTrip(10);
-        //trip.setScoreTrip((int) ((Math.random() * (Max - Min)) + Min));
         trip.setStartDate(StartTime);
-        //trip.setEndDate(String.valueOf(345678));
         trip.setStartTime(StartTime);
-        //trip.setEndTime("11:00");
-
-
-        //user.setPicture("@");
         dao.insertTrip(trip);
-
-        setTripID(trip.getTripId());
-
+        setTripID(dao.getAllTripsByUser(userId).size());
 
 
 
+
+
+    }
+
+    public void saveTripEnd() {
+
+        Trip trip = dao.getTripById(tripID);; //bring 0 require the last number list could be de las
+        trip.setEndLocation(lat+ ", "+lon);
+        trip.setKilometers((float) (distanceTraveled/1000.0)); // save it in Km/s
+        trip.setTimeTrip(timeTrip);
+        trip.setScoreTrip(finalScoreTrip);
+        trip.setEndDate(EndTime);
+        trip.setEndTime(EndTime);
+        dao.updateTrip(trip);
+
+    }
+
+    public void saveFusionSensor() {
+
+        FusionSensor fusionSensor = new FusionSensor();
+
+        fusionSensor.setTripCreatorId(tripID);
+        fusionSensor.setxAcc(xAccCalibrated);
+        fusionSensor.setyAcc(yAccCalibrated);
+        //fusionSensor.setzAcc();
+        fusionSensor.setPitch(newPitchOut);
+        fusionSensor.setYaw(newYawOut);
+        fusionSensor.setCarSpeed(currentSpeed);
+        //fusionSensor.setGoogleCurSpeed();
+        fusionSensor.setCurLocation(lat+ ", "+lon);
+
+        //fusionSensor.setValSpeed();
+        fusionSensor.setSafeAcc(SA);
+        fusionSensor.setSafeDes(SD);
+        fusionSensor.setSafeLeft(HA);
+        fusionSensor.setSafeRight(HD);
+        fusionSensor.setHardAcc(SL);
+        fusionSensor.setHardDes(SR);
+        fusionSensor.setSharpLeft(SHL);
+        fusionSensor.setSharpRight(SHR);
+
+
+
+        //user.setPicture;
+        dao.insertFusionSensor(fusionSensor);
 
     }
 
