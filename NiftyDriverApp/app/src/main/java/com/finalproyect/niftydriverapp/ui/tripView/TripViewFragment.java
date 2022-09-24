@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +41,15 @@ import java.util.List;
 import java.util.Locale;
 
 
-/**https://www.youtube.com/watch?v=wRDLjUK8nyU    https://www.youtube.com/watch?v=b5U8WZM45aY https://www.youtube.com/watch?v=NOVacL7ZPrc  https://www.youtube.com/watch?v=xl0GwkLNpNI */ // to draw the route
+/**
+ * https://www.youtube.com/watch?v=wRDLjUK8nyU    https://www.youtube.com/watch?v=b5U8WZM45aY https://www.youtube.com/watch?v=NOVacL7ZPrc  https://www.youtube.com/watch?v=xl0GwkLNpNI
+ */ // to draw the route
 
 public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
-    Button bt_scoreViewTripView,bt_graphViewTripView;
-    ImageButton bt_leftTripButton,bt_rightButton;
-    TextView tv_startTrip,tv_endTrip,tv_startTripLocation,tv_endTripLocation, tv_tripViewData, tv_totalKilometresTripsview,tv_ScoreTripView, tv_totalTimeView;
+    Button bt_scoreViewTripView, bt_graphViewTripView;
+    ImageButton bt_leftTripButton, bt_rightButton;
+    TextView tv_startTrip, tv_endTrip, tv_startTripLocation, tv_endTripLocation,  tv_totalKilometresTripsview, tv_ScoreTripView, tv_totalTimeView, tv_titleTripsView, tv_tripViewData;
 
 
     public void setUserId(long userId) {
@@ -75,7 +78,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
 
 
-
     }
 
     SharedPreferences sp;//Init sharepreferences for user
@@ -84,7 +86,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     // for save preferences like user id and user state means open session
     @Override
     public void onAttach(@NonNull Context context) {
-        sp = context.getSharedPreferences("userProfile",Context.MODE_PRIVATE );
+        sp = context.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit(); // init sharedPreferences
         super.onAttach(context);
     }
@@ -94,23 +96,23 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_tripview, container, false);
 
 
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         //Init shared preferences
-        sp = getActivity().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
-        long userId = sp.getLong("userId",0);
-        int position = sp.getInt("position",0);;
+        sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        long userId = sp.getLong("userId", 0);
+        int position = sp.getInt("position", 0);
+        ;
         setUserId(userId);
         setPosition(position);
 
-        Toast.makeText(getContext(),"Position After call from SP: " + position + "User" + userId ,Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Position After call from SP: " + position + "User" + userId, Toast.LENGTH_LONG).show();
 
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
-        List<Trip> tripList =dao.getAllTripsByUser(userId);
+        List<Trip> tripList = dao.getAllTripsByUser(userId);
 
 
         /**Set the views*/
@@ -124,6 +126,8 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         tv_totalKilometresTripsview = view.findViewById(R.id.tv_totalKilometresTripsview);
         tv_ScoreTripView = view.findViewById(R.id.tv_ScoreTripView);
         tv_totalTimeView = view.findViewById(R.id.tv_totalTimeView);
+        tv_titleTripsView = view.findViewById(R.id.tv_titleTripsView);
+
 
         bt_leftTripButton = view.findViewById(R.id.bt_leftTripButton);
         bt_rightButton = view.findViewById(R.id.bt_rightButton);
@@ -131,35 +135,28 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         bt_scoreViewTripView = (Button) view.findViewById(R.id.bt_scoreViewTripView);
 
 
+        Trip lastTrip = tripList.get(position);
 
-
-            Trip lastTrip = tripList.get(position);
-
-            settingView(lastTrip);
-
-
-
+        settingView(lastTrip);
 
 
         bt_leftTripButton.setOnClickListener(new View.OnClickListener() {
             int counter = 0;
+
             @Override
             public void onClick(View view) {
-               // Toast.makeText(getContext(),"Position before: Left " + position,Toast.LENGTH_LONG).show();
-                replaceViewDirection("left",position, tripList);
+                // Toast.makeText(getContext(),"Position before: Left " + position,Toast.LENGTH_LONG).show();
+                replaceViewDirection("left", position, tripList);
                 //Toast.makeText(getContext(),"Position After left: " + position + "User" + userId ,Toast.LENGTH_LONG).show();
-
 
 
             }
         });
 
 
-
-
-
         bt_rightButton.setOnClickListener(new View.OnClickListener() {
             int counter = 0;
+
             @Override
             public void onClick(View view) {
 
@@ -171,15 +168,13 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         });
 
 
-
-
         bt_scoreViewTripView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"Score View", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Score View", Toast.LENGTH_LONG).show();
                 ScoreViewTripView scoreView = new ScoreViewTripView();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_tripView_view,scoreView);
+                fragmentTransaction.replace(R.id.fragment_tripView_view, scoreView);
                 fragmentTransaction.commit();
             }
         });
@@ -188,18 +183,13 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         bt_graphViewTripView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"Graph View View", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Graph View View", Toast.LENGTH_LONG).show();
                 GraphView graphView = new GraphView();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_tripView_view,graphView);
+                fragmentTransaction.replace(R.id.fragment_tripView_view, graphView);
                 fragmentTransaction.commit();
             }
         });
-
-
-
-
-
 
 
         /////////////////////////////////////////////////////////////////////////////////////
@@ -207,16 +197,12 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
-
-
-    public void replaceViewDirection(String direction, int position,List<Trip> tripList){
+    public void replaceViewDirection(String direction, int position, List<Trip> tripList) {
         //left = 1
         //Right = 0
 
 
-
-        if(direction=="left") {
+        if (direction == "left") {
             if (position > 0) {
                 //Toast.makeText(getContext(), "Decrease 1" + "CPos" + position, Toast.LENGTH_LONG).show();
                 position--;
@@ -229,8 +215,8 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
                 //can be eliminated
             }
         }
-        if(direction=="right" ) {
-            if (position < (tripList.size()-1)) {
+        if (direction == "right") {
+            if (position < (tripList.size() - 1)) {
                 //Toast.makeText(getContext(), "Increase 1" + "CPos" + position + " Size list" + tripList.size(), Toast.LENGTH_LONG).show();
                 position++;
                 /**Pass this values to the shared preference*/
@@ -244,12 +230,9 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         }
 
 
-
-
-
     }
 
-    public void replaceTripView(){
+    public void replaceTripView() {
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -258,40 +241,56 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    public void settingView(Trip lastTrip){
+    public void settingView(Trip lastTrip) {
         /**Set values*/
         tv_startTrip.setText(getTimeFromMillis(lastTrip.getStartTime()));
         tv_endTrip.setText(getTimeFromMillis(lastTrip.getEndTime()));
         tv_startTripLocation.setText(getStartAddressLocation(lastTrip));
         tv_endTripLocation.setText(getEndAddressLocation(lastTrip));
-        tv_tripViewData.setText("Position: "+String.valueOf(position)+ "Record "+lastTrip.getEndDate());
-        tv_totalKilometresTripsview.setText(String.valueOf((int)lastTrip.getKilometers()));
-        tv_ScoreTripView.setText(String.valueOf((int)lastTrip.getScoreTrip()));
-        tv_totalTimeView.setText(String.valueOf((int)lastTrip.getTimeTrip()));
+        tv_tripViewData.setText(getDateFromMillis(lastTrip.getStartDate()));
+        tv_totalKilometresTripsview.setText(String.valueOf((int) lastTrip.getKilometers()));
 
-
+        tv_ScoreTripView.setText(String.valueOf((int) lastTrip.getScoreTrip()));
+        float timeTrip = (float) lastTrip.getTimeTrip();
+        if (timeTrip > 60) {
+            tv_titleTripsView.setText("Hours");
+            timeTrip = timeTrip/60;
+        }
+        tv_totalTimeView.setText(String.format("%.1f",timeTrip));
 
 
     }
 
     /*****************************Test Data******************************/
+    Geocoder geocoder;
+    private String getStartAddressLocation(Trip trip) {
+
+        geocoder = new Geocoder(getContext());
+        List<Address> geoResult = findGeocoder(trip.getStartLocationLAT(), trip.getStartLocationLON());
+        Address thisAddress = geoResult.get(0);
+        Log.d("testAddres" ,"address: "+ thisAddress.getAddressLine(0));
+        return String.valueOf(thisAddress.getAddressLine(0));
+
+    }
     private String getEndAddressLocation(Trip trip) {
-        trip.getStartLocation();
-        return "24 Seaview avenue, Port macquarie 2444";
+        geocoder = new Geocoder(getContext());
+
+        List<Address> geoResult = findGeocoder(trip.getEndLocationLAT(), trip.getEndLocationLON());
+        Address thisAddress = geoResult.get(0);
+        Log.d("testAddres" ,"address: "+ thisAddress.getAddressLine(0));
+        return String.valueOf(thisAddress.getAddressLine(0));
     }
 
-    private String getStartAddressLocation(Trip trip) {
-        trip.getStartLocation();
-        return "2 Charles Sturt University, Port Macquarie 2";
-    }
+
 
     private String getDateFromMillis(long dateMillis) {
         Date startDate = new Date(dateMillis);
-        DateFormat df = new SimpleDateFormat("dd:MM:yy");
+        DateFormat df = new SimpleDateFormat("E, dd MMM yyyy HH:mm");
 
 
         return df.format(startDate);
     }
+
     private String getTimeFromMillis(long timeMillis) {
         Date millis = new Date(timeMillis);
 
@@ -299,6 +298,21 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
         return df.format(millis);
     }
+
+    private List<Address> findGeocoder(Double lat, Double lon){
+        final int maxResults = 1;
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(lat, lon, maxResults);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        return addresses;
+    }
+
     /**************************************************************/
 
 
@@ -312,24 +326,23 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(Sydney).title("Marker in Sydney"));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Sydney));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(Sydney,5);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(Sydney, 5);
         mMap.animateCamera(cameraUpdate);
 
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
         try {
-            List<Address> listAddress=geocoder.getFromLocationName(empLocation,1);
-            if(listAddress.size()>0){
-                LatLng addressEmp = new LatLng(listAddress.get(0).getLatitude(),listAddress.get(0).getLongitude());
+            List<Address> listAddress = geocoder.getFromLocationName(empLocation, 1);
+            if (listAddress.size() > 0) {
+                LatLng addressEmp = new LatLng(listAddress.get(0).getLatitude(), listAddress.get(0).getLongitude());
 
                 mMap.addMarker(new MarkerOptions().position(addressEmp).title("Employee Address"));
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(addressEmp));
-                CameraUpdate cameraUpdateemp = CameraUpdateFactory.newLatLngZoom(addressEmp,15);
+                CameraUpdate cameraUpdateemp = CameraUpdateFactory.newLatLngZoom(addressEmp, 15);
                 mMap.animateCamera(cameraUpdateemp);
-            }
-            else{
-                Toast.makeText(getContext(),"Address no found", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "Address no found", Toast.LENGTH_LONG).show();
             }
         } catch (IOException e) {
             e.printStackTrace();

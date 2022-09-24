@@ -16,14 +16,53 @@ public class Trip {
     @ColumnInfo(name = "userCreatorId")
     public long userCreatorId;
 
-    @ColumnInfo(name = "Start_Location")
-    public String startLocation;
-    @ColumnInfo(name = "End_Location")
-    public String endLocation;
+    @ColumnInfo(name = "Start_LocationLAT")
+    public double startLocationLAT;
+    @ColumnInfo(name = "Start_LocationLON")
+    public double startLocationLON;
+
+
+    @ColumnInfo(name = "End_LocationLAT")
+    public double endLocationLAT;
+    @ColumnInfo(name = "End_LocationLON")
+    public double endLocationLON;
+
+    public double getStartLocationLAT() {
+        return startLocationLAT;
+    }
+
+    public void setStartLocationLAT(double startLocationLAT) {
+        this.startLocationLAT = startLocationLAT;
+    }
+
+    public double getStartLocationLON() {
+        return startLocationLON;
+    }
+
+    public void setStartLocationLON(double startLocationLON) {
+        this.startLocationLON = startLocationLON;
+    }
+
+    public double getEndLocationLAT() {
+        return endLocationLAT;
+    }
+
+    public void setEndLocationLAT(double endLocationLAT) {
+        this.endLocationLAT = endLocationLAT;
+    }
+
+    public double getEndLocationLON() {
+        return endLocationLON;
+    }
+
+    public void setEndLocationLON(double endLocationLON) {
+        this.endLocationLON = endLocationLON;
+    }
+
     @ColumnInfo(name = "Kilometres")
     public float kilometers;
     @ColumnInfo(name = "Time_Trip")
-    public long timeTrip;
+    public double timeTrip;
     @ColumnInfo(name = "Score_Trip")
     public float scoreTrip;
 
@@ -85,21 +124,7 @@ public class Trip {
         this.userCreatorId = userCreatorId;
     }
 
-    public String getStartLocation() {
-        return startLocation;
-    }
 
-    public void setStartLocation(String startLocation) {
-        this.startLocation = startLocation;
-    }
-
-    public String getEndLocation() {
-        return endLocation;
-    }
-
-    public void setEndLocation(String endLocation) {
-        this.endLocation = endLocation;
-    }
 
     public float getKilometers() {
         return kilometers;
@@ -109,11 +134,11 @@ public class Trip {
         this.kilometers = kilometers;
     }
 
-    public long getTimeTrip() {
+    public double getTimeTrip() {
         return timeTrip;
     }
 
-    public void setTimeTrip(long timeTrip) {
+    public void setTimeTrip(double timeTrip) {
         this.timeTrip = timeTrip;
     }
 

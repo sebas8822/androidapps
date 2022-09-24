@@ -37,6 +37,8 @@ import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 
 public class ProfileFragment extends Fragment {
@@ -56,13 +58,13 @@ public class ProfileFragment extends Fragment {
 
     private long userId = getUserId();
 
-    private TextView tv_userName, tv_mainScore, tv_totalTrips, tv_totalKilometres, tv_totalHours;
+    private TextView tv_userName, tv_mainScore, tv_totalTrips, tv_totalKilometres, tv_totalHours,tv_titleHours;
 
     private ImageView im_profile;
 
     private ImageButton bt_changeImage;
 
-    private Button bt_scoreView,bt_graphView;
+    private Button bt_scoreView, bt_graphView;
 
     Bitmap imageChoose;
 
@@ -78,15 +80,14 @@ public class ProfileFragment extends Fragment {
                     //save data into uri variable transforme into bitmap
                     if (data != null && data.getData() != null) {
                         Uri selectedImageUri = data.getData();
-                        Bitmap selectedImageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.img_1);
+                        Bitmap selectedImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_1);
                         //data.putExtra(MediaStore.EXTRA_OUTPUT,)
                         try {
                             selectedImageBitmap
                                     = MediaStore.Images.Media.getBitmap(
                                     getContext().getContentResolver(),
                                     selectedImageUri);
-                        }
-                        catch (IOException e) {
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 
@@ -101,7 +102,7 @@ public class ProfileFragment extends Fragment {
     // for save preferences like user id and user state means open session to write
     @Override
     public void onAttach(@NonNull Context context) {
-        sp = context.getSharedPreferences("userProfile",Context.MODE_PRIVATE );
+        sp = context.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit(); // init sharedPreferences
         super.onAttach(context);
     }
@@ -110,10 +111,10 @@ public class ProfileFragment extends Fragment {
 
 
         //Init shared preferences
-        sp = getActivity().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         //editor.putBoolean("userState", false);
         //editor.commit();
-        long userId = sp.getLong("userId",0);
+        long userId = sp.getLong("userId", 0);
 
         /**Pass this values to the shared preference reset for trip view*/
         editor.putInt("position", 0);
@@ -153,9 +154,17 @@ public class ProfileFragment extends Fragment {
         tv_totalKilometres.setText(numKilometres(userId));
 
         // Total Hours
+        tv_titleHours= (TextView) view.findViewById(R.id.tv_titleHours);
+        float totalTime =totalTripHours(userId);
+
+        if(totalTime> 60){
+            tv_titleHours.setText("Hours");
+
+            totalTime = totalTime/60;
+        }
 
         tv_totalHours = (TextView) view.findViewById(R.id.tv_totalHours);
-        tv_totalHours.setText(totalTripHours(userId));
+        tv_totalHours.setText(String.format("%.1f", totalTime));
 
         //Inflate Fragment in the profile fragment
         // create the object pointing the fragment that intent to open
@@ -177,10 +186,10 @@ public class ProfileFragment extends Fragment {
         bt_scoreView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"Score View", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Score View", Toast.LENGTH_LONG).show();
                 ScoreView scoreView = new ScoreView();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_profile_view,scoreView);
+                fragmentTransaction.replace(R.id.fragment_profile_view, scoreView);
                 fragmentTransaction.commit();
             }
         });
@@ -189,10 +198,10 @@ public class ProfileFragment extends Fragment {
         bt_graphView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"Graph View View", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Graph View View", Toast.LENGTH_LONG).show();
                 GraphView graphView = new GraphView();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_profile_view,graphView);
+                fragmentTransaction.replace(R.id.fragment_profile_view, graphView);
                 fragmentTransaction.commit();
             }
         });
@@ -201,11 +210,14 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
-    public static String totalTripHours(long userId) {
+    public static long totalTripHours(long userId) {
         AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
-        return String.valueOf(dao.getTotalHoursByUser(userId));
+        long totalTime = dao.getTotalHoursByUser(userId);
+
+
+        return totalTime;
+
     }
 
     public static String numKilometres(long userId) {
@@ -220,13 +232,13 @@ public class ProfileFragment extends Fragment {
         return String.valueOf(dao.getTotalTripsByUser(userId));
     }
 
-    public static String mainScore(long userId){
+    public static String mainScore(long userId) {
         AppDatabase db = AppDatabase.getDbInstance(StaticContextFactory.getAppContext());
         DAO dao = db.driverDao();
         return String.valueOf(dao.getScoreAverageTripByUser(userId));
     }
 
-    public void setProfileImageFromDatabase(User user){
+    public void setProfileImageFromDatabase(User user) {
         byte[] imageData = user.getPicture();
         im_profile.setImageBitmap(createBitmapFromByteArray(imageData));
     }
@@ -236,7 +248,7 @@ public class ProfileFragment extends Fragment {
     }
 
     // this function set profile image
-    public void imageChooser(User user){
+    public void imageChooser(User user) {
 
         Intent i = new Intent();
         i.setType("image/*");
@@ -246,23 +258,23 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private byte[] defaultImage(){
-        Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.img_1);
+    private byte[] defaultImage() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_1);
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArray);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArray);
         byte[] image = byteArray.toByteArray();
 
         return image;
     }
 
-    public void saveImageDatabase(Bitmap selectedImageBitmap){
+    public void saveImageDatabase(Bitmap selectedImageBitmap) {
         //Resi
-        Bitmap reducedSizeImage = ImageResizer.reduceBitmapSize(selectedImageBitmap,240000);
+        Bitmap reducedSizeImage = ImageResizer.reduceBitmapSize(selectedImageBitmap, 240000);
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream();//inicilite
-        reducedSizeImage.compress(Bitmap.CompressFormat.PNG,100,byteArray);
+        reducedSizeImage.compress(Bitmap.CompressFormat.PNG, 100, byteArray);
         byte[] image = byteArray.toByteArray();
 
-        Toast.makeText(getContext(), "The Profile image has been updated",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "The Profile image has been updated", Toast.LENGTH_LONG).show();
 
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
@@ -275,17 +287,17 @@ public class ProfileFragment extends Fragment {
     }
 
     public void populateUserTable() {
-        String[] num = {"ONE", "DOS", "THREE", "FOUR","FIVE", "SIX","SEVEN", "EIGHT","NINE","TEN"};
-        String[] alp = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","E","W","X","Y","Z"};
+        String[] num = {"ONE", "DOS", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN"};
+        String[] alp = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "E", "W", "X", "Y", "Z"};
 
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
 
         for (int i = 0; i < 1; i++) {
             User user = new User();
-            user.setUserName(num[i]+"Sebastian");
+            user.setUserName(num[i] + "Sebastian");
             user.setLastName("Ramirez");
-            user.setEmail(alp[i]+num[i]+"8822@hotmail.com");
+            user.setEmail(alp[i] + num[i] + "8822@hotmail.com");
             user.setPassword("S3b4st1@nR");
             user.setPicture(defaultImage());
             user.setLoginState(true);
@@ -299,12 +311,6 @@ public class ProfileFragment extends Fragment {
 
 
     }
-
-
-
-
-
-
 
 
 }

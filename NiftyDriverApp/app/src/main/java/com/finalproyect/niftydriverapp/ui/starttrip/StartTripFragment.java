@@ -60,12 +60,12 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
     private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed,
-            tv_Xaxis, tv_Yaxis, tv_pith,tv_yaw, tv_XaxisCali, tv_YaxisCali,tv_distance,
-            tv_totalHours, tv_total_Current,tv_aveSpeed,tv_finalScore,tv_safeAccel,
-            tv_safeDesa,tv_safeLeft,tv_safeRight,tv_hardAccel,tv_hardDes,tv_sharpLeft,
-            tv_sharpRight,tv_currentFilter, tv_current_threshold,tv_currentNumDta;
+            tv_Xaxis, tv_Yaxis, tv_pith, tv_yaw, tv_XaxisCali, tv_YaxisCali, tv_distance,
+            tv_totalHours, tv_total_Current, tv_aveSpeed, tv_finalScore, tv_safeAccel,
+            tv_safeDesa, tv_safeLeft, tv_safeRight, tv_hardAccel, tv_hardDes, tv_sharpLeft,
+            tv_sharpRight, tv_currentFilter, tv_current_threshold, tv_currentNumDta;
 
-    private Button bt_startTrip, bt_update_filter,bt_update_threshold,bt_resetFusionDatabase;
+    private Button bt_startTrip, bt_update_filter, bt_update_threshold, bt_resetFusionDatabase;
     private EditText et_filter_coefficient, et_threshold_up;
     private static final String[] unit = {"km/h", "mph", "meter/sec", "knots"};
     private int unitType;
@@ -86,11 +86,13 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     public void setUserid(long userid) {
         this.userid = userid;
     }
+
     private long userid;
 
     public void setTripID(long tripID) {
         this.tripID = tripID;
     }
+
     private long tripID;
 
     SharedPreferences sp;//Init sharepreferences for user
@@ -105,7 +107,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
         //Init shared preferences
         sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        long userId = sp.getLong("userId",0);
+        long userId = sp.getLong("userId", 0);
         setUserid(userId);
 
 
@@ -118,46 +120,46 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tvHeading = (TextView) view.findViewById(R.id.tvHeading);
         tv_Xaxis = (TextView) view.findViewById(R.id.tv_Xaxis);
         tv_Yaxis = (TextView) view.findViewById(R.id.tv_Yaxis);
-        tv_XaxisCali= (TextView) view.findViewById(R.id.tv_XaxisCali);
-        tv_YaxisCali= (TextView) view.findViewById(R.id.tv_YaxisCali);
-        tv_pith= (TextView) view.findViewById(R.id.tv_pith);
-        tv_yaw= (TextView) view.findViewById(R.id.tv_yaw);
+        tv_XaxisCali = (TextView) view.findViewById(R.id.tv_XaxisCali);
+        tv_YaxisCali = (TextView) view.findViewById(R.id.tv_YaxisCali);
+        tv_pith = (TextView) view.findViewById(R.id.tv_pith);
+        tv_yaw = (TextView) view.findViewById(R.id.tv_yaw);
         tv_distance = (TextView) view.findViewById(R.id.tv_distance);
         tv_total_Current = (TextView) view.findViewById(R.id.tv_total_Current);
-        tv_totalHours= (TextView) view.findViewById(R.id.tv_totalHours);
+        tv_totalHours = (TextView) view.findViewById(R.id.tv_totalHours);
         tv_aveSpeed = (TextView) view.findViewById(R.id.tv_aveSpeed);
-        tv_finalScore= (TextView) view.findViewById(R.id.tv_finalScore);
-        tv_safeAccel= (TextView) view.findViewById(R.id.tv_safeAccel);
-        tv_safeDesa= (TextView) view.findViewById(R.id.tv_safeDesa);
-        tv_safeLeft= (TextView) view.findViewById(R.id.tv_safeLeft);
-        tv_safeRight= (TextView) view.findViewById(R.id.tv_safeRight);
-        tv_hardAccel= (TextView) view.findViewById(R.id.tv_hardAccel);
-        tv_hardDes= (TextView) view.findViewById(R.id.tv_hardDes);
-        tv_sharpLeft= (TextView) view.findViewById(R.id.tv_sharpLeft);
-        tv_sharpRight= (TextView) view.findViewById(R.id.tv_sharpRight);
-        tv_currentFilter= (TextView) view.findViewById(R.id.tv_currentFilter);
-        tv_current_threshold= (TextView) view.findViewById(R.id.tv_current_threshold);
+        tv_finalScore = (TextView) view.findViewById(R.id.tv_finalScore);
+        tv_safeAccel = (TextView) view.findViewById(R.id.tv_safeAccel);
+        tv_safeDesa = (TextView) view.findViewById(R.id.tv_safeDesa);
+        tv_safeLeft = (TextView) view.findViewById(R.id.tv_safeLeft);
+        tv_safeRight = (TextView) view.findViewById(R.id.tv_safeRight);
+        tv_hardAccel = (TextView) view.findViewById(R.id.tv_hardAccel);
+        tv_hardDes = (TextView) view.findViewById(R.id.tv_hardDes);
+        tv_sharpLeft = (TextView) view.findViewById(R.id.tv_sharpLeft);
+        tv_sharpRight = (TextView) view.findViewById(R.id.tv_sharpRight);
+        tv_currentFilter = (TextView) view.findViewById(R.id.tv_currentFilter);
+        tv_current_threshold = (TextView) view.findViewById(R.id.tv_current_threshold);
         tv_current_threshold.setText(String.valueOf(thresholdOut));
-        tv_currentNumDta= (TextView) view.findViewById(R.id.tv_currentNumDta);
+        tv_currentNumDta = (TextView) view.findViewById(R.id.tv_currentNumDta);
         tv_currentNumDta.setText(String.valueOf(dao.getAllFusionSensor().size()));
-        et_filter_coefficient= (EditText) view.findViewById(R.id.et_filter_coefficient);
+        et_filter_coefficient = (EditText) view.findViewById(R.id.et_filter_coefficient);
         et_filter_coefficient.setText(String.valueOf(filter_coefficient));
 
-        et_threshold_up= (EditText) view.findViewById(R.id.et_threshold_up);
+        et_threshold_up = (EditText) view.findViewById(R.id.et_threshold_up);
         et_threshold_up.setText(String.valueOf(thresholdOut));
 
 
-        bt_update_threshold=(Button) view.findViewById(R.id.bt_update_threshold);
+        bt_update_threshold = (Button) view.findViewById(R.id.bt_update_threshold);
         bt_update_threshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                thresholdOut=Double.valueOf(et_filter_coefficient.getText().toString());
+                thresholdOut = Double.valueOf(et_filter_coefficient.getText().toString());
 
 
             }
         });
 
-        bt_resetFusionDatabase=(Button) view.findViewById(R.id.bt_resetFusionDatabase);
+        bt_resetFusionDatabase = (Button) view.findViewById(R.id.bt_resetFusionDatabase);
         bt_resetFusionDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,26 +170,24 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             }
         });
 
-        bt_update_filter=(Button) view.findViewById(R.id.bt_update_filter);
+        bt_update_filter = (Button) view.findViewById(R.id.bt_update_filter);
         bt_update_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filter_coefficient=Float.valueOf(et_filter_coefficient.getText().toString());
+                filter_coefficient = Float.valueOf(et_filter_coefficient.getText().toString());
 
 
             }
         });
 
 
-        bt_startTrip =(Button) view.findViewById(R.id.bt_startTrip);
+        bt_startTrip = (Button) view.findViewById(R.id.bt_startTrip);
         bt_startTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startTrip();
             }
         });
-
-
 
 
         previousTime = System.currentTimeMillis();
@@ -238,7 +238,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         //PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         //keep the screen on
-      // getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
         /**Init Graph*/
@@ -285,11 +285,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         graph.addSeries(XUPHard);
 
 
-
-
-
-
-
         // computing sensor values
         gyroOrientation[0] = 0.0f;
         gyroOrientation[1] = 0.0f;
@@ -305,10 +300,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         gyroMatrix[6] = 0.0f;
         gyroMatrix[7] = 0.0f;
         gyroMatrix[8] = 1.0f;
-
-
-
-
 
 
         /**Init Sensors*/// get sensorManager and initialise sensor listeners
@@ -333,24 +324,25 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     private void updateCoeficient() {
 
     }
-/**
-    // save into the the sabe activity
-    protected void onSaveInstanceState(Bundle bundle) {
-        super.onSaveInstanceState(bundle);
-        bundle.putDouble("maxspeed", maxSpeed);
-    }
 
-   // THIS BRING DE DATA WHEN THE APPLICATION RUN AGAIN
-    protected void onRestoreInstanceState(Bundle bundle) {
-
-        super.onRestoreInstanceState(bundle);
-
-        maxSpeed = bundle.getDouble("maxspeed", -100.0);
-
-    }
- */
+    /**
+     * // save into the the sabe activity
+     * protected void onSaveInstanceState(Bundle bundle) {
+     * super.onSaveInstanceState(bundle);
+     * bundle.putDouble("maxspeed", maxSpeed);
+     * }
+     * <p>
+     * // THIS BRING DE DATA WHEN THE APPLICATION RUN AGAIN
+     * protected void onRestoreInstanceState(Bundle bundle) {
+     * <p>
+     * super.onRestoreInstanceState(bundle);
+     * <p>
+     * maxSpeed = bundle.getDouble("maxspeed", -100.0);
+     * <p>
+     * }
+     */
     // Speed Longitud and Lantitud
-public void onResume() {
+    public void onResume() {
         super.onResume();
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         unitType = Integer.parseInt(prefs.getString("unit", "1"));
@@ -387,7 +379,6 @@ public void onResume() {
         }
 
 
-
     }
 
     // Speed Longitud and Lantitud CHECK MAYBE TO SAVE VARIABLES
@@ -419,7 +410,6 @@ public void onResume() {
 
 
     }
-
 
 
     Location previousLocation = null;
@@ -456,17 +446,13 @@ public void onResume() {
                 float localspeed;
 
 
-
-
                 @Override
                 public void onLocationChanged(Location location) {
                     speed = location.getSpeed();
 
 
-
                     //multiplaer to show the units standar Km/h
                     float multiplier = 3.6f;
-
 
 
                     if (maxSpeed < speed) {
@@ -483,19 +469,19 @@ public void onResume() {
                     numberFormat.setMaximumFractionDigits(0);
 
 
-                    if(previousLocation!=null){
-                        distanceTraveled +=location.distanceTo(previousLocation);//in meters
+                    if (previousLocation != null) {
+                        distanceTraveled += location.distanceTo(previousLocation);//in meters
 
                     }
-                    previousLocation =location;
+                    previousLocation = location;
 
                     lon = location.getLongitude();
                     lat = location.getLatitude();
 
-                    Log.d("onChange", "Speed " + localspeed + "latitude: " + lat + " longitude: " + lon + " Distance: " + distanceTraveled/1000);
+                    Log.d("onChange", "Speed " + localspeed + "latitude: " + lat + " longitude: " + lon + " Distance: " + distanceTraveled / 1000);
                     tvSpeed.setText(numberFormat.format(filtSpeed));
                     /************************Distance and MAX speed*******************************/
-                    tv_distance.setText(numberFormat.format(distanceTraveled/1000.0)+"km");
+                    tv_distance.setText(numberFormat.format(distanceTraveled / 1000.0) + "km");
                     tvMaxSpeed.setText(numberFormat.format(maxSpeed * multiplier));
 
 
@@ -545,7 +531,11 @@ public void onResume() {
                     /**Latitud and Longitud*******************************************************/
                     tvLat.setText(nf.format(location.getLatitude()));
                     tvLon.setText(nf.format(location.getLongitude()));
-                    saveFusionSensor();
+                    // save values just when I starttrip
+                    if (!startTripState == false) {
+                        Log.d("saveFusionOnLoc", "stateTripState" + startTripState + "coor: " + lat + "," + lon + "tripID" + tripID);
+                        saveFusionSensor();
+                    }
 
 
                 }
@@ -582,18 +572,17 @@ public void onResume() {
             };
 
 
-            if (ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION)
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_COARSE_LOCATION)
-                    !=PackageManager.PERMISSION_GRANTED){
+                    && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
 
                 ActivityCompat.requestPermissions((Activity) context,
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         1);
 
 
-
-            }else {
+            } else {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
             }
 
@@ -678,18 +667,20 @@ public void onResume() {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //updateValues();
-        switch (event.sensor.getType()) {
-            case Sensor.TYPE_ACCELEROMETER:
-                mGravity = event.values;
-                xAccelerometer = event.values[0];
-                yAccelerometer = event.values[1];
-                zAccelerometer = event.values[2];
-                calibrateAccelerometer();
-                // copy new accelerometer data into accel array
-                // then calculate new orientation
-                System.arraycopy(event.values, 0, accel, 0, 3);
-                calculateAccMagOrientation();
+
+        if (!startTripState == false) {
+            //updateValues();
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_ACCELEROMETER:
+                    mGravity = event.values;
+                    xAccelerometer = event.values[0];
+                    yAccelerometer = event.values[1];
+                    zAccelerometer = event.values[2];
+                    calibrateAccelerometer();
+                    // copy new accelerometer data into accel array
+                    // then calculate new orientation
+                    System.arraycopy(event.values, 0, accel, 0, 3);
+                    calculateAccMagOrientation();
 //                checkReadings();
 //                printArray(accel);
 //                Log.d("onSensor","mGravity"+ mGravity);
@@ -698,68 +689,58 @@ public void onResume() {
 //                Log.d("onSensor","zAccelerometer"+ zAccelerometer);
 
 
+                    break;
 
-                break;
+                case Sensor.TYPE_GYROSCOPE:
+                    // process gyro data
+                    gyroFunction(event);
 
-            case Sensor.TYPE_GYROSCOPE:
-                // process gyro data
-                gyroFunction(event);
+                    break;
 
-                break;
+                case Sensor.TYPE_MAGNETIC_FIELD:
+                    // copy new magnetometer data into magnet array
+                    mMagneticField = event.values;
+                    System.arraycopy(event.values, 0, magnet, 0, 3);
+                    break;
+            }
 
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                // copy new magnetometer data into magnet array
-                mMagneticField = event.values;
-                System.arraycopy(event.values, 0, magnet, 0, 3);
-                break;
+            tv_currentFilter.setText(String.valueOf(filter_coefficient));
+            tv_current_threshold.setText(String.valueOf(thresholdOut));
+            computeQuaternion();
+            //drivingAnalysisWithRoll(xAccCalibrated,newPitchOut,yAccCalibrated,newRollOut);
+            //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
+            //drivingAnalysisWithYaw(xAccCalibrated,newPitchOut,yAccCalibrated,newYawOut);
+            //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
+            drawGraphSpecific();
+            drivingAnalysisWithRoll();
+
+            /**No necesesary just o display the current time runing*/
+            long currentTime = System.currentTimeMillis();
+            int totalMinutes = (int) (((currentTime - previousTime) / (1000 * 60)) % 60);
+            int hours = (int) (((currentTime - previousTime) / (1000 * 60 * 60)) % 24);
+            int seconds = (int) ((currentTime - previousTime) / 1000) % 60;
+            tv_total_Current.setText(String.valueOf(totalMinutes) + " Min " + String.valueOf(seconds) + " sec");
         }
-        tv_currentFilter.setText(String.valueOf(filter_coefficient));
-        tv_current_threshold.setText(String.valueOf(thresholdOut));
-        computeQuaternion();
-        //drivingAnalysisWithRoll(xAccCalibrated,newPitchOut,yAccCalibrated,newRollOut);
-        //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
-        //drivingAnalysisWithYaw(xAccCalibrated,newPitchOut,yAccCalibrated,newYawOut);
-        //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
-        drawGraphSpecific();
-        drivingAnalysisWithRoll();
-
-        /**No necesesary just o display the current time runing*/
-        long currentTime = System.currentTimeMillis();
-        int totalMinutes = (int) (((currentTime-previousTime) / (1000*60)) % 60);
-        int hours   = (int) (((currentTime-previousTime) / (1000*60*60)) % 24);
-        int seconds = (int) ((currentTime-previousTime) / 1000) % 60 ;
-        tv_total_Current.setText(String.valueOf(totalMinutes)+" Min "+String.valueOf(seconds)+" sec");
-
-
-
-
-
-
-
-
-
 
 
     }
 
 
-
-    public void drawGraphSpecific(){
+    public void drawGraphSpecific() {
 
 
         tv_Xaxis.setBackgroundColor(Color.MAGENTA);
-        tv_Xaxis.setText("XAccel: "+String.valueOf(xAccelerometer));
+        tv_Xaxis.setText("XAccel: " + String.valueOf(xAccelerometer));
         tv_Yaxis.setBackgroundColor(Color.GREEN);
-        tv_Yaxis.setText("YAccel: "+String.valueOf(yAccelerometer));
+        tv_Yaxis.setText("YAccel: " + String.valueOf(yAccelerometer));
 //        tv_XaxisCali.setBackgroundColor(Color.MAGENTA);
 //        tv_XaxisCali.setText("XAccelCAL: "+String.valueOf(xAccCalibrated));
 //        tv_YaxisCali.setBackgroundColor(Color.GRAY);
 //        tv_YaxisCali.setText("YAccelCAL: "+String.valueOf(yAccCalibrated));
         tv_pith.setBackgroundColor(Color.YELLOW);
-        tv_pith.setText("Pitch: "+String.valueOf(newPitchOut));
+        tv_pith.setText("Pitch: " + String.valueOf(newPitchOut));
         tv_yaw.setBackgroundColor(Color.WHITE);
-        tv_yaw.setText("yaw: "+String.valueOf(newRollOut));
-
+        tv_yaw.setText("yaw: " + String.valueOf(newRollOut));
 
 
         viewport.setMaxX(pointsPlotted);
@@ -770,66 +751,48 @@ public void onResume() {
 
         // to not saturate the memory we have to limit the points to keep it into the memory
 
-        if (pointsPlotted > 1000){
+        if (pointsPlotted > 1000) {
             pointsPlotted = 1; // reset the variable
-            Xseries.resetData(new DataPoint[]{new DataPoint(1,0)});
-            Yseries.resetData(new DataPoint[]{new DataPoint(1,0)});
-            Pseries.resetData(new DataPoint[]{new DataPoint(1,0)});
-            Rseries.resetData(new DataPoint[]{new DataPoint(1,0)});
+            Xseries.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            Yseries.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            Pseries.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            Rseries.resetData(new DataPoint[]{new DataPoint(1, 0)});
 
-            yUPsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
-            yUPsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
-            yDownsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
-            yDownsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
-            XUPsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
-            XUPsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
-            XDownsafe1.resetData(new DataPoint[]{new DataPoint(1,0)});
-            XDownsafe2.resetData(new DataPoint[]{new DataPoint(1,0)});
-            yUPHard.resetData(new DataPoint[]{new DataPoint(1,0)});
-            yDownHard.resetData(new DataPoint[]{new DataPoint(1,0)});
-            XUPHard.resetData(new DataPoint[]{new DataPoint(1,0)});
-            XDownHard.resetData(new DataPoint[]{new DataPoint(1,0)});
-
-
-
-
+            yUPsafe1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            yUPsafe2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            yDownsafe1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            yDownsafe2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            XUPsafe1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            XUPsafe2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            XDownsafe1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            XDownsafe2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            yUPHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            yDownHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            XUPHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            XDownHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
 
 
         }
 
 
-
-
-
-
-
-
-        Xseries.appendData( new DataPoint(pointsPlotted,xAccCalibrated ),true,pointsPlotted);
-        Yseries.appendData( new DataPoint(pointsPlotted,yAccCalibrated ),true,pointsPlotted);
+        Xseries.appendData(new DataPoint(pointsPlotted, xAccCalibrated), true, pointsPlotted);
+        Yseries.appendData(new DataPoint(pointsPlotted, yAccCalibrated), true, pointsPlotted);
         Pseries.appendData(new DataPoint(pointsPlotted, newPitchOut), true, pointsPlotted);
         Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
 
 
-        yUPsafe1.appendData( new DataPoint(pointsPlotted, 1.3-thresholdOut),true,pointsPlotted);
-        yUPsafe2.appendData( new DataPoint(pointsPlotted, 2.5-thresholdOut),true,pointsPlotted);
-        yDownsafe1.appendData(new DataPoint(pointsPlotted, -1.3+thresholdOut), true, pointsPlotted);
-        yDownsafe2.appendData(new DataPoint(pointsPlotted,-2.5+thresholdOut ), true, pointsPlotted);
-        XUPsafe1.appendData( new DataPoint(pointsPlotted, -1.8+thresholdOut),true,pointsPlotted);
-        XUPsafe2.appendData( new DataPoint(pointsPlotted, -3.0+thresholdOut),true,pointsPlotted);
-        XDownsafe1.appendData(new DataPoint(pointsPlotted, 1.8-thresholdOut), true, pointsPlotted);
-        XDownsafe2.appendData(new DataPoint(pointsPlotted, 3.0-thresholdOut), true, pointsPlotted);
-        yUPHard.appendData( new DataPoint(pointsPlotted, -0.12),true,pointsPlotted);
-        yDownHard.appendData( new DataPoint(pointsPlotted, 0.12),true,pointsPlotted);
-        XUPHard.appendData(new DataPoint(pointsPlotted, -3.0+thresholdOut), true, pointsPlotted);
-        XDownHard.appendData(new DataPoint(pointsPlotted, 3.0-thresholdOut), true, pointsPlotted);
-
-
-
-
-
-
-
-
+        yUPsafe1.appendData(new DataPoint(pointsPlotted, 1.3 - thresholdOut), true, pointsPlotted);
+        yUPsafe2.appendData(new DataPoint(pointsPlotted, 2.5 - thresholdOut), true, pointsPlotted);
+        yDownsafe1.appendData(new DataPoint(pointsPlotted, -1.3 + thresholdOut), true, pointsPlotted);
+        yDownsafe2.appendData(new DataPoint(pointsPlotted, -2.5 + thresholdOut), true, pointsPlotted);
+        XUPsafe1.appendData(new DataPoint(pointsPlotted, -1.8 + thresholdOut), true, pointsPlotted);
+        XUPsafe2.appendData(new DataPoint(pointsPlotted, -3.0 + thresholdOut), true, pointsPlotted);
+        XDownsafe1.appendData(new DataPoint(pointsPlotted, 1.8 - thresholdOut), true, pointsPlotted);
+        XDownsafe2.appendData(new DataPoint(pointsPlotted, 3.0 - thresholdOut), true, pointsPlotted);
+        yUPHard.appendData(new DataPoint(pointsPlotted, -0.12), true, pointsPlotted);
+        yDownHard.appendData(new DataPoint(pointsPlotted, 0.12), true, pointsPlotted);
+        XUPHard.appendData(new DataPoint(pointsPlotted, -3.0 + thresholdOut), true, pointsPlotted);
+        XDownHard.appendData(new DataPoint(pointsPlotted, 3.0 - thresholdOut), true, pointsPlotted);
 
 
     }
@@ -856,8 +819,8 @@ public void onResume() {
             xPreviousAcc = xAccelerometer;
             yPreviousAcc = yAccelerometer;
             zPreviousAcc = zAccelerometer;
-            Log.d("calibrateAccelerometer","xAccCalibrated"+ xAccCalibrated);
-            Log.d("calibrateAccelerometer","yAccCalibrated"+ yAccCalibrated);
+            Log.d("calibrateAccelerometer", "xAccCalibrated" + xAccCalibrated);
+            Log.d("calibrateAccelerometer", "yAccCalibrated" + yAccCalibrated);
         }
     }
 
@@ -870,8 +833,6 @@ public void onResume() {
     //counter for quaternion
     int overYawQ = 0;
     int overPitchQ = 0;
-
-
 
 
     //variables for acceleromneter calibration
@@ -894,7 +855,10 @@ public void onResume() {
 
     private boolean initState = true;
     private float[] gyroMatrix = new float[9];
-    private float[] gyro = new float[3]; /** i thing this give the pitch roll and yaw*/
+    private float[] gyro = new float[3];
+    /**
+     * i thing this give the pitch roll and yaw
+     */
     private float timestamp;
     private static final float NS2S = 1.0f / 1000000000.0f;
     private float[] gyroOrientation = new float[3];
@@ -987,6 +951,7 @@ public void onResume() {
         resultMatrix = matrixMultiplication(zM, resultMatrix);
         return resultMatrix;
     }
+
     private float[] matrixMultiplication(float[] A, float[] B) {
         float[] result = new float[9];
 
@@ -1072,12 +1037,9 @@ public void onResume() {
                 getRollQ = mRoll;
                 getYawQ = mYaw;
 
-                Log.d("oncomputeQuaternion","getPitchQ"+getPitchQ);
-                Log.d("oncomputeQuaternion","getRollQ"+getRollQ);
-                Log.d("oncomputeQuaternion","getYawQ"+getYawQ);
-
-
-
+                Log.d("oncomputeQuaternion", "getPitchQ" + getPitchQ);
+                Log.d("oncomputeQuaternion", "getRollQ" + getRollQ);
+                Log.d("oncomputeQuaternion", "getYawQ" + getYawQ);
 
 
             }
@@ -1095,6 +1057,7 @@ public void onResume() {
     Float newRollOut = 0f;
     Float newYawOut = 0f;
     float filter_coefficient = 0.45f;// works well
+
     // sensor fusion values are computed at every 10 sec as initialized earlier
     private class calculateFusedOrientationTask extends TimerTask {
         //float filter_coefficient = 0.50f;
@@ -1186,24 +1149,24 @@ public void onResume() {
     }
 
 
-    int finaScoreCounter=0;
-    int SAC =0;
-    int SDC =0;
-    int HAC =0;
-    int HDC =0;
-    int SLC =0;
-    int SRC =0;
-    int SHLC =0;
-    int SHRC =0;
+    int finaScoreCounter = 0;
+    int SAC = 0;
+    int SDC = 0;
+    int HAC = 0;
+    int HDC = 0;
+    int SLC = 0;
+    int SRC = 0;
+    int SHLC = 0;
+    int SHRC = 0;
 
-    boolean SA =false;
-    boolean SD =false;
-    boolean HA =false;
-    boolean HD =false;
-    boolean SL =false;
-    boolean SR =false;
-    boolean SHL =false;
-    boolean SHR =false;
+    boolean SA = false;
+    boolean SD = false;
+    boolean HA = false;
+    boolean HD = false;
+    boolean SL = false;
+    boolean SR = false;
+    boolean SHL = false;
+    boolean SHR = false;
 
 
     float x = 0.1f;
@@ -1215,73 +1178,73 @@ public void onResume() {
     double thresholdOut = 0;
 
 
-    public void drivingAnalysisWithRoll(){
+    public void drivingAnalysisWithRoll() {
 
-        if(startTripState == true){
+        if (startTripState == true) {
 
             //Safe Driving
-            if(yAccCalibrated>1.3-thresholdOut && yAccCalibrated<2.5-thresholdOut){
-                if (newPitchOut<-0.08 && newPitchOut>-0.12){
+            if (yAccCalibrated > 1.3 - thresholdOut && yAccCalibrated < 2.5 - thresholdOut) {
+                if (newPitchOut < -0.08 && newPitchOut > -0.12) {
                     SAC++;
                     SA = true;
-                    Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccCalibrated+" Pi: "+newPitchOut);
+                    Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
                 }
             }
-            if(yAccCalibrated<-1.3 + thresholdOut && yAccCalibrated>-2.5+thresholdOut){
-                if (newPitchOut>0.08 && newPitchOut<0.12){
+            if (yAccCalibrated < -1.3 + thresholdOut && yAccCalibrated > -2.5 + thresholdOut) {
+                if (newPitchOut > 0.08 && newPitchOut < 0.12) {
                     SDC++;
-                    SD=true;
-                    Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
+                    SD = true;
+                    Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
                 }
             }
-            if(xAccCalibrated<-1.8 +thresholdOut && xAccCalibrated>-3.0 +thresholdOut){
-                if (newRollOut>0.10 && newRollOut<0.30){
+            if (xAccCalibrated < -1.8 + thresholdOut && xAccCalibrated > -3.0 + thresholdOut) {
+                if (newRollOut > 0.10 && newRollOut < 0.30) {
                     SLC++;
-                    SL=true;
-                    Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
+                    SL = true;
+                    Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
-            if(xAccCalibrated>1.8-thresholdOut && xAccCalibrated<3.0-thresholdOut){
-                if (newRollOut<-0.10 && newRollOut>-0.30){
+            if (xAccCalibrated > 1.8 - thresholdOut && xAccCalibrated < 3.0 - thresholdOut) {
+                if (newRollOut < -0.10 && newRollOut > -0.30) {
                     SRC++;
-                    SR=true;
-                    Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
+                    SR = true;
+                    Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
             //Hard Driving
-            if(yAccCalibrated>2.5 -thresholdOut){
-                if (newPitchOut<-0.12){
+            if (yAccCalibrated > 2.5 - thresholdOut) {
+                if (newPitchOut < -0.12) {
                     HAC++;
-                    HA=true;
-                    Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccCalibrated+" Pi:"+newPitchOut);
+                    HA = true;
+                    Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
                 }
             }
 
 
-            if(yAccCalibrated<-2.5 +thresholdOut){
-                if (newPitchOut>0.12){
+            if (yAccCalibrated < -2.5 + thresholdOut) {
+                if (newPitchOut > 0.12) {
                     HDC++;
-                    HD=true;
-                    Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccCalibrated+"Pi: "+newPitchOut);
+                    HD = true;
+                    Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
                 }
             }
-            if(xAccCalibrated<-3.0+thresholdOut){
-                if (newRollOut>0.30){
+            if (xAccCalibrated < -3.0 + thresholdOut) {
+                if (newRollOut > 0.30) {
                     SHLC++;
-                    SHL=true;
-                    Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccCalibrated+" RO: "+newRollOut);
+                    SHL = true;
+                    Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
-            if(xAccCalibrated>3.0-thresholdOut){
-                if (newRollOut<-0.30){
+            if (xAccCalibrated > 3.0 - thresholdOut) {
+                if (newRollOut < -0.30) {
                     SHRC++;
-                    SHR=true;
-                    Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccCalibrated+" RO: "+newRollOut);
+                    SHR = true;
+                    Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
 
             // to create the the google maps marks
-            if(SA == true|| SD == true||  HA == true|| HD == true||SL == true|| SR == true|| SHL== true||SHR== true) {
+            if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
                 saveFusionSensor();
                 SA = false;
                 SD = false;
@@ -1296,99 +1259,23 @@ public void onResume() {
         }
 
         //tv_finalScore.setText("FSC: "+finaScoreCounter);
-        tv_safeAccel.setText("SAC: "+ SAC);
-        tv_safeDesa.setText("SDC: "+ SDC);
-        tv_safeLeft.setText("SLC: "+ SLC);
-        tv_safeRight.setText("SRC: "+ SRC);
-        tv_hardAccel.setText(" HAC: "+ HAC);
-        tv_hardDes.setText(" HDC: "+ HDC);
-        tv_sharpLeft.setText(" SHLC: "+ SHLC);
-        tv_sharpRight.setText(" SHRC: "+ SHRC);
-
-
-
-
-
-    }
-
-    public void drivingAnalysisWithYaw(float xAccel, float Pitch, float yAccel, float yaw ){
-
-        if(startTripState == true){
-
-            //Safe Driving
-            if(yAccel>1.3 && yAccel<2.5){
-                if (Pitch<-0.08 && Pitch>-0.12){
-                    SAC++;
-                    Log.d("drivingAnalysis","SAC: "+SAC+" yAc: "+yAccel+" Pi: "+Pitch);
-                }
-            }
-            if(yAccel<-1.3 && yAccel>-2.5){
-                if (Pitch>0.08 && Pitch<0.12){
-                    SDC++;
-                    Log.d("drivingAnalysis","SDC: "+SDC+" yAc: "+yAccel+" Pi:"+Pitch);
-                }
-            }
-            if(xAccel<-1.8 && xAccel>-3.0){
-                if (yaw>0.10 && yaw<0.30){
-                    SLC++;
-                    Log.d("drivingAnalysis","SLC: "+SLC+" xAc: "+xAccel+" RO: "+yaw);
-                }
-            }
-            if(xAccel>1.8 && xAccel<3.0){
-                if (yaw<-0.10 && yaw>-0.30){
-                    SRC++;
-                    Log.d("drivingAnalysis","SRC: "+SRC+" xAc: "+xAccel+" RO: "+yaw);
-                }
-            }
-            //Hard Driving
-            if(yAccel>2.5 ){
-                if (Pitch<-0.12){
-                    HAC++;
-                    Log.d("drivingAnalysis","HAC: "+HAC+" yAc: "+yAccel+" Pi:"+Pitch);
-                }
-            }
-
-
-            if(yAccel<-2.5 ){
-                if (Pitch>0.12){
-                    HDC++;
-                    Log.d("drivingAnalysis","HDC: "+HDC+" yAc: "+yAccel+"Pi: "+Pitch);
-                }
-            }
-            if(xAccel<-3.0){
-                if (yaw>0.30){
-                    SHLC++;
-                    Log.d("drivingAnalysis","SHLC: "+SHLC+" xAc: "+xAccel+" RO: "+yaw);
-                }
-            }
-            if(xAccel>3.0){
-                if (yaw<-0.30){
-                    SHRC++;
-                    Log.d("drivingAnalysis","SHRC: "+SHRC+" XAc: "+xAccel+" RO: "+yaw);
-                }
-            }
-
-        }
-
-
-        tv_safeAccel.setText(" SAC: "+ SAC);
-        tv_safeDesa.setText(" SDC: "+ SDC);
-        tv_safeLeft.setText(" SLC: "+ SLC);
-        tv_safeRight.setText(" SRC: "+ SRC);
-        tv_hardAccel.setText(" HAC: "+ HAC);
-        tv_hardDes.setText(" HDC: "+ HDC);
-        tv_sharpLeft.setText(" SHLC: "+ SHLC);
-        tv_sharpRight.setText(" SHRC: "+ SHRC);
+        tv_safeAccel.setText("SAC: " + SAC);
+        tv_safeDesa.setText("SDC: " + SDC);
+        tv_safeLeft.setText("SLC: " + SLC);
+        tv_safeRight.setText("SRC: " + SRC);
+        tv_hardAccel.setText(" HAC: " + HAC);
+        tv_hardDes.setText(" HDC: " + HDC);
+        tv_sharpLeft.setText(" SHLC: " + SHLC);
+        tv_sharpRight.setText(" SHRC: " + SHRC);
 
 
     }
 
 
-
-    public void printArray(String name,float[] array){
+    public void printArray(String name, float[] array) {
 
         for (int v = 0; v < accel.length; v++) {
-            Log.d("printarray","pos "+v+" "+name+": "+array[v]);
+            Log.d("printarray", "pos " + v + " " + name + ": " + array[v]);
         }
 
     }
@@ -1397,6 +1284,7 @@ public void onResume() {
     boolean startTripState = false;
     long EndTime, StartTime;
     long timeTrip;
+    double elapse;
 
     public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
@@ -1412,14 +1300,14 @@ public void onResume() {
             bt_startTrip.setBackgroundColor(getResources().getColor(R.color.StateButton));
             previousLocation = null;
             StartTime = System.currentTimeMillis();
-            finalScoreTrip=0;
+            finalScoreTrip = 0;
             saveTripInitial(userid, trip);
             //trip.getTripId();
             Log.d("saveTripInitial", "TripID" + trip.getTripId());
 
 
             // making changes to the UI
-            Log.d("Score","finalScoreTrip"+finalScoreTrip);
+            Log.d("Score", "finalScoreTrip" + finalScoreTrip);
         } else {
             // END OF THE TRIP
             startTripState = false;
@@ -1429,38 +1317,35 @@ public void onResume() {
             /*****************************calculating time*********************************/
             EndTime = System.currentTimeMillis();
             timeTrip = EndTime - StartTime;
-            double  distanceKM = distanceTraveled / 1000.0;// it is show in real-Time
+            double distanceKM = distanceTraveled / 1000.0;// it is show in real-Time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            String time  = simpleDateFormat.format(new Date(timeTrip));
-            double elapse = (double)  (timeTrip/1000)/60;// this is the measure i need
-            float totalTimeTraveledMin = (float) (((EndTime-StartTime) / (1000*60)) % 60);
-            int hours   = (int) (((EndTime-StartTime)  / (1000*60*60)) % 24);
-            int seconds = (int) ((EndTime-StartTime)  / 1000) % 60 ;
+            String time = simpleDateFormat.format(new Date(timeTrip));
+            elapse = (double) (timeTrip / 1000) / 60;// this is the measure i need
+            float totalTimeTraveledMin = (float) (((EndTime - StartTime) / (1000 * 60)) % 60);
+            int hours = (int) (((EndTime - StartTime) / (1000 * 60 * 60)) % 24);
+            int seconds = (int) ((EndTime - StartTime) / 1000) % 60;
 
             //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
-            tv_totalHours.setText(String.format("%.2f", elapse)+"Min");
+            tv_totalHours.setText(String.format("%.2f", elapse) + "Min");
 
-            float reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC ;
-            finalScoreTrip = scoreTrip-reductionFactor;
-            Log.d("Score","reductionFactor"+reductionFactor);
-            Log.d("Score","finalScoreTrip"+finalScoreTrip);
-            tv_finalScore.setText(String.valueOf((int)finalScoreTrip));
-            SAC =0;
-            SDC =0;
-            HAC =0;
-            HDC =0;
-            SLC =0;
-            SRC =0;
-            SHLC =0;
-            SHRC =0;
-
-
-
+            float reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC;
+            finalScoreTrip = scoreTrip - reductionFactor;
+            Log.d("Score", "reductionFactor" + reductionFactor);
+            Log.d("Score", "finalScoreTrip" + finalScoreTrip);
+            tv_finalScore.setText(String.valueOf((int) finalScoreTrip));
+            SAC = 0;
+            SDC = 0;
+            HAC = 0;
+            HDC = 0;
+            SLC = 0;
+            SRC = 0;
+            SHLC = 0;
+            SHRC = 0;
 
 
             double avgSpeedKM = distanceKM / totalTimeTraveledMin;
-            tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM)+" ASp ");
+            tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM) + " ASp ");
 
             saveTripEnd();
 
@@ -1476,69 +1361,28 @@ public void onResume() {
         }
 
     }
-    /**
-    public void saveData(long tripId) {
 
-
-
-
-
-
-
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
-        DAO dao = db.driverDao();
-
-        for (int i = 0; i < 10; i++) {
-            com.finalproyect.niftydriverapp.db.Sensor sensor = new com.finalproyect.niftydriverapp.db.Sensor();
-
-            sensor.setTripCreatorId(tripId);
-            sensor.setxAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setyAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setzAcc((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setPitch((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setYaw((float) ((Math.random() * (accMax - accMin)) + accMin));
-            sensor.setCarSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
-            sensor.setGoogleCurSpeed((int) ((Math.random() * (speedMax - speedMin)) + speedMin));
-            sensor.setCurLocationLong(41.40338f);
-            sensor.setCurLocationLat(2.17403f);
-            sensor.setValSpeed(random.nextBoolean());
-            sensor.setSafeAcc(random.nextBoolean());
-            sensor.setSafeDes(random.nextBoolean());
-            sensor.setSafeLeft(random.nextBoolean());
-            sensor.setSafeRight(random.nextBoolean());
-            sensor.setHardAcc(random.nextBoolean());
-            sensor.setHardDes(random.nextBoolean());
-            sensor.setSharpLeft(random.nextBoolean());
-            sensor.setSharpRight(random.nextBoolean());
-
-
-            //user.setPicture;
-            dao.insertSensor(sensor);
-
-
-        }
-    }*/
 
     public void saveTripInitial(long userId, Trip trip) {
         trip.setUserCreatorId(userId);
-        trip.setStartLocation(lat+ ", "+lon);
+        trip.setStartLocationLAT(lat);
+        trip.setStartLocationLON(lon);
         trip.setStartDate(StartTime);
         trip.setStartTime(StartTime);
         dao.insertTrip(trip);
         setTripID(dao.getAllTripsByUser(userId).size());
 
 
-
-
-
     }
 
     public void saveTripEnd() {
 
-        Trip trip = dao.getTripById(tripID);; //bring 0 require the last number list could be de las
-        trip.setEndLocation(lat+ ", "+lon);
-        trip.setKilometers((float) (distanceTraveled/1000.0)); // save it in Km/s
-        trip.setTimeTrip(timeTrip);
+        Trip trip = dao.getTripById(tripID);
+        ; //bring 0 require the last number list could be de las
+        trip.setEndLocationLAT(lat);
+        trip.setEndLocationLON(lon);
+        trip.setKilometers((float) (distanceTraveled / 1000.0)); // save it in Km/s
+        trip.setTimeTrip(elapse);
         trip.setScoreTrip(finalScoreTrip);
         trip.setEndDate(EndTime);
         trip.setEndTime(EndTime);
@@ -1558,7 +1402,7 @@ public void onResume() {
         fusionSensor.setYaw(newYawOut);
         fusionSensor.setCarSpeed(currentSpeed);
         //fusionSensor.setGoogleCurSpeed();
-        fusionSensor.setCurLocation(lat+ ", "+lon);
+        fusionSensor.setCurLocation(lat + ", " + lon);
 
         //fusionSensor.setValSpeed();
         fusionSensor.setSafeAcc(SA);
@@ -1571,12 +1415,10 @@ public void onResume() {
         fusionSensor.setSharpRight(SHR);
 
 
-
         //user.setPicture;
         dao.insertFusionSensor(fusionSensor);
 
     }
-
 
 
     @Override

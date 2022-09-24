@@ -1,6 +1,7 @@
 package com.finalproyect.niftydriverapp.ui.mytrips;
 
 import android.content.Context;
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyViewHolder> {
 
@@ -67,19 +69,23 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
         holder.tv_scoreTripMyTrips.setText(String.valueOf((int)this.tripList.get(position).getScoreTrip()));
     }
     /*****************************Test Data******************************/
-    private String getEndAddressLocation(Trip trip) {
-        trip.getStartLocation();
-        return "24 Seaview avenue, Port macquarie 2444";
-    }
 
     private String getStartAddressLocation(Trip trip) {
-        trip.getStartLocation();
+        //trip.getStartLocation();
+        //Geocoder geocoder = new Geocoder(context,lo );
         return "2 Charles Sturt University, Port Macquarie 2";
     }
 
+    private String getEndAddressLocation(Trip trip) {
+        //trip.getStartLocation();
+        return "24 Seaview avenue, Port macquarie 2444";
+    }
+
+
+
     private String getDateFromMillis(long dateMillis) {
         Date startDate = new Date(dateMillis);
-        DateFormat df = new SimpleDateFormat("dd:MM:yy");
+        DateFormat df = new SimpleDateFormat("E, dd MMM yyyy HH:mm");
 
 
         return df.format(startDate);

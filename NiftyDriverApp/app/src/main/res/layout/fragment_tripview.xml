@@ -59,7 +59,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Wen,14-Aug-2022"
-        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textSize="25dp"
+
+
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
@@ -86,14 +90,14 @@
         android:id="@+id/tv_titleTripsView"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginEnd="36dp"
-        android:text="Minutes"
+        android:text="Min"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/include3"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_totalTimeView"
+        app:layout_constraintStart_toStartOf="@+id/tv_totalTimeView"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalTimeView"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -101,14 +105,14 @@
         android:id="@+id/tv_titleKilometresView"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginStart="28dp"
         android:text="Kilometres"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/include3"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_totalKilometresTripsview"
+        app:layout_constraintStart_toStartOf="@+id/tv_totalKilometresTripsview"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalKilometresTripsview"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -131,7 +135,7 @@
 
     <include
         android:id="@+id/include3"
-        layout="@layout/current_trip_view"
+        layout="@layout/current_trip_view2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="132dp"

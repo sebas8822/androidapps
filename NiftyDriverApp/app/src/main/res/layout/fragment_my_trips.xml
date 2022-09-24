@@ -12,15 +12,14 @@
         android:layout_width="41dp"
         android:layout_height="22dp"
         android:layout_marginBottom="52dp"
-        android:text="Hours"
+        android:text="Min"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.837"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_totalHours"
+        app:layout_constraintStart_toStartOf="@+id/tv_totalHours"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalHours"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -28,7 +27,6 @@
         android:id="@+id/tv_totalHours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
         android:hint="##"
         android:textAlignment="center"
         android:textColor="@color/blue_sky_200"
@@ -37,7 +35,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.929"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.579" />
@@ -63,7 +61,7 @@
         android:id="@+id/tv_totalTrips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="36dp"
         android:hint="##"
         android:textAlignment="center"
         android:textColor="@color/blue_sky_200"
@@ -73,7 +71,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.545" />
+        app:layout_constraintVertical_bias="0.539" />
 
     <TextView
         android:id="@+id/tv_titleTrips"
@@ -87,10 +85,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.161"
+        app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalTrips"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tv_totalKilometres"
