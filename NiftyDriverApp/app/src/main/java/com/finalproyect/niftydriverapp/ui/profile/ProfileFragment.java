@@ -111,14 +111,12 @@ public class ProfileFragment extends Fragment {
 
 
         //Init shared preferences
-        sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        //editor.putBoolean("userState", false);
-        //editor.commit();
+        /**no delete yet*///sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+
         long userId = sp.getLong("userId", 0);
 
         /**Pass this values to the shared preference reset for trip view*/
         editor.putInt("position", 0);
-        //editor.clear();
         editor.commit();
 
         setUserId(userId);
@@ -133,23 +131,20 @@ public class ProfileFragment extends Fragment {
         //populateUserTable();
         im_profile = (ImageView) view.findViewById(R.id.im_profile);
         setProfileImageFromDatabase(user);
-        //User Name
 
+        //User Name
         tv_userName = (TextView) view.findViewById(R.id.tv_userName);
         tv_userName.setText(user.getUserName() + " " + user.getLastName());
 
         //Main score
-
         tv_mainScore = (TextView) view.findViewById(R.id.tv_mainScore);
         tv_mainScore.setText(mainScore(userId));
 
         // Number of trips
-
         tv_totalTrips = (TextView) view.findViewById(R.id.tv_totalTrips);
         tv_totalTrips.setText(numTrips(userId));
 
         //Number Kilometers
-
         tv_totalKilometres = (TextView) view.findViewById(R.id.tv_totalKilometres);
         tv_totalKilometres.setText(numKilometres(userId));
 
@@ -176,7 +171,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 imageChooser(user);
-                //saveImageDatabase(imageChoose);
+
 
             }
         });
@@ -286,31 +281,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    public void populateUserTable() {
-        String[] num = {"ONE", "DOS", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN"};
-        String[] alp = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "E", "W", "X", "Y", "Z"};
 
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
-        DAO dao = db.driverDao();
-
-        for (int i = 0; i < 1; i++) {
-            User user = new User();
-            user.setUserName(num[i] + "Sebastian");
-            user.setLastName("Ramirez");
-            user.setEmail(alp[i] + num[i] + "8822@hotmail.com");
-            user.setPassword("S3b4st1@nR");
-            user.setPicture(defaultImage());
-            user.setLoginState(true);
-
-
-            //user.setPicture("@");
-            dao.insertUser(user);
-
-
-        }
-
-
-    }
 
 
 }

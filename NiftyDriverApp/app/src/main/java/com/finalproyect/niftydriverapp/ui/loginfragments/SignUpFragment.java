@@ -212,7 +212,7 @@ public class SignUpFragment extends Fragment {
 
 
         //finish();
-        Toast.makeText(getContext(), "Employee Added Successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "User Created Successfully", Toast.LENGTH_SHORT).show();
 
     }
 

@@ -113,25 +113,23 @@ public class LoginFragment extends Fragment {
 
             if (validUser(email, pass)) {
                 // insert values into the data base
-                Toast.makeText(getContext(), "start the application an setup sharedpreference", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "start the application an setup sharedpreference", Toast.LENGTH_LONG).show();
 
-                //save preferences with sharepreferences and set the user state true to allow to acces to the app and keep it online until the user log out
+                //save preferences with sharepreferences and set the user state true to allow to access to the app and keep it online until the user log out
                 User user = dao.getUserByEmail(email);
-                editor.putLong("userId", user.getIdUser());
                 user.setLoginState(true);
                 dao.updateUser(user);
+
+                //Obtain and set in sharepreferences the user
+                editor.putLong("userId", user.getIdUser());
                 editor.putBoolean("userState", user.isLoginState());
                 editor.commit();
-                Toast.makeText(getContext(),"Save preferences" + user.isLoginState(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(),"Save preferences" + user.isLoginState(), Toast.LENGTH_LONG).show();
 
-
+                // after save preferencces and update database start new activity
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
-                /**
-                new AlertDialog.Builder(getContext())
-                        .setTitle("Data inserted is correct")
-                        .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Email: " + email )
-                        .show();*/
+
 
             } else {
                 new AlertDialog.Builder(getContext())

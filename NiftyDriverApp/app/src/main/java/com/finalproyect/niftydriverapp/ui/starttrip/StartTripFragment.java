@@ -53,6 +53,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -417,6 +418,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     double lat;
     double lon;
     float currentSpeed;
+    boolean statusLocation = false;
 
     //THIS CLASS PROVIDE THE VARIABLES SPEED lONGITUD AND lATITUD
     private class SpeedTask extends AsyncTask<String, Void, String> {
@@ -449,7 +451,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 @Override
                 public void onLocationChanged(Location location) {
                     speed = location.getSpeed();
-
+                    statusLocation = true;
 
                     //multiplaer to show the units standar Km/h
                     float multiplier = 3.6f;
@@ -1289,75 +1291,81 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
 
-        if (startTripState == false) {
-            Trip trip = new Trip();
-            //DURING THE TRIP
-            // during the start of a trip, values are initialized
-            // change the button to display "End" to end the trip
-            startTripState = true;
+        Log.d("StartTrip","statusLocation"+statusLocation);
+        if(!statusLocation==false) {
 
-            bt_startTrip.setText("End Trip");
-            bt_startTrip.setBackgroundColor(getResources().getColor(R.color.StateButton));
-            previousLocation = null;
-            StartTime = System.currentTimeMillis();
-            finalScoreTrip = 0;
-            saveTripInitial(userid, trip);
-            //trip.getTripId();
-            Log.d("saveTripInitial", "TripID" + trip.getTripId());
+            if (startTripState == false) {
+                Trip trip = new Trip();
+                //DURING THE TRIP
+                // during the start of a trip, values are initialized
+                // change the button to display "End" to end the trip
+                startTripState = true;
 
-
-            // making changes to the UI
-            Log.d("Score", "finalScoreTrip" + finalScoreTrip);
-        } else {
-            // END OF THE TRIP
-            startTripState = false;
-            // Time,Score,AverageScore, is compute after finish trip
-            bt_startTrip.setText("Start Trip");
-            bt_startTrip.setBackgroundColor(getResources().getColor(R.color.blue_sky_500));
-            /*****************************calculating time*********************************/
-            EndTime = System.currentTimeMillis();
-            timeTrip = EndTime - StartTime;
-            double distanceKM = distanceTraveled / 1000.0;// it is show in real-Time
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            String time = simpleDateFormat.format(new Date(timeTrip));
-            elapse = (double) (timeTrip / 1000) / 60;// this is the measure i need
-            float totalTimeTraveledMin = (float) (((EndTime - StartTime) / (1000 * 60)) % 60);
-            int hours = (int) (((EndTime - StartTime) / (1000 * 60 * 60)) % 24);
-            int seconds = (int) ((EndTime - StartTime) / 1000) % 60;
-
-            //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
-            tv_totalHours.setText(String.format("%.2f", elapse) + "Min");
-
-            float reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC;
-            finalScoreTrip = scoreTrip - reductionFactor;
-            Log.d("Score", "reductionFactor" + reductionFactor);
-            Log.d("Score", "finalScoreTrip" + finalScoreTrip);
-            tv_finalScore.setText(String.valueOf((int) finalScoreTrip));
-            SAC = 0;
-            SDC = 0;
-            HAC = 0;
-            HDC = 0;
-            SLC = 0;
-            SRC = 0;
-            SHLC = 0;
-            SHRC = 0;
+                bt_startTrip.setText("End Trip");
+                bt_startTrip.setBackgroundColor(getResources().getColor(R.color.StateButton));
+                previousLocation = null;
+                StartTime = System.currentTimeMillis();
+                finalScoreTrip = 0;
+                saveTripInitial(userid, trip);
+                //trip.getTripId();
+                Log.d("saveTripInitial", "TripID" + trip.getTripId());
 
 
-            double avgSpeedKM = distanceKM / totalTimeTraveledMin;
-            tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM) + " ASp ");
+                // making changes to the UI
+                Log.d("Score", "finalScoreTrip" + finalScoreTrip);
+            } else {
+                // END OF THE TRIP
+                startTripState = false;
+                // Time,Score,AverageScore, is compute after finish trip
+                bt_startTrip.setText("Start Trip");
+                bt_startTrip.setBackgroundColor(getResources().getColor(R.color.blue_sky_500));
+                /*****************************calculating time*********************************/
+                EndTime = System.currentTimeMillis();
+                timeTrip = EndTime - StartTime;
+                double distanceKM = distanceTraveled / 1000.0;// it is show in real-Time
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            saveTripEnd();
+                String time = simpleDateFormat.format(new Date(timeTrip));
+                elapse = (double) (timeTrip / 1000) / 60;// this is the measure i need
+                float totalTimeTraveledMin = (float) (((EndTime - StartTime) / (1000 * 60)) % 60);
+                int hours = (int) (((EndTime - StartTime) / (1000 * 60 * 60)) % 24);
+                int seconds = (int) ((EndTime - StartTime) / 1000) % 60;
+
+                //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
+                tv_totalHours.setText(String.format("%.2f", elapse) + "Min");
+
+                float reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC;
+                finalScoreTrip = scoreTrip - reductionFactor;
+                Log.d("Score", "reductionFactor" + reductionFactor);
+                Log.d("Score", "finalScoreTrip" + finalScoreTrip);
+                tv_finalScore.setText(String.valueOf((int) finalScoreTrip));
+                SAC = 0;
+                SDC = 0;
+                HAC = 0;
+                HDC = 0;
+                SLC = 0;
+                SRC = 0;
+                SHLC = 0;
+                SHRC = 0;
 
 
-            /**SAVE VALUES fuction*///Save values
-            //getting average score of the trip
-            //scoreArrayList = new ScoreArrayList(scoreList);
-            //avgScore = scoreArrayList.getAverage();
-            //double result = Math.round(avgScore * 100) / 100.0;
+                double avgSpeedKM = distanceKM / totalTimeTraveledMin;
+                tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM) + " ASp ");
 
-            Toast.makeText(getContext(), "Trip End final Trip Score: ", Toast.LENGTH_LONG).show();
+                saveTripEnd();
 
+
+                /**SAVE VALUES fuction*///Save values
+                //getting average score of the trip
+                //scoreArrayList = new ScoreArrayList(scoreList);
+                //avgScore = scoreArrayList.getAverage();
+                //double result = Math.round(avgScore * 100) / 100.0;
+
+                Toast.makeText(getContext(), "Trip End final Trip Score: ", Toast.LENGTH_LONG).show();
+
+            }
+        }else {
+            Toast.makeText(getContext(),"Location is not still enable. Please wait",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -1370,7 +1378,11 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         trip.setStartDate(StartTime);
         trip.setStartTime(StartTime);
         dao.insertTrip(trip);
-        setTripID(dao.getAllTripsByUser(userId).size());
+        List<Trip> tripList = dao.getAllTripsByUser(userId);
+        Trip lastTrip = tripList.get(dao.getAllTripsByUser(userId).size()-1);
+
+        setTripID(lastTrip.getTripId());/**Problem because i need the trip id no the number of trips **/
+        Log.d("SaveTripInitial","tripID"+ lastTrip.getTripId());
 
 
     }

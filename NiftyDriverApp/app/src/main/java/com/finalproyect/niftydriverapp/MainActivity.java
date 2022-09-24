@@ -31,24 +31,20 @@ import androidx.fragment.app.Fragment;
 
 import com.finalproyect.niftydriverapp.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements CallBackFragment{
+public class MainActivity extends AppCompatActivity implements CallBackFragment {
 
     private ActivityMainBinding binding;
     CallBackFragment callBackFragment;
 
 
-
     private Button bt_startTrip;
 
     //Buttons profile fragment
-    private Button bt_scoreView,bt_graphView;
+    private Button bt_scoreView, bt_graphView;
 
+    //Init Sharepreferences
     SharedPreferences sp;
-
-
-
-
-
+    SharedPreferences.Editor editor;
 
 
     //Global variable
@@ -56,9 +52,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
     private int intLayout = 1;
 
 
-    // for save preferences like user id and user state means open session
 
-    // for save preferences like user id and user state means open session
 
 
     @Override
@@ -69,12 +63,11 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
         long userid = getuserIdfromSP();
         boolean userState = getUserStatefromSP();
-        Toast.makeText(getApplicationContext(),"UserId "+ userid +" userState " + userState, Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(), "UserId " + userid + " userState " + userState, Toast.LENGTH_LONG).show();
 
 
         // depending of the user state
-        if(userState == true){
+        if (userState == true) {
             //disable night mode but show a bug can be better show
 
             intLayout = 1;
@@ -85,40 +78,35 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
             bottomNavigationView.setOnItemSelectedListener(item -> onBottonNavigationItemClicked(item));
             bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
 
-        }else {
+        } else {
             setContentView(R.layout.activity_login);
             addFragmentLogin();
         }
 
 
-
-
-   }
+    }
 
     private boolean getUserStatefromSP() {
         SharedPreferences sp;
         //Init shared preferences
-        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         //editor.putBoolean("userState", false);
         //editor.commit();
 
-        boolean userState = sp.getBoolean("userState",false);
+        boolean userState = sp.getBoolean("userState", false);
         return userState;
     }
 
     private long getuserIdfromSP() {
-        SharedPreferences sp;
-        //Init shared preferences
-        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
-        //editor.putBoolean("userState", false);
-        //editor.commit();
-        long userid = sp.getLong("userId",0);
+        sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+
+        long userid = sp.getLong("userId", 0);
 
         return userid;
     }
 
     private boolean onBottonNavigationItemClicked(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.navigation_profile:
                 loadFragment(new ProfileFragment());
                 return true;
@@ -136,23 +124,17 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
         return false;
     }
 
-    private void loadFragment(Fragment fragment){
+    private void loadFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, fragment)
                 .commit();
 
     }
-    /**
-    private void loadSettingsFragment(Fragment fragment){
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container_settings, fragment)
-                .commit();
 
-    }*/
 
-    private void addFragmentLogin(){
+
+    private void addFragmentLogin() {
         LoginFragment fragment = new LoginFragment();
         fragment.setCallBackFragment(this);
         getSupportFragmentManager()
@@ -162,53 +144,36 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
     }
 
-    /**private void addFragmentSetting(){
-        Settings_Activity fragment = new Settings_Activity();
 
-        getSupportFragmentManager()
-                .beginTransaction()
 
-                .add(R.id.fragment_container_settings, fragment)
-                .addToBackStack(null)
-                .commit();
-
-    }*/
-
-    private void replaceFragmentLogin(Fragment fragment){
+    private void replaceFragmentLogin(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction().addToBackStack(null)
                 .replace(R.id.fragment_container_login, fragment)
                 .commit();
 
     }
-    /**
-    private void replaceFragmentSetting(Fragment fragment){
-        getSupportFragmentManager()
-                .beginTransaction().addToBackStack(null)
-                .replace(R.id.fragment_container_settings, fragment)
-                .commit();
 
-    }*/
+
 
 
     // call top menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.top_menu,menu);
+        inflater.inflate(R.menu.top_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.bt_settings:
-                Toast.makeText(this,"Settings selected",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Settings selected", Toast.LENGTH_LONG).show();
                 intLayout = 2;
                 //setContentView(R.layout.activity_settings);
                 //addFragmentSetting();
                 startActivity(new Intent(this, Settings_Activity.class));
-
 
 
                 //break;
@@ -220,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //init sharedpreferences
+
                         closeApp();
                     }
                 });
@@ -234,24 +199,20 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
                 dialog.show();
 
 
-
-
-
-
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void closeApp(){
+    public void closeApp() {
 
-        SharedPreferences.Editor editor = sp.edit();
-        sp = getApplicationContext().getSharedPreferences("userProfile",Context.MODE_PRIVATE);
+        editor = sp.edit();
+        sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         //editor.putBoolean("userState", false);
         //editor.commit();
-        long userId = sp.getLong("userId",0);
-        boolean userState = sp.getBoolean("userState",false);
-        Toast.makeText(this,"Logout selected",Toast.LENGTH_LONG).show();
+        long userId = sp.getLong("userId", 0);
+        boolean userState = sp.getBoolean("userState", false);
+        Toast.makeText(this, "Logout selected", Toast.LENGTH_LONG).show();
         AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());// Init database
         DAO dao = db.driverDao();
         User user = dao.getUserById(userId);
@@ -261,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
         editor.clear();
         editor.commit();
         editor.apply();
-        Toast.makeText(getApplicationContext(),"Save preferences " + user.isLoginState(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Save preferences " + user.isLoginState(), Toast.LENGTH_LONG).show();
 
         this.finish();
         System.exit(0);
@@ -276,10 +237,9 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
     }
 
 
-
     @Override
     public void onBackPressed() {
-        /*
+        /**
         if (intLayout ==2){
             intLayout = 1;
             setContentView(R.layout.activity_main);
@@ -288,17 +248,15 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment{
 
 
 
-        /*
+        /**
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_settings);
         if(fragment!=null){ // if is not = null means there is more fragments in the container
             // remove fragments
         }*/
 
 
-
         super.onBackPressed();
     }
-
 
 
 }

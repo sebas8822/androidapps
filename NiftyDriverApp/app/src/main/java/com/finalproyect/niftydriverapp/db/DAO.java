@@ -25,7 +25,13 @@ public interface DAO {
 
 
     @Delete
-    void delete(User user);
+    void deleteUser(User user);
+
+    @Delete
+    void deleteTrip(Trip trip);
+
+    @Delete
+    void deleteFusionSensor(FusionSensor fusionSensor);
 
     @Delete
     void deleteAllTrips(User user);
@@ -77,6 +83,9 @@ public interface DAO {
 
     @Query("SELECT * FROM FusionSensor ")
     List<FusionSensor> getAllFusionSensor();
+
+    @Query("SELECT * FROM FusionSensor where tripCreatorId= :id")
+    List<FusionSensor> getAllFusionSensorByTrip(long id);
 
 
 
