@@ -22,51 +22,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/im_profileSettings"
-        android:layout_width="114dp"
-        android:layout_height="109dp"
-        android:layout_marginTop="14dp"
+        android:layout_width="138dp"
+        android:layout_height="120dp"
+        app:civ_border_color="@color/blue_sky_500"
+        app:civ_border_width="3dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.053"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewsettings"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/img_1" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.776" />
 
     <ImageButton
         android:id="@+id/bt_changeImageSettings"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="38dp"
         android:layout_height="33dp"
-        android:layout_marginTop="76dp"
         android:src="@drawable/ic_baseline_change_circle_24"
         app:layout_constraintBottom_toBottomOf="@+id/im_profileSettings"
         app:layout_constraintEnd_toEndOf="@+id/im_profileSettings"
-        app:layout_constraintTop_toTopOf="@+id/im_profileSettings"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/im_profileSettings"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
         android:id="@+id/tv_currentName"
-        android:layout_width="143dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="44dp"
         android:hint="Current_Name"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="22dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.583"
+        app:layout_constraintHorizontal_bias="0.857"
         app:layout_constraintStart_toEndOf="@+id/im_profileSettings"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_currentEmailSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="247dp"
+        android:layout_height="23dp"
         android:layout_marginTop="8dp"
         android:hint="Current_Email_address"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="18dp"
         android:textStyle="bold"

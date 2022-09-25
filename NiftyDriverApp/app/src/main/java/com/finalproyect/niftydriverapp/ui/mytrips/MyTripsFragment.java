@@ -139,12 +139,16 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
         //get the record from database
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
-        long tripDate = tripList.get(0).getStartDate();
+        Date startDate = null;
 
-        Date startDate = new Date(tripList.get(0).getStartDate());
+        if(!tripList.isEmpty()) {
+            startDate = new Date(tripList.get(0).getStartDate());
+        }else{
+            startDate = new Date(System.currentTimeMillis());
+        }
+
+
         DateFormat df = new SimpleDateFormat("E, dd MMM yyyy HH:mm");
-
-
         return df.format(startDate);
 
 
@@ -154,9 +158,14 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
         //get the record from database
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
-        long tripDate = tripList.get(0).getStartDate();
+        Date startDate = null;
+        if(!tripList.isEmpty()) {
+            startDate = new Date(tripList.get(tripList.size() - 1).getStartDate());
+        }else{
+            startDate = new Date(System.currentTimeMillis());
+        }
+        
 
-        Date startDate = new Date(tripList.get(tripList.size()-1).getStartDate());
         DateFormat df = new SimpleDateFormat("E, dd MMM yyyy HH:mm");
 
 

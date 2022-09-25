@@ -1381,7 +1381,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         List<Trip> tripList = dao.getAllTripsByUser(userId);
         Trip lastTrip = tripList.get(dao.getAllTripsByUser(userId).size()-1);
 
-        setTripID(lastTrip.getTripId());/**Problem because i need the trip id no the number of trips **/
+        setTripID(lastTrip.getTripId());
         Log.d("SaveTripInitial","tripID"+ lastTrip.getTripId());
 
 

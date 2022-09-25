@@ -1,20 +1,32 @@
 package com.finalproyect.niftydriverapp.ui.settings;
 
+import static com.finalproyect.niftydriverapp.ui.profile.ProfileFragment.createBitmapFromByteArray;
+
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.finalproyect.niftydriverapp.CallBackFragment;
 import com.finalproyect.niftydriverapp.R;
@@ -23,8 +35,12 @@ import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.finalproyect.niftydriverapp.db.Trip;
 import com.finalproyect.niftydriverapp.db.User;
+import com.finalproyect.niftydriverapp.ui.functions.ImageResizer;
+import com.finalproyect.niftydriverapp.ui.profile.ProfileFragment;
 import com.finalproyect.niftydriverapp.ui.settings.about.About_Activity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class Settings_Activity extends AppCompatActivity {
@@ -32,6 +48,10 @@ public class Settings_Activity extends AppCompatActivity {
     //Init Sharepreferences
     SharedPreferences sp;
     SharedPreferences.Editor editor;
+
+    AppDatabase db;
+    DAO dao;
+
 
     long userId;
 
@@ -47,6 +67,40 @@ public class Settings_Activity extends AppCompatActivity {
     TextView tv_currentName, tv_currentEmailSettings;
 
 
+    //Obtain image setup in profile view and save into database init activity to obtain a result
+    ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
+            new ActivityResultContracts
+                    .StartActivityForResult(),
+            result -> {
+                if (result.getResultCode()
+                        == Activity.RESULT_OK) {
+                    // init data obtain image
+                    Intent data = result.getData();
+                    //save data into uri variable transforme into bitmap
+                    if (data != null && data.getData() != null) {
+                        Uri selectedImageUri = data.getData();
+                        Bitmap selectedImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_1);
+                        //data.putExtra(MediaStore.EXTRA_OUTPUT,)
+                        try {
+                            selectedImageBitmap
+                                    = MediaStore.Images.Media.getBitmap(
+                                    getApplicationContext().getContentResolver(),
+                                    selectedImageUri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        //imageChoose = selectedImageBitmap;
+                        saveImageDatabase(selectedImageBitmap);
+
+                    }
+                }
+
+            });
+
+
+
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
@@ -54,9 +108,62 @@ public class Settings_Activity extends AppCompatActivity {
         sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit();
         long userId = sp.getLong("userId", 0);
+        boolean switchThemeState = sp.getBoolean("switchThemeState",false);
         setUserId(userId);
 
+        db = AppDatabase.getDbInstance(getApplicationContext());// Init database
+        dao = db.driverDao();
+        //call user to delete
+        User user = dao.getUserById(userId);
 
+
+        //Current name and Email
+
+        tv_currentName = (TextView) findViewById(R.id.tv_currentName);
+        tv_currentName.setText(user.getUserName() +" "+user.getLastName());
+        tv_currentEmailSettings = (TextView) findViewById(R.id.tv_currentEmailSettings);
+        tv_currentEmailSettings.setText(user.getEmail());
+
+        //Image Profile
+        im_profileSettings = (ImageView) findViewById(R.id.im_profileSettings);
+        setProfileImageFromDatabase(user);
+
+        //Theme
+        sw_themeDarkMode = (Switch) findViewById(R.id.sw_themeDarkMode);
+        sw_themeDarkMode.setChecked(switchThemeState);
+        sw_themeDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b==true){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    user.setThemeState(true);
+                    dao.updateUser(user);
+                    editor.putBoolean("switchThemeState",true);
+                    editor.putBoolean("themeState", user.isThemeState());
+                    editor.commit();
+                }else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    user.setThemeState(false);
+                    dao.updateUser(user);
+                    editor.putBoolean("switchThemeState",false);
+                    editor.putBoolean("themeState", user.isThemeState());
+                    editor.commit();
+                }
+
+            }
+        });
+
+        bt_changeImageSettings = (ImageButton) findViewById(R.id.bt_changeImageSettings);
+        bt_changeImageSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                imageChooser();
+
+            }
+        });
+
+        //change user settings
         bt_changeParameterSet = findViewById(R.id.bt_changeParameterSet);
         bt_changeParameterSet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +203,7 @@ public class Settings_Activity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        closeApp();
+                        closeApp(user);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -122,7 +229,7 @@ public class Settings_Activity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        deleteUser();
+                        deleteUser(user);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -142,17 +249,49 @@ public class Settings_Activity extends AppCompatActivity {
     }
 
 
-    public void closeApp() {
+
+    public void setProfileImageFromDatabase(User user) {
+        byte[] imageData = user.getPicture();
+        im_profileSettings.setImageBitmap(createBitmapFromByteArray(imageData));
+    }
+
+
+    public void imageChooser() {
+
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+
+        launchSomeActivity.launch(i);
+
+    }
+
+    public void saveImageDatabase(Bitmap selectedImageBitmap) {
+        //Resi
+        Bitmap reducedSizeImage = ImageResizer.reduceBitmapSize(selectedImageBitmap, 240000);
+        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();//inicilite
+        reducedSizeImage.compress(Bitmap.CompressFormat.PNG, 100, byteArray);
+        byte[] image = byteArray.toByteArray();
+
+        Toast.makeText(getApplicationContext(), "The Profile image has been updated", Toast.LENGTH_LONG).show();
+
+        AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());
+        DAO dao = db.driverDao();
+        User user = dao.getUserById(userId);
+        user.setPicture(image);
+        dao.updateUser(user);
+        im_profileSettings.setImageBitmap(
+                selectedImageBitmap);
+
+    }
 
 
 
-
+    public void closeApp(User user) {
 
 
         //Toast.makeText(this, "Logout selected", Toast.LENGTH_LONG).show();
-        AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());// Init database
-        DAO dao = db.driverDao();
-        User user = dao.getUserById(userId);
+
 
         user.setLoginState(false);
         dao.updateUser(user);
@@ -167,22 +306,18 @@ public class Settings_Activity extends AppCompatActivity {
         System.exit(0);
 
 
-
     }
 
-    public void deleteUser() {
+    public void deleteUser(User user) {
 
-        AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());// Init database
-        DAO dao = db.driverDao();
 
-        User user = dao.getUserById(userId);
-
+        //call the list of thips made by the user
         List<Trip> trips = dao.getAllTripsByUser(userId);
+        //notify before to deleted
+        Toast.makeText(this, user.getUserName() + " Deleted", Toast.LENGTH_LONG).show();
 
-        Toast.makeText(this, user.getUserName()+" Deleted", Toast.LENGTH_LONG).show();
 
-
-
+        //delete first fusionSensor entries, then trips and finally the user wipe all data
         for (Trip trip : trips) {
 
             List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(trip.getTripId());
@@ -204,8 +339,6 @@ public class Settings_Activity extends AppCompatActivity {
         this.finishAffinity();
         this.finish();
         System.exit(0);
-
-
 
 
     }

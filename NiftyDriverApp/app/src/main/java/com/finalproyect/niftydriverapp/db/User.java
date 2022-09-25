@@ -22,6 +22,16 @@ public class User {
     public byte[] picture;
     @ColumnInfo(name = "Log_in_state")
     public boolean loginState;
+    @ColumnInfo(name = "Theme_state")
+    public boolean themeState;
+
+    public boolean isThemeState() {
+        return themeState;
+    }
+
+    public void setThemeState(boolean themeState) {
+        this.themeState = themeState;
+    }
 
     public boolean isLoginState() {
         return loginState;

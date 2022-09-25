@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,19 +52,34 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
     BottomNavigationView bottomNavigationView;
     private int intLayout = 1;
 
+    long userId;
 
 
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    AppDatabase db;
+    DAO dao;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
 
 
         long userid = getuserIdfromSP();
         boolean userState = getUserStatefromSP();
+        boolean themeState = getThemeState();
+        setUserId(userId);
         Toast.makeText(getApplicationContext(), "UserId " + userid + " userState " + userState, Toast.LENGTH_LONG).show();
+
+
+
+
+
+
 
 
         // depending of the user state
@@ -71,8 +87,18 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
             //disable night mode but show a bug can be better show
 
             intLayout = 1;
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
             setContentView(R.layout.activity_main);
+
+
+
+            Log.d("theme","statetheme"+themeState);
+
+            if (themeState){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
 
             bottomNavigationView = findViewById(R.id.nav_view);
             bottomNavigationView.setOnItemSelectedListener(item -> onBottonNavigationItemClicked(item));
@@ -103,6 +129,15 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
         long userid = sp.getLong("userId", 0);
 
         return userid;
+    }
+
+    private boolean getThemeState() {
+        sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+
+        boolean themeState = sp.getBoolean("themeState", false); // if is not get it is false
+
+
+        return themeState;
     }
 
     private boolean onBottonNavigationItemClicked(MenuItem item) {

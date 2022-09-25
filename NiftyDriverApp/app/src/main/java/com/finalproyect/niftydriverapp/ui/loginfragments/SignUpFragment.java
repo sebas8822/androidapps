@@ -50,6 +50,7 @@ public class SignUpFragment extends Fragment {
     String userEmail, Password;
 
     SharedPreferences.Editor editor;
+    Context context;
 
 
 
@@ -124,7 +125,7 @@ public class SignUpFragment extends Fragment {
 
             //System.out.println("Input values " + " Name: " + firstName + " Last Name:" + lastName + " Employee ID" + empId + " Email:" + email);
 
-            if (validName(firstName, lastName) == true && validEmail(email) == true && validPasswords(pass, confPass) == true) {
+            if (validName(context,firstName, lastName) == true && validEmail(email) == true && validPasswords(context,pass, confPass) == true) {
                 // insert values into the data base
                 saveUser(firstName, lastName, email, pass);
                 new AlertDialog.Builder(getContext())
@@ -145,29 +146,42 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    public static boolean validPasswords(String pass, String confPass) {
+    public static boolean validNewPass(Context context,String pass, String confPass) {
         boolean val = true;
+        String PASSWORD_PATTERN =
+                "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+        //valid with regex if correct check if if equal to confirm pass
+        if(val==true){
+            val = validPasswords(context,pass,confPass);
+
+        }
+        return val;
+    }
+
+    public static boolean validPasswords(Context context,String pass, String confPass) {
+        boolean val = true;
+
         if (!pass.equals(confPass)) {
-            Toast.makeText(getAppContext(), "Passwords are not the same check", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Passwords are not the same check", Toast.LENGTH_LONG).show();
             val = false;
         }
         return val;
     }
 
-    public static boolean validName(String firsName, String lastName) {
+    public static boolean validName(Context context,String firsName, String lastName) {
 
 
         // Variables declaration for regex function
         String valName = "[a-zA-Z. -]+";
         boolean val = true;
         if ((!(Pattern.matches(valName, firsName))) || (!(Pattern.matches(valName, lastName)))) {
-            Toast.makeText(getAppContext(), "Name is not accepted", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Name is not accepted", Toast.LENGTH_LONG).show();
             val = false;
         }
         return val;
     }
 
-    public boolean validEmail(String email) {
+    public boolean validEmail( String email) {
         // Variables declaration for regex function
 
         AppDatabase db = AppDatabase.getDbInstance(getContext());// Init database
@@ -179,12 +193,12 @@ public class SignUpFragment extends Fragment {
         boolean val = true;
 
         if (!(Pattern.matches(valemail, email))) {
-            Toast.makeText(getContext(), "email is invalid", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "email is invalid", Toast.LENGTH_LONG).show();
             val = false;
         }
         //check if exits this email in the data base
         if (!(dao.getUserByEmail(email)==null)) {
-            Toast.makeText(getContext(), "email already exits", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "email already exits", Toast.LENGTH_LONG).show();
             val = false;
         }
 
@@ -205,6 +219,7 @@ public class SignUpFragment extends Fragment {
         user.setPassword(pass);
         user.setPicture(defaultImage());
         user.setLoginState(false);
+        user.setThemeState(false);
 
 
         //user.setPicture("@");

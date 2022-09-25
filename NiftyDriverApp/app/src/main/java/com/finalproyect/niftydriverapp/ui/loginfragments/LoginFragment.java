@@ -123,6 +123,7 @@ public class LoginFragment extends Fragment {
                 //Obtain and set in sharepreferences the user
                 editor.putLong("userId", user.getIdUser());
                 editor.putBoolean("userState", user.isLoginState());
+                editor.putBoolean("themeState", user.isThemeState());
                 editor.commit();
                 //Toast.makeText(getContext(),"Save preferences" + user.isLoginState(), Toast.LENGTH_LONG).show();
 

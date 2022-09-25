@@ -1,5 +1,6 @@
 package com.finalproyect.niftydriverapp.ui.tripView;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -25,6 +26,7 @@ import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.Trip;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreViewTripView;
+import com.finalproyect.niftydriverapp.ui.settings.Settings_Activity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,7 +51,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
     Button bt_scoreViewTripView, bt_graphViewTripView;
     ImageButton bt_leftTripButton, bt_rightButton;
-    TextView tv_startTrip, tv_endTrip, tv_startTripLocation, tv_endTripLocation,  tv_totalKilometresTripsview, tv_ScoreTripView, tv_totalTimeView, tv_titleTripsView, tv_tripViewData;
+    TextView tv_startTrip, tv_endTrip, tv_startTripLocation, tv_endTripLocation, tv_totalKilometresTripsview, tv_ScoreTripView, tv_totalTimeView, tv_titleTripsView, tv_tripViewData;
 
 
     public void setUserId(long userId) {
@@ -134,10 +136,15 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         bt_graphViewTripView = (Button) view.findViewById(R.id.bt_graphViewTripView);
         bt_scoreViewTripView = (Button) view.findViewById(R.id.bt_scoreViewTripView);
 
+        if (tripList.isEmpty()) {
 
-        Trip lastTrip = tripList.get(position);
+            settingViewEMPTY();
+        } else {
+            Trip lastTrip = tripList.get(position);
 
-        settingView(lastTrip);
+
+            settingView(lastTrip);
+        }
 
 
         bt_leftTripButton.setOnClickListener(new View.OnClickListener() {
@@ -254,33 +261,55 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         float timeTrip = (float) lastTrip.getTimeTrip();
         if (timeTrip > 60) {
             tv_titleTripsView.setText("Hours");
-            timeTrip = timeTrip/60;
+            timeTrip = timeTrip / 60;
         }
-        tv_totalTimeView.setText(String.format("%.1f",timeTrip));
+        tv_totalTimeView.setText(String.format("%.1f", timeTrip));
+    }
 
+    public void settingViewEMPTY() {
+        /**Set values*/
+        long currentTime = System.currentTimeMillis();
+        tv_startTrip.setText(getTimeFromMillis(currentTime));
+        tv_endTrip.setText(getTimeFromMillis(currentTime));
+        tv_startTripLocation.setText("No location available");
+        tv_endTripLocation.setText("No location available");
+        tv_tripViewData.setText(getDateFromMillis(currentTime));
+        tv_totalKilometresTripsview.setText("0");
+
+        tv_ScoreTripView.setText("0");
+
+        tv_totalTimeView.setText("0");
+
+        /**Inflate**/
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("No Trips Available!!");
+        builder.setMessage("Please start a trip");
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
     }
 
     /*****************************Test Data******************************/
     Geocoder geocoder;
+
     private String getStartAddressLocation(Trip trip) {
 
         geocoder = new Geocoder(getContext());
         List<Address> geoResult = findGeocoder(trip.getStartLocationLAT(), trip.getStartLocationLON());
         Address thisAddress = geoResult.get(0);
-        Log.d("testAddres" ,"address: "+ thisAddress.getAddressLine(0));
+        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
         return String.valueOf(thisAddress.getAddressLine(0));
 
     }
+
     private String getEndAddressLocation(Trip trip) {
         geocoder = new Geocoder(getContext());
 
         List<Address> geoResult = findGeocoder(trip.getEndLocationLAT(), trip.getEndLocationLON());
         Address thisAddress = geoResult.get(0);
-        Log.d("testAddres" ,"address: "+ thisAddress.getAddressLine(0));
+        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
         return String.valueOf(thisAddress.getAddressLine(0));
     }
-
 
 
     private String getDateFromMillis(long dateMillis) {
@@ -299,7 +328,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         return df.format(millis);
     }
 
-    private List<Address> findGeocoder(Double lat, Double lon){
+    private List<Address> findGeocoder(Double lat, Double lon) {
         final int maxResults = 1;
         List<Address> addresses = null;
         try {
