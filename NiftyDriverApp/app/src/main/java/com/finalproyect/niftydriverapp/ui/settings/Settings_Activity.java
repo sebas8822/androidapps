@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -98,7 +99,13 @@ public class Settings_Activity extends AppCompatActivity {
 
             });
 
-
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -115,6 +122,7 @@ public class Settings_Activity extends AppCompatActivity {
         dao = db.driverDao();
         //call user to delete
         User user = dao.getUserById(userId);
+
 
 
         //Current name and Email

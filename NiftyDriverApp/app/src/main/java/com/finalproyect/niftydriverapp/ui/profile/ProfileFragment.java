@@ -122,6 +122,8 @@ public class ProfileFragment extends Fragment {
         setUserId(userId);
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         DAO dao = db.driverDao();
         User user = dao.getUserById(userId);
@@ -280,6 +282,8 @@ public class ProfileFragment extends Fragment {
                 selectedImageBitmap);
 
     }
+
+
 
 
 

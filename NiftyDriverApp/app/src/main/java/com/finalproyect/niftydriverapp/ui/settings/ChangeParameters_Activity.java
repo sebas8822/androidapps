@@ -3,6 +3,7 @@ package com.finalproyect.niftydriverapp.ui.settings;
 import static com.finalproyect.niftydriverapp.ui.functions.StaticContextFactory.getAppContext;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -91,9 +92,18 @@ public class ChangeParameters_Activity extends AppCompatActivity {
                     user.setLastName(lastName);
                     user.setEmail(email);
 
-
+                    // Update the Database
                     dao.updateUser(user);
                     Toast.makeText(getApplicationContext(), "Data Updated" , Toast.LENGTH_SHORT).show();
+                    //update
+                    Intent intent = getIntent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    finish();
+                    overridePendingTransition(0, 0);
+
+                    startActivity(intent);
+                    overridePendingTransition(0,0);
+
 
 
                 }else{
@@ -116,6 +126,7 @@ public class ChangeParameters_Activity extends AppCompatActivity {
 
 
     }
+
 
 
     public boolean validEmailCurrentUser(User user, String email) {

@@ -49,20 +49,16 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
     DAO dao = db.driverDao();
 
 
-
-
-
-    private TextView tv_mainScore, tv_totalTrips, tv_totalKilometres, tv_totalHours, tv_titleHours,tv_dateFirstTrip, tv_lastTrip;
+    private TextView tv_mainScore, tv_totalTrips, tv_totalKilometres, tv_totalHours, tv_titleHours, tv_dateFirstTrip, tv_lastTrip;
 
 
     // for save preferences like user id and user state means open session
     @Override
     public void onAttach(@NonNull Context context) {
-        sp = context.getSharedPreferences("userProfile",Context.MODE_PRIVATE );
+        sp = context.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit(); // init sharedPreferences
         super.onAttach(context);
     }
-
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -71,7 +67,7 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
 
         //Init shared preferences
         sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        long userId = sp.getLong("userId",0);
+        long userId = sp.getLong("userId", 0);
         setUserid(userId);
 
         //Main score
@@ -92,11 +88,11 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
         // Total Hours
         tv_titleHours = (TextView) view.findViewById(R.id.tv_titleHours);
         tv_totalHours = (TextView) view.findViewById(R.id.tv_totalHours);
-        float totalTime =ProfileFragment.totalTripHours(userId);
+        float totalTime = ProfileFragment.totalTripHours(userId);
 
-        if(totalTime> 60){
+        if (totalTime > 60) {
             tv_titleHours.setText("Hours");
-            totalTime = totalTime/60;
+            totalTime = totalTime / 60;
         }
 
         tv_totalHours.setText(String.format("%.1f", totalTime));
@@ -115,6 +111,7 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
 
         return view;
     }
+
     private void initRecyclerview(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -141,9 +138,9 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
         List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
         Date startDate = null;
 
-        if(!tripList.isEmpty()) {
+        if (!tripList.isEmpty()) {
             startDate = new Date(tripList.get(0).getStartDate());
-        }else{
+        } else {
             startDate = new Date(System.currentTimeMillis());
         }
 
@@ -159,15 +156,13 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
         Date startDate = null;
-        if(!tripList.isEmpty()) {
+        if (!tripList.isEmpty()) {
             startDate = new Date(tripList.get(tripList.size() - 1).getStartDate());
-        }else{
+        } else {
             startDate = new Date(System.currentTimeMillis());
         }
-        
 
         DateFormat df = new SimpleDateFormat("E, dd MMM yyyy HH:mm");
-
 
         return df.format(startDate);
 
@@ -177,7 +172,7 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(getContext(),"Item Clicked", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Item Clicked", Toast.LENGTH_LONG).show();
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, new TripViewFragment())
@@ -186,8 +181,6 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
         /**Pass this values to the shared preference*/
         editor.putInt("position", position);
         editor.commit();
-
-
 
 
     }
