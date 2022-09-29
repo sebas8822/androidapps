@@ -68,6 +68,13 @@ public class ProfileFragment extends Fragment {
 
     Bitmap imageChoose;
 
+//    AppDatabase db;
+//    DAO dao;
+//    User user ;
+
+
+
+
     //Obtain image setup in profile view and save into database init activity to obtain a result
     ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
             new ActivityResultContracts
@@ -107,6 +114,29 @@ public class ProfileFragment extends Fragment {
         super.onAttach(context);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppDatabase db = AppDatabase.getDbInstance(getContext());
+        DAO dao = db.driverDao();
+        User user = dao.getUserById(userId);
+
+
+        /**OnResume*/setProfileImageFromDatabase(user);
+        /**OnResume*/tv_userName.setText(user.getUserName() + " " + user.getLastName());
+        /**OnResume*/tv_mainScore.setText(mainScore(userId));
+        /**OnResume*/tv_totalTrips.setText(numTrips(userId));
+        /**OnResume*/tv_totalKilometres.setText(numKilometres(userId));
+        /**OnResume*/float totalTime =totalTripHours(userId);
+
+        if(totalTime> 60){
+            tv_titleHours.setText("Hours");
+
+            totalTime = totalTime/60;
+        }
+        /**OnResume*/tv_totalHours.setText(String.format("%.1f", totalTime));
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
@@ -124,44 +154,35 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
 
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
-        DAO dao = db.driverDao();
-        User user = dao.getUserById(userId);
 
         //Setting profile fragment with user data from database
         //Profile image
         //populateUserTable();
         im_profile = (ImageView) view.findViewById(R.id.im_profile);
-        setProfileImageFromDatabase(user);
+
 
         //User Name
         tv_userName = (TextView) view.findViewById(R.id.tv_userName);
-        tv_userName.setText(user.getUserName() + " " + user.getLastName());
+
 
         //Main score
         tv_mainScore = (TextView) view.findViewById(R.id.tv_mainScore);
-        tv_mainScore.setText(mainScore(userId));
+
 
         // Number of trips
         tv_totalTrips = (TextView) view.findViewById(R.id.tv_totalTrips);
-        tv_totalTrips.setText(numTrips(userId));
+
 
         //Number Kilometers
         tv_totalKilometres = (TextView) view.findViewById(R.id.tv_totalKilometres);
-        tv_totalKilometres.setText(numKilometres(userId));
+
 
         // Total Hours
         tv_titleHours= (TextView) view.findViewById(R.id.tv_titleHours);
-        float totalTime =totalTripHours(userId);
 
-        if(totalTime> 60){
-            tv_titleHours.setText("Hours");
-
-            totalTime = totalTime/60;
-        }
 
         tv_totalHours = (TextView) view.findViewById(R.id.tv_totalHours);
-        tv_totalHours.setText(String.format("%.1f", totalTime));
+
 
         //Inflate Fragment in the profile fragment
         // create the object pointing the fragment that intent to open
@@ -172,7 +193,7 @@ public class ProfileFragment extends Fragment {
         bt_changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageChooser(user);
+                imageChooser();
 
 
             }
@@ -245,7 +266,7 @@ public class ProfileFragment extends Fragment {
     }
 
     // this function set profile image
-    public void imageChooser(User user) {
+    public void imageChooser() {
 
         Intent i = new Intent();
         i.setType("image/*");

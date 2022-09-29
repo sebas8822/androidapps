@@ -1,72 +1,166 @@
 package com.finalproyect.niftydriverapp.ui.fragIndicators;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.finalproyect.niftydriverapp.R;
+import com.finalproyect.niftydriverapp.db.AppDatabase;
+import com.finalproyect.niftydriverapp.db.DAO;
+import com.finalproyect.niftydriverapp.db.FusionSensor;
+import com.finalproyect.niftydriverapp.db.Trip;
+import com.finalproyect.niftydriverapp.db.User;
+import com.finalproyect.niftydriverapp.ui.tripView.TripViewFragment;
+
+import java.util.List;
 
 public class ScoreViewTripView  extends Fragment {
-    private int currentProgress = 40;
-    private ProgressBar pg_acceleration;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int currentProgress = 0;
+    private ProgressBar pg_accelerationTripView, pg_brakingTripView, pg_corneringTripView, pg_speedTripView;
+    private TextView tv_proAccelerationTripView, tv_proBrakingTripView, tv_proCorneringTripView, tv_proSpeedTripView;
+    private long userId;
+    private int position;
 
-    public ScoreViewTripView() {
-        // Required empty public constructor
+    Trip lastTrip;
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ScoreView.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ScoreView newInstance(String param1, String param2) {
-        ScoreView fragment = new ScoreView();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    SharedPreferences sp;//Init sharepreferences for user
+
+    SharedPreferences.Editor editor;
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_score_view_trip_view, container, false);
-        // Inflate the layout for this fragment
 
-        pg_acceleration = (ProgressBar) view.findViewById(R.id.pg_accelerationTripView);
 
-        pg_acceleration.setProgress(currentProgress);
 
+
+
+        //Init shared preferences
+        sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        long userId = sp.getLong("userId", 0);
+        int position = sp.getInt("position", 0);
+        setUserId(userId);
+        setPosition(position);
+
+
+
+        pg_accelerationTripView = (ProgressBar) view.findViewById(R.id.pg_accelerationTripView);
+        pg_brakingTripView = (ProgressBar) view.findViewById(R.id.pg_brakingTripView);
+        pg_corneringTripView = (ProgressBar) view.findViewById(R.id.pg_corneringTripView);
+        pg_speedTripView = (ProgressBar) view.findViewById(R.id.pg_speedTripView);
+
+        tv_proAccelerationTripView = (TextView) view.findViewById(R.id.tv_proAccelerationTripView);
+        tv_proBrakingTripView = (TextView) view.findViewById(R.id.tv_proBrakingTripView);
+        tv_proCorneringTripView = (TextView) view.findViewById(R.id.tv_proCorneringTripView);
+        tv_proSpeedTripView = (TextView) view.findViewById(R.id.tv_proSpeedTripView);
 
 
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        boolean acceleration;
+        boolean braking;
+        boolean left;
+        boolean right;
+        boolean speed;
+        int count;
+        int count2 = 0;
+        int accCount = 0;
+        int brakingCount = 0;
+        int LeftCount = 0;
+        int RightCount = 0;
+
+        float totalAccCount = 0;
+
+        AppDatabase db = AppDatabase.getDbInstance(getContext());
+        DAO dao = db.driverDao();
+        List<Trip> tripList = dao.getAllTripsByUser(userId);
+        lastTrip= tripList.get(position);
+
+
+
+
+            List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
+            count = fusionSensors.size();
+            Log.d("onResumeSTripView", "count" + count);
+            for (FusionSensor fusionSensor : fusionSensors) {
+
+                acceleration = fusionSensor.isHardAcc();
+                braking = fusionSensor.isHardDes();
+                left = fusionSensor.isSharpLeft();
+                right = fusionSensor.isSharpRight();
+
+                if (acceleration == true) {
+                    accCount++;
+                }
+
+                if (braking == true) {
+                    brakingCount++;
+                }
+
+                if (left == true) {
+                    LeftCount++;
+                }
+
+                if (right == true) {
+                    RightCount++;
+                }
+
+
+
+            }
+
+        Log.d("onResumeSTripView", "accCount" + accCount);
+        Log.d("onResumeSTripView", "brakingCount" + brakingCount);
+        Log.d("onResumeSTripView", "LeftCount" + LeftCount);
+        Log.d("onResumeSTripView", "RightCount" + RightCount);
+
+
+
+
+
+
+            pg_accelerationTripView.setProgress(100 - 5 * accCount );// require the sum of sussion sensor  average
+            pg_brakingTripView.setProgress(100 - 5 * brakingCount);
+            pg_corneringTripView.setProgress(100 - (5 * LeftCount) - (5 * RightCount ));
+            pg_speedTripView.setProgress((int)lastTrip.getAveSpeed());
+            tv_proAccelerationTripView.setText(String.valueOf(100 - 5 * (accCount )));
+            tv_proBrakingTripView.setText(String.valueOf(100 - 5 * (brakingCount )));
+            tv_proCorneringTripView.setText(String.valueOf(100 - 5 * (LeftCount ) - 5 * (RightCount )));;
+            tv_proSpeedTripView.setText(String.valueOf((int)lastTrip.getAveSpeed()));
+            Toast.makeText(getContext(),"Current score"+lastTrip.getScoreTrip(),Toast.LENGTH_LONG).show();
+
+
+
+
+
+
+    }
+
+
 }

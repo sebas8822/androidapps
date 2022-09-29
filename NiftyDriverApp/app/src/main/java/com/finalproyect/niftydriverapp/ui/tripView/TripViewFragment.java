@@ -65,6 +65,8 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     long userId;
     int position;
 
+
+
     GoogleMap mMap;
 
 
@@ -106,7 +108,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         long userId = sp.getLong("userId", 0);
         int position = sp.getInt("position", 0);
-        ;
+
         setUserId(userId);
         setPosition(position);
 

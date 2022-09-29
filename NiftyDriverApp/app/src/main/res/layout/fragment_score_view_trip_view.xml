@@ -52,7 +52,7 @@
             <ProgressBar
                 android:id="@+id/pg_accelerationTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="335dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
@@ -60,10 +60,10 @@
 
             <TextView
                 android:id="@+id/tv_proAccelerationTripView"
-                android:layout_width="59dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="##"
+                android:text="###"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
                 android:textSize="15dp"
@@ -104,7 +104,7 @@
             <ProgressBar
                 android:id="@+id/pg_brakingTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="335dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
@@ -112,10 +112,10 @@
 
             <TextView
                 android:id="@+id/tv_proBrakingTripView"
-                android:layout_width="59dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="##"
+                android:text="###"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
                 android:textSize="15dp"
@@ -156,7 +156,7 @@
             <ProgressBar
                 android:id="@+id/pg_corneringTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="335dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
@@ -164,10 +164,10 @@
 
             <TextView
                 android:id="@+id/tv_proCorneringTripView"
-                android:layout_width="59dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="##"
+                android:text="###"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
                 android:textSize="15dp"
@@ -208,7 +208,7 @@
             <ProgressBar
                 android:id="@+id/pg_speedTripView"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="335dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
@@ -216,10 +216,10 @@
 
             <TextView
                 android:id="@+id/tv_proSpeedTripView"
-                android:layout_width="59dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="##"
+                android:text="###"
                 android:textAlignment="center"
                 android:textColor="@color/blue_sky_200"
                 android:textSize="15dp"

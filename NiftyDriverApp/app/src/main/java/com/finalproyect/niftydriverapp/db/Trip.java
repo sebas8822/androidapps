@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity(tableName="Trip") // identifier required
+@Entity(tableName = "Trip") // identifier required
 public class Trip {
 
     @PrimaryKey(autoGenerate = true)
@@ -26,6 +26,31 @@ public class Trip {
     public double endLocationLAT;
     @ColumnInfo(name = "End_LocationLON")
     public double endLocationLON;
+
+
+    @ColumnInfo(name = "Kilometres")
+    public float kilometers;
+    @ColumnInfo(name = "Time_Trip")
+    public double timeTrip;
+    @ColumnInfo(name = "Score_Trip")
+    public float scoreTrip;
+
+    @ColumnInfo(name = "Start_Date")
+    public long startDate; // need be checked
+
+    @ColumnInfo(name = "End_Date")
+    public long endDate; // need be checked
+
+    @ColumnInfo(name = "Start_Time")
+    public long startTime; // need be checked
+
+    @ColumnInfo(name = "End_Time")
+    public long endTime; // need be checked
+
+    @ColumnInfo(name = "Ave_speed")
+    public double AveSpeed; // need be checked
+
+
 
     public double getStartLocationLAT() {
         return startLocationLAT;
@@ -59,25 +84,6 @@ public class Trip {
         this.endLocationLON = endLocationLON;
     }
 
-    @ColumnInfo(name = "Kilometres")
-    public float kilometers;
-    @ColumnInfo(name = "Time_Trip")
-    public double timeTrip;
-    @ColumnInfo(name = "Score_Trip")
-    public float scoreTrip;
-
-    @ColumnInfo(name = "Start_Date")
-    public long startDate; // need be checked
-
-    @ColumnInfo(name = "End_Date")
-    public long endDate; // need be checked
-
-    @ColumnInfo(name = "Start_Time")
-    public long startTime; // need be checked
-
-    @ColumnInfo(name = "End_Time")
-    public long endTime; // need be checked
-
     public long getStartDate() {
         return startDate;
     }
@@ -110,10 +116,17 @@ public class Trip {
         this.endTime = endTime;
     }
 
+    public double getAveSpeed() {
+        return AveSpeed;
+    }
+
+    public void setAveSpeed(double aveSpeed) {
+        AveSpeed = aveSpeed;
+    }
+
     public long getTripId() {
         return tripId;
     }
-
 
 
     public long getUserCreatorId() {
@@ -123,7 +136,6 @@ public class Trip {
     public void setUserCreatorId(long userCreatorId) {
         this.userCreatorId = userCreatorId;
     }
-
 
 
     public float getKilometers() {
@@ -149,7 +161,6 @@ public class Trip {
     public void setScoreTrip(float scoreTrip) {
         this.scoreTrip = scoreTrip;
     }
-
 
 
 }

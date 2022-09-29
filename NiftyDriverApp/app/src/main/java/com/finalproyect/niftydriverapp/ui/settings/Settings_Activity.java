@@ -52,7 +52,7 @@ public class Settings_Activity extends AppCompatActivity {
 
     AppDatabase db;
     DAO dao;
-
+    User user;
 
     long userId;
 
@@ -70,16 +70,20 @@ public class Settings_Activity extends AppCompatActivity {
 
     //Obtain image setup in profile view and save into database init activity to obtain a result
     ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
+
             new ActivityResultContracts
                     .StartActivityForResult(),
             result -> {
+
                 if (result.getResultCode()
                         == Activity.RESULT_OK) {
                     // init data obtain image
                     Intent data = result.getData();
                     //save data into uri variable transforme into bitmap
+
                     if (data != null && data.getData() != null) {
                         Uri selectedImageUri = data.getData();
+
                         Bitmap selectedImageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_1);
                         //data.putExtra(MediaStore.EXTRA_OUTPUT,)
                         try {
@@ -99,14 +103,19 @@ public class Settings_Activity extends AppCompatActivity {
 
             });
 
-    @Override
-    public void onRestart()
-    {
-        super.onRestart();
-        finish();
-        startActivity(getIntent());
-    }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());// Init database
+        DAO dao = db.driverDao();
+        User user = dao.getUserById(userId);
+        /**onResume*/tv_currentName.setText(user.getUserName() + " " + user.getLastName());
+        /**onResume*/tv_currentEmailSettings.setText(user.getEmail());
+
+
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,20 +124,20 @@ public class Settings_Activity extends AppCompatActivity {
         sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit();
         long userId = sp.getLong("userId", 0);
-        boolean switchThemeState = sp.getBoolean("switchThemeState",false);
+        boolean switchThemeState = sp.getBoolean("switchThemeState", false);
         setUserId(userId);
 
         db = AppDatabase.getDbInstance(getApplicationContext());// Init database
         dao = db.driverDao();
         //call user to delete
-        User user = dao.getUserById(userId);
-
+        user = dao.getUserById(userId);
 
 
         //Current name and Email
 
         tv_currentName = (TextView) findViewById(R.id.tv_currentName);
-        tv_currentName.setText(user.getUserName() +" "+user.getLastName());
+        tv_currentName.setText(user.getUserName() + " " + user.getLastName());
+
         tv_currentEmailSettings = (TextView) findViewById(R.id.tv_currentEmailSettings);
         tv_currentEmailSettings.setText(user.getEmail());
 
@@ -139,21 +148,22 @@ public class Settings_Activity extends AppCompatActivity {
         //Theme
         sw_themeDarkMode = (Switch) findViewById(R.id.sw_themeDarkMode);
         sw_themeDarkMode.setChecked(switchThemeState);
+
         sw_themeDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b==true){
+                if (b == true) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     user.setThemeState(true);
                     dao.updateUser(user);
-                    editor.putBoolean("switchThemeState",true);
+                    editor.putBoolean("switchThemeState", true);
                     editor.putBoolean("themeState", user.isThemeState());
                     editor.commit();
-                }else{
+                } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     user.setThemeState(false);
                     dao.updateUser(user);
-                    editor.putBoolean("switchThemeState",false);
+                    editor.putBoolean("switchThemeState", false);
                     editor.putBoolean("themeState", user.isThemeState());
                     editor.commit();
                 }
@@ -165,7 +175,7 @@ public class Settings_Activity extends AppCompatActivity {
         bt_changeImageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(getApplicationContext(), "press button to change image", Toast.LENGTH_LONG).show();
                 imageChooser();
 
             }
@@ -257,7 +267,6 @@ public class Settings_Activity extends AppCompatActivity {
     }
 
 
-
     public void setProfileImageFromDatabase(User user) {
         byte[] imageData = user.getPicture();
         im_profileSettings.setImageBitmap(createBitmapFromByteArray(imageData));
@@ -292,7 +301,6 @@ public class Settings_Activity extends AppCompatActivity {
                 selectedImageBitmap);
 
     }
-
 
 
     public void closeApp(User user) {

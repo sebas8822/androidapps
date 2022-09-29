@@ -68,7 +68,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
     private Button bt_startTrip, bt_update_filter, bt_update_threshold, bt_resetFusionDatabase;
     private EditText et_filter_coefficient, et_threshold_up;
-    private static final String[] unit = {"km/h", "mph", "meter/sec", "knots"};
+    private static final String unit = "km/h";
     private int unitType;
     private NotificationCompat.Builder mbuilder;
     private NotificationManager mnotice;
@@ -197,7 +197,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
         //SET UP UNITS PREFERENCES
         unitType = Integer.parseInt(prefs.getString("unit", "1"));
-        tvUnit.setText(unit[unitType - 1]);
+        tvUnit.setText(unit);
 
 
         // check if the services are available ASK TO THE USER TO ENABLE
@@ -354,24 +354,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
         if (maxSpeed > 0) {
 
-            float multiplier = 3.6f;
+            float multiplier = 3.6f; //Km/h
 
-            switch (unitType) {
-                case 1:
-                    multiplier = 3.6f;
-                    break;
-                case 2:
-                    multiplier = 2.25f;
-                    break;
-                case 3:
-                    multiplier = 1.0f;
-                    break;
 
-                case 4:
-                    multiplier = 1.943856f;
-                    break;
-
-            }
             NumberFormat numberFormat = NumberFormat.getNumberInstance();
             numberFormat.setMaximumFractionDigits(0);
 
@@ -442,7 +427,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         }
 
         protected void onPostExecute(String result) {
-            tvUnit.setText(unit[unitType - 1]);
+            tvUnit.setText(unit);
             LocationListener listener = new LocationListener() {
                 float filtSpeed;
                 float localspeed;
@@ -1287,6 +1272,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     long EndTime, StartTime;
     long timeTrip;
     double elapse;
+    double aveSpeedKM;
 
     public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
@@ -1334,8 +1320,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
                 tv_totalHours.setText(String.format("%.2f", elapse) + "Min");
 
-                float reductionFactor = 3 * HAC + 3 * HDC + 2 * SHLC + 2 * SHRC;
+                float reductionFactor = 5 * HAC + 5 * HDC + 5 * SHLC + 5 * SHRC;
                 finalScoreTrip = scoreTrip - reductionFactor;
+                if(finalScoreTrip<0){finalScoreTrip=0;}
                 Log.d("Score", "reductionFactor" + reductionFactor);
                 Log.d("Score", "finalScoreTrip" + finalScoreTrip);
                 tv_finalScore.setText(String.valueOf((int) finalScoreTrip));
@@ -1349,8 +1336,11 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 SHRC = 0;
 
 
-                double avgSpeedKM = distanceKM / totalTimeTraveledMin;
-                tv_aveSpeed.setText(String.format("%.2f", avgSpeedKM) + " ASp ");
+                aveSpeedKM =  distanceKM / totalTimeTraveledMin;
+
+                if(Double.isInfinite(aveSpeedKM)){aveSpeedKM=0;}
+
+                tv_aveSpeed.setText(String.format("%.2f", aveSpeedKM) + " ASp ");
 
                 saveTripEnd();
 
@@ -1398,6 +1388,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         trip.setScoreTrip(finalScoreTrip);
         trip.setEndDate(EndTime);
         trip.setEndTime(EndTime);
+        trip.setAveSpeed(aveSpeedKM);
         dao.updateTrip(trip);
 
     }
@@ -1419,10 +1410,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         //fusionSensor.setValSpeed();
         fusionSensor.setSafeAcc(SA);
         fusionSensor.setSafeDes(SD);
-        fusionSensor.setSafeLeft(HA);
-        fusionSensor.setSafeRight(HD);
-        fusionSensor.setHardAcc(SL);
-        fusionSensor.setHardDes(SR);
+        fusionSensor.setSafeLeft(SL);
+        fusionSensor.setSafeRight(SR);
+        fusionSensor.setHardAcc(HA);
+        fusionSensor.setHardDes(HD);
         fusionSensor.setSharpLeft(SHL);
         fusionSensor.setSharpRight(SHR);
 

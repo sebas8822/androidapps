@@ -80,12 +80,18 @@ public interface DAO {
     @Query("SELECT SUM(Time_Trip) FROM Trip where userCreatorId= :id")
     int getTotalHoursByUser(long id);
 
+    @Query("SELECT SUM(hard_acceleration) FROM FusionSensor where tripCreatorId= :id")
+    int getTotalAcceleration(long id);
+
 
     @Query("SELECT * FROM FusionSensor ")
     List<FusionSensor> getAllFusionSensor();
 
     @Query("SELECT * FROM FusionSensor where tripCreatorId= :id")
     List<FusionSensor> getAllFusionSensorByTrip(long id);
+
+    @Query("SELECT AVG(Ave_speed) FROM Trip where userCreatorId = :id")
+    int getAverageSpeedByUser(long id);
 
 
 
