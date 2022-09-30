@@ -29,12 +29,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
@@ -61,13 +63,15 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
     private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed,
-            tv_Xaxis, tv_Yaxis, tv_pith, tv_yaw, tv_XaxisCali, tv_YaxisCali, tv_distance,
+            tv_Xaxis, tv_Yaxis, tv_pith, tv_yaw, tv_distance,
             tv_totalHours, tv_total_Current, tv_aveSpeed, tv_finalScore, tv_safeAccel,
             tv_safeDesa, tv_safeLeft, tv_safeRight, tv_hardAccel, tv_hardDes, tv_sharpLeft,
-            tv_sharpRight, tv_currentFilter, tv_current_threshold, tv_currentNumDta;
+            tv_sharpRight, tv_fusionDB, tv_tripsDB, tv_threshold_Y, tv_threshold_X, tv_threshold_P, tv_threshold_R;
 
-    private Button bt_startTrip, bt_update_filter, bt_update_threshold, bt_resetFusionDatabase;
-    private EditText et_filter_coefficient, et_threshold_up;
+
+
+    private Button bt_startTrip,bt_resetFusionDatabase, bt_UP_threshold, bt_DOWN_threshold, bt_OPEN_threshold, bt_CLOSE_threshold,bt_Reset_Thresholds;
+
     private static final String unit = "km/h";
     private int unitType;
     private NotificationCompat.Builder mbuilder;
@@ -85,10 +89,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     public static final int TIME_CONSTANT = 10;
 
     public void setUserid(long userid) {
-        this.userid = userid;
+        this.userId = userid;
     }
 
-    private long userid;
+    private long userId;
 
     public void setTripID(long tripID) {
         this.tripID = tripID;
@@ -96,7 +100,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
     private long tripID;
 
-    SharedPreferences sp;//Init sharepreferences for user
+    //Init Sharepreferences
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
 
     AppDatabase db = AppDatabase.getDbInstance(getContext());
     DAO dao = db.driverDao();
@@ -104,12 +110,15 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.start_trip_test_fragment, container, false);
+        View view = inflater.inflate(R.layout.start_trip_test_fragment_dev, container, false);
+        sp = getContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        editor = sp.edit();
 
         //Init shared preferences
         sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        long userId = sp.getLong("userId", 0);
-        setUserid(userId);
+        long userid = sp.getLong("userId", 0);
+        boolean switchDevState = sp.getBoolean("switchDevState", false);
+        setUserid(userid);
 
 
         tvSpeed = (TextView) view.findViewById(R.id.tvSpeed);
@@ -121,8 +130,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tvHeading = (TextView) view.findViewById(R.id.tvHeading);
         tv_Xaxis = (TextView) view.findViewById(R.id.tv_Xaxis);
         tv_Yaxis = (TextView) view.findViewById(R.id.tv_Yaxis);
-        tv_XaxisCali = (TextView) view.findViewById(R.id.tv_XaxisCali);
-        tv_YaxisCali = (TextView) view.findViewById(R.id.tv_YaxisCali);
+
         tv_pith = (TextView) view.findViewById(R.id.tv_pith);
         tv_yaw = (TextView) view.findViewById(R.id.tv_yaw);
         tv_distance = (TextView) view.findViewById(R.id.tv_distance);
@@ -138,48 +146,112 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tv_hardDes = (TextView) view.findViewById(R.id.tv_hardDes);
         tv_sharpLeft = (TextView) view.findViewById(R.id.tv_sharpLeft);
         tv_sharpRight = (TextView) view.findViewById(R.id.tv_sharpRight);
-        tv_currentFilter = (TextView) view.findViewById(R.id.tv_currentFilter);
-        tv_current_threshold = (TextView) view.findViewById(R.id.tv_current_threshold);
-        tv_current_threshold.setText(String.valueOf(thresholdOut));
-        tv_currentNumDta = (TextView) view.findViewById(R.id.tv_currentNumDta);
-        tv_currentNumDta.setText(String.valueOf(dao.getAllFusionSensor().size()));
-        et_filter_coefficient = (EditText) view.findViewById(R.id.et_filter_coefficient);
-        et_filter_coefficient.setText(String.valueOf(filter_coefficient));
-
-        et_threshold_up = (EditText) view.findViewById(R.id.et_threshold_up);
-        et_threshold_up.setText(String.valueOf(thresholdOut));
 
 
-        bt_update_threshold = (Button) view.findViewById(R.id.bt_update_threshold);
-        bt_update_threshold.setOnClickListener(new View.OnClickListener() {
+        tv_fusionDB = (TextView) view.findViewById(R.id.tv_fusionDB);
+        tv_fusionDB.setText(String.valueOf(dao.getAllFusionSensor().size()));
+
+        tv_tripsDB= (TextView) view.findViewById(R.id.tv_tripsDB);
+        tv_tripsDB.setText(String.valueOf(dao.getAllTripsByUser(userId).size()));
+
+        //Thresholds
+        tv_threshold_Y=(TextView) view.findViewById(R.id.tv_threshold_Y);
+        tv_threshold_X=(TextView) view.findViewById(R.id.tv_threshold_X);
+        tv_threshold_P=(TextView) view.findViewById(R.id.tv_threshold_P);
+        tv_threshold_R=(TextView) view.findViewById(R.id.tv_threshold_R);
+
+        thresholds();
+
+
+        bt_Reset_Thresholds=(Button) view.findViewById(R.id.bt_Reset_Thresholds);
+        bt_Reset_Thresholds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                thresholdOut = Double.valueOf(et_filter_coefficient.getText().toString());
-
-
+                ResetThresholds();
             }
         });
+
+
+        bt_UP_threshold=(Button) view.findViewById(R.id.bt_UP_threshold);
+        bt_UP_threshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                thresholdUPDOWN = thresholdUPDOWN + .1;
+
+                thresholds();
+                Log.d("thresholds","UP: "+thresholdUPDOWN + " Y1: "+ Y1+ " Y2: "+ Y2);
+                Log.d("thresholds","UP: "+thresholdUPDOWN + " X1: "+ X1+ " X2: "+ X2);
+                Log.d("thresholds","UP: "+thresholdUPDOWN + " P1: "+ P1+ " P2: "+ P2);
+                Log.d("thresholds","UP: "+thresholdUPDOWN + " R1: "+ R1+ " R2: "+ R2);
+            }
+        });
+
+
+        bt_DOWN_threshold=(Button) view.findViewById(R.id.bt_DOWN_threshold);
+        bt_DOWN_threshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                thresholdUPDOWN = thresholdUPDOWN - .1;
+
+                thresholds();
+                Log.d("thresholds","DOWN: "+thresholdUPDOWN+ "Y1: "+ Y1+ "Y2: "+ Y2);
+                Log.d("thresholds","DOWN: "+thresholdUPDOWN + " X1: "+ X1+ " X2: "+ X2);
+                Log.d("thresholds","DOWN: "+thresholdUPDOWN + " P1: "+ P1+ " P2: "+ P2);
+                Log.d("thresholds","DOWN: "+thresholdUPDOWN + " R1: "+ R1+ " R2: "+ R2);
+            }
+        });
+
+
+
+        bt_OPEN_threshold=(Button) view.findViewById(R.id.bt_OPEN_threshold);
+        bt_OPEN_threshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                thresholdOPENCLOSE = thresholdOPENCLOSE + .1;
+
+                thresholds();
+                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " Y1: "+ Y1+ " Y2: "+ Y2);
+                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " X1: "+ X1+ " X2: "+ X2);
+                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " P1: "+ P1+ " P2: "+ P2);
+                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " R1: "+ R1+ " R2: "+ R2);
+            }
+        });
+
+
+        bt_CLOSE_threshold=(Button) view.findViewById(R.id.bt_CLOSE_threshold);
+        bt_CLOSE_threshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                thresholdOPENCLOSE = thresholdOPENCLOSE - .1;
+
+                thresholds();
+                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE+ "Y1: "+ Y1+ "Y2: "+ Y2);
+                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE + " X1: "+ X1+ " X2: "+ X2);
+                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE + " P1: "+ P1+ " P2: "+ P2);
+                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE + " R1: "+ R1+ " R2: "+ R2);
+            }
+        });
+
+
+
+
+
+
 
         bt_resetFusionDatabase = (Button) view.findViewById(R.id.bt_resetFusionDatabase);
         bt_resetFusionDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dao.deleteAllFusionSensor();
-                tv_currentNumDta.setText(String.valueOf(dao.getAllFusionSensor().size()));
+                dao.deleteAllTrip();
+                tv_fusionDB.setText(String.valueOf(dao.getAllFusionSensor().size()));
+                tv_tripsDB.setText(String.valueOf(dao.getAllTripsByUser(userId).size()));
 
 
             }
         });
 
-        bt_update_filter = (Button) view.findViewById(R.id.bt_update_filter);
-        bt_update_filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                filter_coefficient = Float.valueOf(et_filter_coefficient.getText().toString());
 
-
-            }
-        });
 
 
         bt_startTrip = (Button) view.findViewById(R.id.bt_startTrip);
@@ -189,6 +261,34 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 startTrip();
             }
         });
+
+
+        //Devop State
+        sw_themeDarkMode = (Switch) findViewById(R.id.sw_themeDarkMode);
+        sw_themeDarkMode.setChecked(switchThemeState);
+
+        sw_themeDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b == true) {
+
+                    editor.putBoolean("switchDevState", true);
+
+                    editor.commit();
+                } else {
+
+
+                    editor.putBoolean("switchDevState", false);
+
+                    editor.commit();
+                }
+
+            }
+        });
+
+
+
+
 
 
         previousTime = System.currentTimeMillis();
@@ -284,6 +384,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         graph.addSeries(yDownHard);
         XUPHard.setColor(Color.RED);
         graph.addSeries(XUPHard);
+        XDownHard.setColor(Color.RED);
+        graph.addSeries(XDownHard);
 
 
         // computing sensor values
@@ -322,80 +424,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         return view;
     }
 
-    private void updateCoeficient() {
-
-    }
-
-    /**
-     * // save into the the sabe activity
-     * protected void onSaveInstanceState(Bundle bundle) {
-     * super.onSaveInstanceState(bundle);
-     * bundle.putDouble("maxspeed", maxSpeed);
-     * }
-     * <p>
-     * // THIS BRING DE DATA WHEN THE APPLICATION RUN AGAIN
-     * protected void onRestoreInstanceState(Bundle bundle) {
-     * <p>
-     * super.onRestoreInstanceState(bundle);
-     * <p>
-     * maxSpeed = bundle.getDouble("maxspeed", -100.0);
-     * <p>
-     * }
-     */
-    // Speed Longitud and Lantitud
-    public void onResume() {
-        super.onResume();
-        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        unitType = Integer.parseInt(prefs.getString("unit", "1"));
-        maxSpeed = prefs.getFloat("maxspeed", -100.0f);
-
-
-        tvUnit.setText(unit[unitType - 1]);
-
-        if (maxSpeed > 0) {
-
-            float multiplier = 3.6f; //Km/h
-
-
-            NumberFormat numberFormat = NumberFormat.getNumberInstance();
-            numberFormat.setMaximumFractionDigits(0);
-
-            tvMaxSpeed.setText(numberFormat.format(maxSpeed * multiplier));
-
-        }
-
-
-    }
-
-    // Speed Longitud and Lantitud CHECK MAYBE TO SAVE VARIABLES
-    public void onStop() {
-        super.onStop();
-
-        //displayNotification();
-
-
-    }
-
-    // OPTIONAL TO SAVE VARIABLES OR DO SOMETHING ELSE
-    public void onPause() {
-        super.onPause();
-
-        float tempMaxpeed = 0.0f;
-        try {
-
-            tempMaxpeed = Float.parseFloat(tvMaxSpeed.getText().toString());
-
-
-        } catch (java.lang.NumberFormatException nfe) {
-
-            tempMaxpeed = 0.0f;
-
-        }
-
-        prefs.edit().putFloat("maxSpeed", tempMaxpeed);
-
-
-    }
 
 
     Location previousLocation = null;
@@ -469,18 +497,18 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                     tvSpeed.setText(numberFormat.format(filtSpeed));
                     /************************Distance and MAX speed*******************************/
                     tv_distance.setText(numberFormat.format(distanceTraveled / 1000.0) + "km");
-                    tvMaxSpeed.setText(numberFormat.format(maxSpeed * multiplier));
+                    tvMaxSpeed.setText("MaxS: "+numberFormat.format(maxSpeed * multiplier));
 
 
                     if (location.hasAltitude()) {
-                        tvAccuracy.setText(numberFormat.format(location.getAccuracy()) + " m");
+                        tvAccuracy.setText("AC: "+numberFormat.format(location.getAccuracy()) + " m");
                     } else {
                         tvAccuracy.setText("NIL");
                     }
 
                     numberFormat.setMaximumFractionDigits(0);
 
-
+                    // Direction like a compass direction
                     if (location.hasBearing()) {
 
                         double bearing = location.getBearing();
@@ -691,8 +719,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                     break;
             }
 
-            tv_currentFilter.setText(String.valueOf(filter_coefficient));
-            tv_current_threshold.setText(String.valueOf(thresholdOut));
+
             computeQuaternion();
             //drivingAnalysisWithRoll(xAccCalibrated,newPitchOut,yAccCalibrated,newRollOut);
             //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
@@ -717,17 +744,17 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
         tv_Xaxis.setBackgroundColor(Color.MAGENTA);
-        tv_Xaxis.setText("XAccel: " + String.valueOf(xAccelerometer));
+        tv_Xaxis.setText("XA: " + String.valueOf(xAccelerometer));
         tv_Yaxis.setBackgroundColor(Color.GREEN);
-        tv_Yaxis.setText("YAccel: " + String.valueOf(yAccelerometer));
+        tv_Yaxis.setText("YA: " + String.valueOf(yAccelerometer));
 //        tv_XaxisCali.setBackgroundColor(Color.MAGENTA);
 //        tv_XaxisCali.setText("XAccelCAL: "+String.valueOf(xAccCalibrated));
 //        tv_YaxisCali.setBackgroundColor(Color.GRAY);
 //        tv_YaxisCali.setText("YAccelCAL: "+String.valueOf(yAccCalibrated));
         tv_pith.setBackgroundColor(Color.YELLOW);
-        tv_pith.setText("Pitch: " + String.valueOf(newPitchOut));
+        tv_pith.setText("P: " + String.valueOf(newPitchOut));
         tv_yaw.setBackgroundColor(Color.WHITE);
-        tv_yaw.setText("yaw: " + String.valueOf(newRollOut));
+        tv_yaw.setText("R: " + String.valueOf(newRollOut));
 
 
         viewport.setMaxX(pointsPlotted);
@@ -768,18 +795,19 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
 
 
-        yUPsafe1.appendData(new DataPoint(pointsPlotted, 1.3 - thresholdOut), true, pointsPlotted);
-        yUPsafe2.appendData(new DataPoint(pointsPlotted, 2.5 - thresholdOut), true, pointsPlotted);
-        yDownsafe1.appendData(new DataPoint(pointsPlotted, -1.3 + thresholdOut), true, pointsPlotted);
-        yDownsafe2.appendData(new DataPoint(pointsPlotted, -2.5 + thresholdOut), true, pointsPlotted);
-        XUPsafe1.appendData(new DataPoint(pointsPlotted, -1.8 + thresholdOut), true, pointsPlotted);
-        XUPsafe2.appendData(new DataPoint(pointsPlotted, -3.0 + thresholdOut), true, pointsPlotted);
-        XDownsafe1.appendData(new DataPoint(pointsPlotted, 1.8 - thresholdOut), true, pointsPlotted);
-        XDownsafe2.appendData(new DataPoint(pointsPlotted, 3.0 - thresholdOut), true, pointsPlotted);
+        yUPsafe1.appendData(new DataPoint(pointsPlotted, Y1 ), true, pointsPlotted);
+        yUPsafe2.appendData(new DataPoint(pointsPlotted, Y2 ), true, pointsPlotted);
+        yDownsafe1.appendData(new DataPoint(pointsPlotted, -Y1 ), true, pointsPlotted);
+        yDownsafe2.appendData(new DataPoint(pointsPlotted, -Y2 ), true, pointsPlotted);
+        XUPsafe1.appendData(new DataPoint(pointsPlotted, -X1 ), true, pointsPlotted);
+        XUPsafe2.appendData(new DataPoint(pointsPlotted, -X2 ), true, pointsPlotted);
+        XDownsafe1.appendData(new DataPoint(pointsPlotted, X1 ), true, pointsPlotted);
+        XDownsafe2.appendData(new DataPoint(pointsPlotted, X2 ), true, pointsPlotted);
         yUPHard.appendData(new DataPoint(pointsPlotted, -0.12), true, pointsPlotted);
         yDownHard.appendData(new DataPoint(pointsPlotted, 0.12), true, pointsPlotted);
-        XUPHard.appendData(new DataPoint(pointsPlotted, -3.0 + thresholdOut), true, pointsPlotted);
-        XDownHard.appendData(new DataPoint(pointsPlotted, 3.0 - thresholdOut), true, pointsPlotted);
+        XUPHard.appendData(new DataPoint(pointsPlotted, 0.30 ), true, pointsPlotted);
+        XDownHard.appendData(new DataPoint(pointsPlotted, -0.30 ), true, pointsPlotted);
+
 
 
     }
@@ -1156,13 +1184,72 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     boolean SHR = false;
 
 
-    float x = 0.1f;
-    float y = -2.6f;
-    float p = 0.14f;
-    float r = 0.1f;
+
+
+    double thresholdUPDOWN= 0;
+    double thresholdOPENCLOSE= 0;
+    double Y1 = 0;
+    double Y2= 0;
+    double X1= 0;
+    double X2= 0;
+    double P1 = 0;
+    double P2= 0;
+    double R1= 0;
+    double R2= 0;
+
+
+
+
+
+
+
+
+
     float scoreTrip = 100;
     float finalScoreTrip;
-    double thresholdOut = 0;
+
+    public void thresholds(){
+        Y1 = 1.3+thresholdUPDOWN-thresholdOPENCLOSE;
+        Y2 = 2.5+thresholdUPDOWN+thresholdOPENCLOSE;
+        X1 = 1.8+thresholdUPDOWN-thresholdOPENCLOSE;
+        X2 = 3.0+thresholdUPDOWN+thresholdOPENCLOSE;
+        P1 = 0.8+thresholdUPDOWN-thresholdOPENCLOSE;
+        P2 = 0.12+thresholdUPDOWN+thresholdOPENCLOSE;
+        R1 = 0.10+thresholdUPDOWN-thresholdOPENCLOSE;
+        R2 = 0.30+thresholdUPDOWN+thresholdOPENCLOSE;
+
+
+
+
+        tv_threshold_Y.setText("Y:"+String.format("%.1f",Y1)+"-"+String.format("%.1f",Y2));
+        tv_threshold_X.setText("X:"+String.format("%.1f",X1)+"-"+String.format("%.1f",X2));
+        tv_threshold_P.setText("P:"+String.format("%.1f",P1)+"-"+String.format("%.1f",P2));
+        tv_threshold_R.setText("R:"+String.format("%.1f",R1)+"-"+String.format("%.1f",R2));
+
+    }
+
+    private void ResetThresholds() {
+        thresholdUPDOWN= 0;
+        thresholdOPENCLOSE= 0;
+
+        Y1 = 1.3+thresholdUPDOWN-thresholdOPENCLOSE;
+        Y2 = 2.5+thresholdUPDOWN+thresholdOPENCLOSE;
+        X1 = 1.8+thresholdUPDOWN-thresholdOPENCLOSE;
+        X2 = 3.0+thresholdUPDOWN+thresholdOPENCLOSE;
+        P1 = 0.8+thresholdUPDOWN-thresholdOPENCLOSE;
+        P2 = 0.12+thresholdUPDOWN+thresholdOPENCLOSE;
+        R1 = 0.10+thresholdUPDOWN-thresholdOPENCLOSE;
+        R2 = 0.30+thresholdUPDOWN+thresholdOPENCLOSE;
+
+        tv_threshold_Y.setText("Y:"+String.format("%.1f",Y1)+"-"+String.format("%.1f",Y2));
+        tv_threshold_X.setText("X:"+String.format("%.1f",X1)+"-"+String.format("%.1f",X2));
+        tv_threshold_P.setText("P:"+String.format("%.1f",P1)+"-"+String.format("%.1f",P2));
+        tv_threshold_R.setText("R:"+String.format("%.1f",R1)+"-"+String.format("%.1f",R2));
+
+
+    }
+
+
 
 
     public void drivingAnalysisWithRoll() {
@@ -1170,28 +1257,28 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         if (startTripState == true) {
 
             //Safe Driving
-            if (yAccCalibrated > 1.3 - thresholdOut && yAccCalibrated < 2.5 - thresholdOut) {
+            if (yAccCalibrated > Y1 && yAccCalibrated < Y2) {
                 if (newPitchOut < -0.08 && newPitchOut > -0.12) {
                     SAC++;
                     SA = true;
                     Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
                 }
             }
-            if (yAccCalibrated < -1.3 + thresholdOut && yAccCalibrated > -2.5 + thresholdOut) {
+            if (yAccCalibrated < -Y1 && yAccCalibrated > -Y2) {
                 if (newPitchOut > 0.08 && newPitchOut < 0.12) {
                     SDC++;
                     SD = true;
                     Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
                 }
             }
-            if (xAccCalibrated < -1.8 + thresholdOut && xAccCalibrated > -3.0 + thresholdOut) {
+            if (xAccCalibrated < -X1 && xAccCalibrated > -X2) {
                 if (newRollOut > 0.10 && newRollOut < 0.30) {
                     SLC++;
                     SL = true;
                     Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
-            if (xAccCalibrated > 1.8 - thresholdOut && xAccCalibrated < 3.0 - thresholdOut) {
+            if (xAccCalibrated > X1 && xAccCalibrated < X2) {
                 if (newRollOut < -0.10 && newRollOut > -0.30) {
                     SRC++;
                     SR = true;
@@ -1199,7 +1286,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 }
             }
             //Hard Driving
-            if (yAccCalibrated > 2.5 - thresholdOut) {
+            if (yAccCalibrated > Y2) {
                 if (newPitchOut < -0.12) {
                     HAC++;
                     HA = true;
@@ -1208,21 +1295,21 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             }
 
 
-            if (yAccCalibrated < -2.5 + thresholdOut) {
+            if (yAccCalibrated < -Y2) {
                 if (newPitchOut > 0.12) {
                     HDC++;
                     HD = true;
                     Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
                 }
             }
-            if (xAccCalibrated < -3.0 + thresholdOut) {
+            if (xAccCalibrated < -X2) {
                 if (newRollOut > 0.30) {
                     SHLC++;
                     SHL = true;
                     Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
-            if (xAccCalibrated > 3.0 - thresholdOut) {
+            if (xAccCalibrated > X2) {
                 if (newRollOut < -0.30) {
                     SHRC++;
                     SHR = true;
@@ -1292,7 +1379,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 previousLocation = null;
                 StartTime = System.currentTimeMillis();
                 finalScoreTrip = 0;
-                saveTripInitial(userid, trip);
+                saveTripInitial(userId, trip);
                 //trip.getTripId();
                 Log.d("saveTripInitial", "TripID" + trip.getTripId());
 
