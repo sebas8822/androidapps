@@ -10,9 +10,9 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -26,40 +26,40 @@
                 android:layout_height="wrap_content"
                 android:text="Sensors"
                 android:textAlignment="center"
-                android:textColor="#11EA1A"
+                android:textColor="@color/blue_sky_200"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_Xaxis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#11EA1A"
-                android:text="x axis data" />
+                android:text="x axis data"
+                android:textColor="@color/blue_sky_200" />
 
             <TextView
                 android:id="@+id/tv_Yaxis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#11EA1A"
-                android:text="y axis data" />
+                android:text="y axis data"
+                android:textColor="@color/blue_sky_200"/>
 
             <TextView
                 android:id="@+id/tv_pith"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#11EA1A"
-                android:text="pitch" />
+                android:text="pitch"
+                android:textColor="@color/blue_sky_200"/>
 
             <TextView
                 android:id="@+id/tv_yaw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Roll"
-                android:textColor="#11EA1A" />
+                android:textColor="@color/blue_sky_200" />
         </LinearLayout>
 
         <TableLayout
-            android:layout_width="match_parent"
+            android:layout_width="105dp"
             android:layout_height="match_parent">
 
             <TableRow
@@ -74,29 +74,15 @@
                     android:layout_gravity="center"
                     android:text="GPS"
                     android:textAlignment="center"
-                    android:textColor="#00ee00"
+                    android:textColor="@color/blue_sky_200"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvHeading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:text="HEADING"
-                    android:textColor="#00ee00" />
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tvMaxSpeed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="NIL"
-                    android:textColor="#00ee00" />
 
                 <TextView
                     android:id="@+id/tvAccuracy"
@@ -105,7 +91,7 @@
 
 
                     android:text="ACCURACY"
-                    android:textColor="#00ee00" />
+                    android:textColor="@color/blue_sky_200"/>
             </TableRow>
 
             <TableRow
@@ -118,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:text="Latitude"
 
-                    android:textColor="#00ee00" />
+                    android:textColor="@color/blue_sky_200"/>
 
             </TableRow>
 
@@ -132,64 +118,52 @@
                     android:layout_height="wrap_content"
                     android:text="Longitude"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#00ee00" />
+                    android:textColor="@color/blue_sky_200" />
             </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <TextView
-                    android:id="@+id/tv_total_Current"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TTimeApp"
-                    android:textColor="#00ee00"/>
-            </TableRow>
-
-        </TableLayout>
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/tvHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="HEADING"
+                    android:textColor="@color/blue_sky_200" />
+            </TableRow>
+
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
                     android:id="@+id/tvSpeed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="00"
+                    android:text="000"
                     android:textAlignment="center"
-                    android:textColor="#00ee00"
+                    android:textColor="@color/blue_sky_200"
                     android:textSize="70sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_distance"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
-                        android:text="Distan" />
-
-                    <TextView
-                        android:id="@+id/tvUnitc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:text="km/h"
-                        android:textColor="#00ee00" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvUnitc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="km/h"
+                    android:textColor="@color/blue_sky_200" />
 
             </TableRow>
 
@@ -212,29 +186,96 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="305dp"
+        android:layout_height="282dp"
         android:layout_gravity="center"
         android:orientation="vertical">
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="295dp"
-            android:orientation="vertical">
-
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/graph"
-                android:layout_width="wrap_content"
-                android:layout_height="297dp"
-                android:layout_marginBottom="68dp" />
-        </LinearLayout>
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
 
 
     </LinearLayout>
 
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_safeAccel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SAC"
+                android:textColor="@color/blue_sky_200" />
+
+            <TextView
+                android:id="@+id/tv_safeDesa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SDC"
+                android:textColor="@color/blue_sky_200"/>
+
+            <TextView
+                android:id="@+id/tv_safeLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SLC"
+                android:textColor="@color/blue_sky_200" />
+
+            <TextView
+                android:id="@+id/tv_safeRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SRC"
+                android:textColor="@color/blue_sky_200"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="65dp">
+
+            <TextView
+                android:id="@+id/tv_hardAccel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HAC"
+                android:textColor="@color/blue_sky_200" />
+
+            <TextView
+                android:id="@+id/tv_hardDes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HDC"
+                android:textColor="@color/blue_sky_200" />
+
+            <TextView
+                android:id="@+id/tv_sharpLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SHLC"
+                android:textColor="@color/blue_sky_200" />
+
+            <TextView
+                android:id="@+id/tv_sharpRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SHRC"
+                android:textColor="@color/blue_sky_200"/>
+        </TableRow>
+
+    </TableLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="203dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -268,7 +309,7 @@
                     android:text="CLOSE DOWN"
                     android:textStyle="bold"
                     android:textAlignment="center"
-                    android:textColor="#11EA1A" />
+                    android:textColor="@color/blue_sky_200" />
             </LinearLayout>
 
 
@@ -296,8 +337,7 @@
                     android:layout_height="wrap_content"
 
                     android:hint="P:#.#-#.#"
-                    android:textColorHint="#11EA1A"
-                    android:textColor="#11EA1A"
+                    android:textColor="@color/blue_sky_200"
                     android:textSize="11dp"
 
                     android:textAlignment="center" />
@@ -310,8 +350,7 @@
                     android:layout_height="wrap_content"
 
                     android:hint="R:#.#-#.#"
-                    android:textColorHint="#11EA1A"
-                    android:textColor="#11EA1A"
+                    android:textColor="@color/blue_sky_200"
                     android:textSize="11dp"
 
                     android:textAlignment="center" />
@@ -324,8 +363,7 @@
                     android:layout_height="wrap_content"
 
                     android:hint="Y:#.#-#.#"
-                    android:textColorHint="#11EA1A"
-                    android:textColor="#11EA1A"
+                    android:textColor="@color/blue_sky_200"
                     android:textSize="11dp"
 
                     android:textAlignment="center" />
@@ -335,8 +373,8 @@
                     android:layout_height="wrap_content"
 
                     android:hint="X:#.#-#.#"
-                    android:textColorHint="#11EA1A"
-                    android:textColor="#11EA1A"
+
+                    android:textColor="@color/blue_sky_200"
                     android:textSize="11dp"
 
                     android:textAlignment="center" />
@@ -375,7 +413,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="center"
-                    android:textColor="#11EA1A"
+                    android:textColor="@color/blue_sky_200"
                     android:textStyle="bold"
                     android:text="UP OPEN" />
 
@@ -395,6 +433,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -403,7 +442,7 @@
                 android:layout_height="wrap_content"
                 android:text="FS"
                 android:textAlignment="center"
-                android:textColor="#11EA1A"
+                android:textColor="@color/blue_sky_200"
                 android:textSize="60dp" />
 
             <Button
@@ -421,24 +460,26 @@
 
         </LinearLayout>
 
+
+
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_totalHours"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#11EA1A"
-                android:text="TimeTrav" />
 
-            <TextView
-                android:id="@+id/tv_aveSpeed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#11EA1A"
-                android:text="AverageSpe" />
+
+            <Switch
+                android:id="@+id/switch_DEV"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="USER"
+                android:textColor="@color/blue_sky_200"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -451,67 +492,49 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_safeAccel"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tv_distance"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="SAC" />
+                        android:text="Distance: ### Km"
+                        android:textAlignment="center"
+                        android:textSize="12dp"
+                        android:textColor="@color/blue_sky_200"
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_safeDesa"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tv_totalHours"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="SDC" />
+                        android:text="Time Traveled: ## min"
+                        android:textColor="@color/blue_sky_200"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvMaxSpeed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Max Speed: ### km/h"
+                        android:textSize="12dp"
+                        android:textColor="@color/blue_sky_200"
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_safeLeft"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tv_aveSpeed"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="SLC" />
-
+                        android:text="Avg Speed: ### km/h"
+                        android:textColor="@color/blue_sky_200"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
                     <TextView
-                        android:id="@+id/tv_safeRight"
+                        android:id="@+id/tv_total_Current"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="SRC" />
+                        android:text="TTimeApp"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/blue_sky_200" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_hardAccel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="HAC" />
-
-                    <TextView
-                        android:id="@+id/tv_hardDes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="HDC" />
-
-                    <TextView
-                        android:id="@+id/tv_sharpLeft"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="SHLC" />
-
-                    <TextView
-                        android:id="@+id/tv_sharpRight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#11EA1A"
-                        android:text="SHRC" />
 
                 </LinearLayout>
 
@@ -544,7 +567,7 @@
                         android:layout_height="wrap_content"
                         android:text="TDB"
                         android:textAlignment="center"
-                        android:textColor="#11EA1A"
+                        android:textColor="@color/blue_sky_200"
                         android:textSize="15dp" />
 
                     <TextView
@@ -553,21 +576,13 @@
                         android:layout_height="wrap_content"
                         android:text="FDB"
                         android:textAlignment="center"
-                        android:textColor="#11EA1A"
+                        android:textColor="@color/blue_sky_200"
                         android:textSize="15dp" />
 
                 </LinearLayout>
 
 
             </LinearLayout>
-
-            <Switch
-                android:id="@+id/switch1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:textColor="#11EA1A"
-                android:text="DEV"/>
 
 
         </LinearLayout>

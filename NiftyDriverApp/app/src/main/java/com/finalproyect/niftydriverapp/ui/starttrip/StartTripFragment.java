@@ -21,8 +21,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import android.preference.PreferenceManager;
-
 import android.util.Log;
 
 import android.view.LayoutInflater;
@@ -36,7 +34,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
@@ -63,14 +60,14 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
     private TextView tvSpeed, tvUnit, tvLat, tvLon, tvAccuracy, tvHeading, tvMaxSpeed,
-            tv_Xaxis, tv_Yaxis, tv_pith, tv_yaw, tv_distance,
+            tv_Xaxis, tv_Yaxis, tv_pith, tv_yaw, tv_distance, tv_title2, tv_title1, textView9, textView8,
             tv_totalHours, tv_total_Current, tv_aveSpeed, tv_finalScore, tv_safeAccel,
             tv_safeDesa, tv_safeLeft, tv_safeRight, tv_hardAccel, tv_hardDes, tv_sharpLeft,
             tv_sharpRight, tv_fusionDB, tv_tripsDB, tv_threshold_Y, tv_threshold_X, tv_threshold_P, tv_threshold_R;
 
 
-
-    private Button bt_startTrip,bt_resetFusionDatabase, bt_UP_threshold, bt_DOWN_threshold, bt_OPEN_threshold, bt_CLOSE_threshold,bt_Reset_Thresholds;
+    private Button bt_startTrip, bt_resetFusionDatabase, bt_UP_threshold, bt_DOWN_threshold, bt_OPEN_threshold, bt_CLOSE_threshold, bt_Reset_Thresholds;
+    private Switch switch_DEV;
 
     private static final String unit = "km/h";
     private int unitType;
@@ -82,7 +79,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     private SharedPreferences prefs;
 
     private SensorManager mSensorManager = null;
-    private GraphView grapht;
+
 
     long previousTime = 0;
     private Timer fuseTimer = new Timer();
@@ -107,10 +104,17 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     AppDatabase db = AppDatabase.getDbInstance(getContext());
     DAO dao = db.driverDao();
 
+    View view;
+
+    boolean switchDevState;
+
+    public void setSwitchDevState(boolean switchDevState) {
+        this.switchDevState = switchDevState;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.start_trip_test_fragment_dev, container, false);
+
         sp = getContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit();
 
@@ -119,6 +123,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         long userid = sp.getLong("userId", 0);
         boolean switchDevState = sp.getBoolean("switchDevState", false);
         setUserid(userid);
+        setSwitchDevState(switchDevState);
+
+        view = inflater.inflate(R.layout.start_trip_test_fragment_dev, container, false);
 
 
         tvSpeed = (TextView) view.findViewById(R.id.tvSpeed);
@@ -126,6 +133,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tvUnit = (TextView) view.findViewById(R.id.tvUnitc);
         tvLat = (TextView) view.findViewById(R.id.tvLat);
         tvLon = (TextView) view.findViewById(R.id.tvLon);
+        tv_title2 = (TextView) view.findViewById(R.id.tv_title2);
+        tv_title1 = (TextView) view.findViewById(R.id.tv_title1);
+        textView9 = (TextView) view.findViewById(R.id.textView9);
+        textView8 = (TextView) view.findViewById(R.id.textView8);
         tvAccuracy = (TextView) view.findViewById(R.id.tvAccuracy);
         tvHeading = (TextView) view.findViewById(R.id.tvHeading);
         tv_Xaxis = (TextView) view.findViewById(R.id.tv_Xaxis);
@@ -151,19 +162,27 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tv_fusionDB = (TextView) view.findViewById(R.id.tv_fusionDB);
         tv_fusionDB.setText(String.valueOf(dao.getAllFusionSensor().size()));
 
-        tv_tripsDB= (TextView) view.findViewById(R.id.tv_tripsDB);
+        tv_tripsDB = (TextView) view.findViewById(R.id.tv_tripsDB);
         tv_tripsDB.setText(String.valueOf(dao.getAllTripsByUser(userId).size()));
 
         //Thresholds
-        tv_threshold_Y=(TextView) view.findViewById(R.id.tv_threshold_Y);
-        tv_threshold_X=(TextView) view.findViewById(R.id.tv_threshold_X);
-        tv_threshold_P=(TextView) view.findViewById(R.id.tv_threshold_P);
-        tv_threshold_R=(TextView) view.findViewById(R.id.tv_threshold_R);
+        tv_threshold_Y = (TextView) view.findViewById(R.id.tv_threshold_Y);
+        tv_threshold_X = (TextView) view.findViewById(R.id.tv_threshold_X);
+        tv_threshold_P = (TextView) view.findViewById(R.id.tv_threshold_P);
+        tv_threshold_R = (TextView) view.findViewById(R.id.tv_threshold_R);
 
+        //Buttons
+        bt_Reset_Thresholds = (Button) view.findViewById(R.id.bt_Reset_Thresholds);
+        bt_UP_threshold = (Button) view.findViewById(R.id.bt_UP_threshold);
+        bt_DOWN_threshold = (Button) view.findViewById(R.id.bt_DOWN_threshold);
+        bt_OPEN_threshold = (Button) view.findViewById(R.id.bt_OPEN_threshold);
+        bt_CLOSE_threshold = (Button) view.findViewById(R.id.bt_CLOSE_threshold);
+        bt_resetFusionDatabase = (Button) view.findViewById(R.id.bt_resetFusionDatabase);
+        bt_startTrip = (Button) view.findViewById(R.id.bt_startTrip);
         thresholds();
+        setVisibility(switchDevState);
 
 
-        bt_Reset_Thresholds=(Button) view.findViewById(R.id.bt_Reset_Thresholds);
         bt_Reset_Thresholds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,73 +191,62 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         });
 
 
-        bt_UP_threshold=(Button) view.findViewById(R.id.bt_UP_threshold);
         bt_UP_threshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 thresholdUPDOWN = thresholdUPDOWN + .1;
 
                 thresholds();
-                Log.d("thresholds","UP: "+thresholdUPDOWN + " Y1: "+ Y1+ " Y2: "+ Y2);
-                Log.d("thresholds","UP: "+thresholdUPDOWN + " X1: "+ X1+ " X2: "+ X2);
-                Log.d("thresholds","UP: "+thresholdUPDOWN + " P1: "+ P1+ " P2: "+ P2);
-                Log.d("thresholds","UP: "+thresholdUPDOWN + " R1: "+ R1+ " R2: "+ R2);
+                Log.d("thresholds", "UP: " + thresholdUPDOWN + " Y1: " + Y1 + " Y2: " + Y2);
+                Log.d("thresholds", "UP: " + thresholdUPDOWN + " X1: " + X1 + " X2: " + X2);
+                Log.d("thresholds", "UP: " + thresholdUPDOWN + " P1: " + P1 + " P2: " + P2);
+                Log.d("thresholds", "UP: " + thresholdUPDOWN + " R1: " + R1 + " R2: " + R2);
             }
         });
 
 
-        bt_DOWN_threshold=(Button) view.findViewById(R.id.bt_DOWN_threshold);
         bt_DOWN_threshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 thresholdUPDOWN = thresholdUPDOWN - .1;
 
                 thresholds();
-                Log.d("thresholds","DOWN: "+thresholdUPDOWN+ "Y1: "+ Y1+ "Y2: "+ Y2);
-                Log.d("thresholds","DOWN: "+thresholdUPDOWN + " X1: "+ X1+ " X2: "+ X2);
-                Log.d("thresholds","DOWN: "+thresholdUPDOWN + " P1: "+ P1+ " P2: "+ P2);
-                Log.d("thresholds","DOWN: "+thresholdUPDOWN + " R1: "+ R1+ " R2: "+ R2);
+                Log.d("thresholds", "DOWN: " + thresholdUPDOWN + "Y1: " + Y1 + "Y2: " + Y2);
+                Log.d("thresholds", "DOWN: " + thresholdUPDOWN + " X1: " + X1 + " X2: " + X2);
+                Log.d("thresholds", "DOWN: " + thresholdUPDOWN + " P1: " + P1 + " P2: " + P2);
+                Log.d("thresholds", "DOWN: " + thresholdUPDOWN + " R1: " + R1 + " R2: " + R2);
             }
         });
 
 
-
-        bt_OPEN_threshold=(Button) view.findViewById(R.id.bt_OPEN_threshold);
         bt_OPEN_threshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 thresholdOPENCLOSE = thresholdOPENCLOSE + .1;
 
                 thresholds();
-                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " Y1: "+ Y1+ " Y2: "+ Y2);
-                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " X1: "+ X1+ " X2: "+ X2);
-                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " P1: "+ P1+ " P2: "+ P2);
-                Log.d("thresholds","OPEN: "+thresholdOPENCLOSE + " R1: "+ R1+ " R2: "+ R2);
+                Log.d("thresholds", "OPEN: " + thresholdOPENCLOSE + " Y1: " + Y1 + " Y2: " + Y2);
+                Log.d("thresholds", "OPEN: " + thresholdOPENCLOSE + " X1: " + X1 + " X2: " + X2);
+                Log.d("thresholds", "OPEN: " + thresholdOPENCLOSE + " P1: " + P1 + " P2: " + P2);
+                Log.d("thresholds", "OPEN: " + thresholdOPENCLOSE + " R1: " + R1 + " R2: " + R2);
             }
         });
 
 
-        bt_CLOSE_threshold=(Button) view.findViewById(R.id.bt_CLOSE_threshold);
         bt_CLOSE_threshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 thresholdOPENCLOSE = thresholdOPENCLOSE - .1;
 
                 thresholds();
-                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE+ "Y1: "+ Y1+ "Y2: "+ Y2);
-                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE + " X1: "+ X1+ " X2: "+ X2);
-                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE + " P1: "+ P1+ " P2: "+ P2);
-                Log.d("thresholds","CLOSE: "+thresholdOPENCLOSE + " R1: "+ R1+ " R2: "+ R2);
+                Log.d("thresholds", "CLOSE: " + thresholdOPENCLOSE + "Y1: " + Y1 + "Y2: " + Y2);
+                Log.d("thresholds", "CLOSE: " + thresholdOPENCLOSE + " X1: " + X1 + " X2: " + X2);
+                Log.d("thresholds", "CLOSE: " + thresholdOPENCLOSE + " P1: " + P1 + " P2: " + P2);
+                Log.d("thresholds", "CLOSE: " + thresholdOPENCLOSE + " R1: " + R1 + " R2: " + R2);
             }
         });
 
 
-
-
-
-
-
-        bt_resetFusionDatabase = (Button) view.findViewById(R.id.bt_resetFusionDatabase);
         bt_resetFusionDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -252,9 +260,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         });
 
 
-
-
-        bt_startTrip = (Button) view.findViewById(R.id.bt_startTrip);
         bt_startTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,39 +269,41 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
         //Devop State
-        sw_themeDarkMode = (Switch) findViewById(R.id.sw_themeDarkMode);
-        sw_themeDarkMode.setChecked(switchThemeState);
+        switch_DEV = (Switch) view.findViewById(R.id.switch_DEV);
+        switch_DEV.setChecked(switchDevState);
 
-        sw_themeDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switch_DEV.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b == true) {
 
+                    switch_DEV.setText("DEV");
+                    setVisibility(true);
                     editor.putBoolean("switchDevState", true);
 
                     editor.commit();
+
+
                 } else {
 
-
+                    switch_DEV.setText("USER");
+                    setVisibility(false);
                     editor.putBoolean("switchDevState", false);
 
                     editor.commit();
+
                 }
 
             }
         });
 
 
-
-
-
-
         previousTime = System.currentTimeMillis();
         //FOR SAVE REFERENCES
-        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
 
         //SET UP UNITS PREFERENCES
-        unitType = Integer.parseInt(prefs.getString("unit", "1"));
+
         tvUnit.setText(unit);
 
 
@@ -342,8 +349,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         // getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
-        /**Init Graph*/
-        grapht = (GraphView) view.findViewById(R.id.graph);
+
 
 
         // Add graphs set up
@@ -424,6 +430,97 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         return view;
     }
 
+    private void setVisibility(boolean state) {
+
+
+        if (state == true) {
+            tv_distance.setTextSize(10);
+            tv_totalHours.setTextSize(10);
+            tv_aveSpeed.setTextSize(10);
+            tvMaxSpeed.setTextSize(10);
+            bt_UP_threshold.setVisibility(View.VISIBLE);
+            tv_title2.setVisibility(View.VISIBLE);
+            tv_Xaxis.setVisibility(View.VISIBLE);
+            tv_Yaxis.setVisibility(View.VISIBLE);
+            tv_pith.setVisibility(View.VISIBLE);
+            tv_yaw.setVisibility(View.VISIBLE);
+            tv_title1.setVisibility(View.VISIBLE);
+
+            tvLat.setVisibility(View.VISIBLE);
+            tvLon.setVisibility(View.VISIBLE);
+            tv_total_Current.setVisibility(View.VISIBLE);
+            tvHeading.setVisibility(View.VISIBLE);
+            tvAccuracy.setVisibility(View.VISIBLE);
+            bt_UP_threshold.setVisibility(View.VISIBLE);
+            bt_CLOSE_threshold.setVisibility(View.VISIBLE);
+            bt_DOWN_threshold.setVisibility(View.VISIBLE);
+            bt_OPEN_threshold.setVisibility(View.VISIBLE);
+            tv_threshold_P.setVisibility(View.VISIBLE);
+            tv_threshold_R.setVisibility(View.VISIBLE);
+            tv_threshold_Y.setVisibility(View.VISIBLE);
+            tv_threshold_X.setVisibility(View.VISIBLE);
+            bt_Reset_Thresholds.setVisibility(View.VISIBLE);
+            textView9.setVisibility(View.VISIBLE);
+            textView8.setVisibility(View.VISIBLE);
+            tv_safeAccel.setVisibility(View.VISIBLE);
+            tv_safeDesa.setVisibility(View.VISIBLE);
+            tv_safeLeft.setVisibility(View.VISIBLE);
+            tv_safeRight.setVisibility(View.VISIBLE);
+            tv_hardAccel.setVisibility(View.VISIBLE);
+            tv_hardDes.setVisibility(View.VISIBLE);
+            tv_sharpLeft.setVisibility(View.VISIBLE);
+            tv_sharpRight.setVisibility(View.VISIBLE);
+            bt_resetFusionDatabase.setVisibility(View.VISIBLE);
+            tv_tripsDB.setVisibility(View.VISIBLE);
+            tv_fusionDB.setVisibility(View.VISIBLE);
+
+
+        } else {
+            tv_distance.setTextSize(20);
+            tv_totalHours.setTextSize(20);
+            tv_aveSpeed.setTextSize(20);
+            tvMaxSpeed.setTextSize(20);
+            bt_UP_threshold.setVisibility(View.GONE);
+            tv_title2.setVisibility(View.GONE);
+            tv_Xaxis.setVisibility(View.GONE);
+            tv_Yaxis.setVisibility(View.GONE);
+            tv_pith.setVisibility(View.GONE);
+            tv_yaw.setVisibility(View.GONE);
+            tv_title1.setVisibility(View.GONE);
+
+            tvLat.setVisibility(View.GONE);
+            tvLon.setVisibility(View.GONE);
+            tv_total_Current.setVisibility(View.GONE);
+            tvHeading.setVisibility(View.GONE);
+            tvAccuracy.setVisibility(View.GONE);
+            bt_UP_threshold.setVisibility(View.GONE);
+            bt_CLOSE_threshold.setVisibility(View.GONE);
+            bt_DOWN_threshold.setVisibility(View.GONE);
+            bt_OPEN_threshold.setVisibility(View.GONE);
+            tv_threshold_P.setVisibility(View.GONE);
+            tv_threshold_R.setVisibility(View.GONE);
+            tv_threshold_Y.setVisibility(View.GONE);
+            tv_threshold_X.setVisibility(View.GONE);
+            bt_Reset_Thresholds.setVisibility(View.GONE);
+            textView9.setVisibility(View.GONE);
+            textView8.setVisibility(View.GONE);
+            tv_safeAccel.setVisibility(View.GONE);
+            tv_safeDesa.setVisibility(View.GONE);
+            tv_safeLeft.setVisibility(View.GONE);
+            tv_safeRight.setVisibility(View.GONE);
+            tv_hardAccel.setVisibility(View.GONE);
+            tv_hardDes.setVisibility(View.GONE);
+            tv_sharpLeft.setVisibility(View.GONE);
+            tv_sharpRight.setVisibility(View.GONE);
+            bt_resetFusionDatabase.setVisibility(View.GONE);
+            tv_tripsDB.setVisibility(View.GONE);
+            tv_fusionDB.setVisibility(View.GONE);
+
+
+        }
+
+
+    }
 
 
     Location previousLocation = null;
@@ -496,12 +593,12 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                     Log.d("onChange", "Speed " + localspeed + "latitude: " + lat + " longitude: " + lon + " Distance: " + distanceTraveled / 1000);
                     tvSpeed.setText(numberFormat.format(filtSpeed));
                     /************************Distance and MAX speed*******************************/
-                    tv_distance.setText(numberFormat.format(distanceTraveled / 1000.0) + "km");
-                    tvMaxSpeed.setText("MaxS: "+numberFormat.format(maxSpeed * multiplier));
+                    tv_distance.setText("Distance " + numberFormat.format(+distanceTraveled / 1000.0) + " km");
+                    tvMaxSpeed.setText("Max Speed: " + numberFormat.format(maxSpeed * multiplier));
 
 
                     if (location.hasAltitude()) {
-                        tvAccuracy.setText("AC: "+numberFormat.format(location.getAccuracy()) + " m");
+                        tvAccuracy.setText("AC: " + numberFormat.format(location.getAccuracy()) + " m");
                     } else {
                         tvAccuracy.setText("NIL");
                     }
@@ -795,19 +892,18 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
 
 
-        yUPsafe1.appendData(new DataPoint(pointsPlotted, Y1 ), true, pointsPlotted);
-        yUPsafe2.appendData(new DataPoint(pointsPlotted, Y2 ), true, pointsPlotted);
-        yDownsafe1.appendData(new DataPoint(pointsPlotted, -Y1 ), true, pointsPlotted);
-        yDownsafe2.appendData(new DataPoint(pointsPlotted, -Y2 ), true, pointsPlotted);
-        XUPsafe1.appendData(new DataPoint(pointsPlotted, -X1 ), true, pointsPlotted);
-        XUPsafe2.appendData(new DataPoint(pointsPlotted, -X2 ), true, pointsPlotted);
-        XDownsafe1.appendData(new DataPoint(pointsPlotted, X1 ), true, pointsPlotted);
-        XDownsafe2.appendData(new DataPoint(pointsPlotted, X2 ), true, pointsPlotted);
+        yUPsafe1.appendData(new DataPoint(pointsPlotted, Y1), true, pointsPlotted);
+        yUPsafe2.appendData(new DataPoint(pointsPlotted, Y2), true, pointsPlotted);
+        yDownsafe1.appendData(new DataPoint(pointsPlotted, -Y1), true, pointsPlotted);
+        yDownsafe2.appendData(new DataPoint(pointsPlotted, -Y2), true, pointsPlotted);
+        XUPsafe1.appendData(new DataPoint(pointsPlotted, -X1), true, pointsPlotted);
+        XUPsafe2.appendData(new DataPoint(pointsPlotted, -X2), true, pointsPlotted);
+        XDownsafe1.appendData(new DataPoint(pointsPlotted, X1), true, pointsPlotted);
+        XDownsafe2.appendData(new DataPoint(pointsPlotted, X2), true, pointsPlotted);
         yUPHard.appendData(new DataPoint(pointsPlotted, -0.12), true, pointsPlotted);
         yDownHard.appendData(new DataPoint(pointsPlotted, 0.12), true, pointsPlotted);
-        XUPHard.appendData(new DataPoint(pointsPlotted, 0.30 ), true, pointsPlotted);
-        XDownHard.appendData(new DataPoint(pointsPlotted, -0.30 ), true, pointsPlotted);
-
+        XUPHard.appendData(new DataPoint(pointsPlotted, 0.30), true, pointsPlotted);
+        XDownHard.appendData(new DataPoint(pointsPlotted, -0.30), true, pointsPlotted);
 
 
     }
@@ -1184,72 +1280,59 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     boolean SHR = false;
 
 
-
-
-    double thresholdUPDOWN= 0;
-    double thresholdOPENCLOSE= 0;
+    double thresholdUPDOWN = 0;
+    double thresholdOPENCLOSE = 0;
     double Y1 = 0;
-    double Y2= 0;
-    double X1= 0;
-    double X2= 0;
+    double Y2 = 0;
+    double X1 = 0;
+    double X2 = 0;
     double P1 = 0;
-    double P2= 0;
-    double R1= 0;
-    double R2= 0;
-
-
-
-
-
-
-
+    double P2 = 0;
+    double R1 = 0;
+    double R2 = 0;
 
 
     float scoreTrip = 100;
     float finalScoreTrip;
 
-    public void thresholds(){
-        Y1 = 1.3+thresholdUPDOWN-thresholdOPENCLOSE;
-        Y2 = 2.5+thresholdUPDOWN+thresholdOPENCLOSE;
-        X1 = 1.8+thresholdUPDOWN-thresholdOPENCLOSE;
-        X2 = 3.0+thresholdUPDOWN+thresholdOPENCLOSE;
-        P1 = 0.8+thresholdUPDOWN-thresholdOPENCLOSE;
-        P2 = 0.12+thresholdUPDOWN+thresholdOPENCLOSE;
-        R1 = 0.10+thresholdUPDOWN-thresholdOPENCLOSE;
-        R2 = 0.30+thresholdUPDOWN+thresholdOPENCLOSE;
+    public void thresholds() {
+        Y1 = 1.3 + thresholdUPDOWN - thresholdOPENCLOSE;
+        Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
+        X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
+        X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
+        P1 = 0.8 + thresholdUPDOWN - thresholdOPENCLOSE;
+        P2 = 0.12 + thresholdUPDOWN + thresholdOPENCLOSE;
+        R1 = 0.10 + thresholdUPDOWN - thresholdOPENCLOSE;
+        R2 = 0.30 + thresholdUPDOWN + thresholdOPENCLOSE;
 
 
-
-
-        tv_threshold_Y.setText("Y:"+String.format("%.1f",Y1)+"-"+String.format("%.1f",Y2));
-        tv_threshold_X.setText("X:"+String.format("%.1f",X1)+"-"+String.format("%.1f",X2));
-        tv_threshold_P.setText("P:"+String.format("%.1f",P1)+"-"+String.format("%.1f",P2));
-        tv_threshold_R.setText("R:"+String.format("%.1f",R1)+"-"+String.format("%.1f",R2));
+        tv_threshold_Y.setText("Y:" + String.format("%.1f", Y1) + "-" + String.format("%.1f", Y2));
+        tv_threshold_X.setText("X:" + String.format("%.1f", X1) + "-" + String.format("%.1f", X2));
+        tv_threshold_P.setText("P:" + String.format("%.1f", P1) + "-" + String.format("%.1f", P2));
+        tv_threshold_R.setText("R:" + String.format("%.1f", R1) + "-" + String.format("%.1f", R2));
 
     }
 
     private void ResetThresholds() {
-        thresholdUPDOWN= 0;
-        thresholdOPENCLOSE= 0;
+        thresholdUPDOWN = 0;
+        thresholdOPENCLOSE = 0;
 
-        Y1 = 1.3+thresholdUPDOWN-thresholdOPENCLOSE;
-        Y2 = 2.5+thresholdUPDOWN+thresholdOPENCLOSE;
-        X1 = 1.8+thresholdUPDOWN-thresholdOPENCLOSE;
-        X2 = 3.0+thresholdUPDOWN+thresholdOPENCLOSE;
-        P1 = 0.8+thresholdUPDOWN-thresholdOPENCLOSE;
-        P2 = 0.12+thresholdUPDOWN+thresholdOPENCLOSE;
-        R1 = 0.10+thresholdUPDOWN-thresholdOPENCLOSE;
-        R2 = 0.30+thresholdUPDOWN+thresholdOPENCLOSE;
+        Y1 = 1.3 + thresholdUPDOWN - thresholdOPENCLOSE;
+        Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
+        X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
+        X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
+        P1 = 0.8 + thresholdUPDOWN - thresholdOPENCLOSE;
+        P2 = 0.12 + thresholdUPDOWN + thresholdOPENCLOSE;
+        R1 = 0.10 + thresholdUPDOWN - thresholdOPENCLOSE;
+        R2 = 0.30 + thresholdUPDOWN + thresholdOPENCLOSE;
 
-        tv_threshold_Y.setText("Y:"+String.format("%.1f",Y1)+"-"+String.format("%.1f",Y2));
-        tv_threshold_X.setText("X:"+String.format("%.1f",X1)+"-"+String.format("%.1f",X2));
-        tv_threshold_P.setText("P:"+String.format("%.1f",P1)+"-"+String.format("%.1f",P2));
-        tv_threshold_R.setText("R:"+String.format("%.1f",R1)+"-"+String.format("%.1f",R2));
+        tv_threshold_Y.setText("Y:" + String.format("%.1f", Y1) + "-" + String.format("%.1f", Y2));
+        tv_threshold_X.setText("X:" + String.format("%.1f", X1) + "-" + String.format("%.1f", X2));
+        tv_threshold_P.setText("P:" + String.format("%.1f", P1) + "-" + String.format("%.1f", P2));
+        tv_threshold_R.setText("R:" + String.format("%.1f", R1) + "-" + String.format("%.1f", R2));
 
 
     }
-
-
 
 
     public void drivingAnalysisWithRoll() {
@@ -1364,8 +1447,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
 
-        Log.d("StartTrip","statusLocation"+statusLocation);
-        if(!statusLocation==false) {
+        Log.d("StartTrip", "statusLocation" + statusLocation);
+        if (!statusLocation == false) {
 
             if (startTripState == false) {
                 Trip trip = new Trip();
@@ -1405,11 +1488,13 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 int seconds = (int) ((EndTime - StartTime) / 1000) % 60;
 
                 //tv_totalHours.setText(String.valueOf(totalTimeTraveledMin)+" Minutes "+String.valueOf(seconds)+" seconds");
-                tv_totalHours.setText(String.format("%.2f", elapse) + "Min");
+                tv_totalHours.setText("Total Time Trip: " + String.format("%.2f", elapse) + "Min");
 
                 float reductionFactor = 5 * HAC + 5 * HDC + 5 * SHLC + 5 * SHRC;
                 finalScoreTrip = scoreTrip - reductionFactor;
-                if(finalScoreTrip<0){finalScoreTrip=0;}
+                if (finalScoreTrip < 0) {
+                    finalScoreTrip = 0;
+                }
                 Log.d("Score", "reductionFactor" + reductionFactor);
                 Log.d("Score", "finalScoreTrip" + finalScoreTrip);
                 tv_finalScore.setText(String.valueOf((int) finalScoreTrip));
@@ -1423,9 +1508,11 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 SHRC = 0;
 
 
-                aveSpeedKM =  distanceKM / totalTimeTraveledMin;
+                aveSpeedKM = distanceKM / totalTimeTraveledMin;
 
-                if(Double.isInfinite(aveSpeedKM)){aveSpeedKM=0;}
+                if (Double.isInfinite(aveSpeedKM)) {
+                    aveSpeedKM = 0;
+                }
 
                 tv_aveSpeed.setText(String.format("%.2f", aveSpeedKM) + " ASp ");
 
@@ -1441,8 +1528,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 Toast.makeText(getContext(), "Trip End final Trip Score: ", Toast.LENGTH_LONG).show();
 
             }
-        }else {
-            Toast.makeText(getContext(),"Location is not still enable. Please wait",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getContext(), "Location is not still enable. Please wait", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -1456,10 +1543,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         trip.setStartTime(StartTime);
         dao.insertTrip(trip);
         List<Trip> tripList = dao.getAllTripsByUser(userId);
-        Trip lastTrip = tripList.get(dao.getAllTripsByUser(userId).size()-1);
+        Trip lastTrip = tripList.get(dao.getAllTripsByUser(userId).size() - 1);
 
         setTripID(lastTrip.getTripId());
-        Log.d("SaveTripInitial","tripID"+ lastTrip.getTripId());
+        Log.d("SaveTripInitial", "tripID" + lastTrip.getTripId());
 
 
     }
@@ -1475,7 +1562,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         trip.setScoreTrip(finalScoreTrip);
         trip.setEndDate(EndTime);
         trip.setEndTime(EndTime);
-        trip.setAveSpeed(aveSpeedKM);
+        trip.setAveSpeed(aveSpeedKM*100);
         dao.updateTrip(trip);
 
     }

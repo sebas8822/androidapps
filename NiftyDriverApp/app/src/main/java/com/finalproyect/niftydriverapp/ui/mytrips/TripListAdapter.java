@@ -1,7 +1,9 @@
 package com.finalproyect.niftydriverapp.ui.mytrips;
 
 import android.content.Context;
+import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.RecyclerViewInterface;
 import com.finalproyect.niftydriverapp.db.Trip;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,16 +73,42 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     }
     /*****************************Test Data******************************/
 
+    Geocoder geocoder;
+    private List<Address> findGeocoder(Double lat, Double lon) {
+
+        final int maxResults = 1;
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(lat, lon, maxResults);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        return addresses;
+    }
+
     private String getStartAddressLocation(Trip trip) {
-        //trip.getStartLocation();
-        //Geocoder geocoder = new Geocoder(context,lo );
-        return "2 Charles Sturt University, Port Macquarie 2";
+
+        geocoder = new Geocoder(context);
+        List<Address> geoResult = findGeocoder(trip.getStartLocationLAT(), trip.getStartLocationLON());
+        Address thisAddress = geoResult.get(0);
+        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
+        return String.valueOf(thisAddress.getAddressLine(0));
+
     }
 
     private String getEndAddressLocation(Trip trip) {
-        //trip.getStartLocation();
-        return "24 Seaview avenue, Port macquarie 2444";
+        geocoder = new Geocoder(context);
+
+        List<Address> geoResult = findGeocoder(trip.getEndLocationLAT(), trip.getEndLocationLON());
+        Address thisAddress = geoResult.get(0);
+        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
+        return String.valueOf(thisAddress.getAddressLine(0));
     }
+
+
 
 
 

@@ -8,10 +8,26 @@
     tools:context=".ui.profile.ProfileFragment">
 
     <TextView
+        android:id="@+id/tv_totalHours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="##"
+        android:textAlignment="center"
+        android:textColor="@color/blue_sky_200"
+        android:textColorHint="@color/blue_sky_200"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.569"
+        app:layout_constraintStart_toEndOf="@+id/tv_totalKilometres"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_profile_view" />
+
+    <TextView
         android:id="@+id/tv_totalKilometres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:hint="##"
         android:textAlignment="center"
         android:textColor="@color/blue_sky_200"
@@ -26,7 +42,7 @@
         android:id="@+id/tv_totalTrips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:hint="##"
         android:textAlignment="center"
         android:textColor="@color/blue_sky_200"
@@ -52,7 +68,7 @@
         app:layout_constraintHorizontal_bias="0.44"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalTrips"
-        app:layout_constraintVertical_bias="0.025" />
+        app:layout_constraintVertical_bias="0.064" />
 
     <TextView
         android:id="@+id/tv_titleKilometres"
@@ -69,7 +85,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalKilometres"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.04"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -87,23 +103,7 @@
         app:layout_constraintHorizontal_bias="0.806"
         app:layout_constraintStart_toEndOf="@+id/tv_titleKilometres"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalHours"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/tv_totalHours"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="##"
-        android:textAlignment="center"
-        android:textColor="@color/blue_sky_200"
-        android:textColorHint="@color/blue_sky_200"
-        android:textSize="35dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.569"
-        app:layout_constraintStart_toEndOf="@+id/tv_totalKilometres"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_profile_view" />
+        app:layout_constraintVertical_bias="0.04" />
 
     <Button
         android:id="@+id/bt_scoreView"
@@ -111,7 +111,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="228dp"
+        android:layout_marginTop="184dp"
 
         android:text="Score View"
         android:textAlignment="center"
@@ -126,14 +126,14 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="228dp"
+        android:layout_marginTop="184dp"
         android:text="Graph View"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="12dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.825"
+        app:layout_constraintHorizontal_bias="0.819"
         app:layout_constraintStart_toEndOf="@+id/bt_scoreView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -141,7 +141,7 @@
         android:id="@+id/tv_userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="176dp"
+        android:layout_marginTop="152dp"
         android:hint="Current_Name"
         android:textAlignment="center"
 
@@ -157,7 +157,7 @@
         android:id="@+id/tv_totalScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Total Score"
         android:textAlignment="center"
         android:textColor="@color/black"
@@ -195,7 +195,7 @@
         app:layout_constraintHorizontal_bias="0.146"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.039" />
+        app:layout_constraintVertical_bias="0.026" />
 
     <ImageButton
         android:id="@+id/bt_changeImage"
@@ -209,20 +209,20 @@
         app:layout_constraintHorizontal_bias="0.375"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/im_profile"
-        app:layout_constraintVertical_bias="0.255"
+        app:layout_constraintVertical_bias="0.215"
         tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_profile_view"
         android:name="com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView"
         android:layout_width="400dp"
-        android:layout_height="245dp"
+        android:layout_height="290dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_userName"
-        app:layout_constraintVertical_bias="0.276" />
+        app:layout_constraintVertical_bias="0.167" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

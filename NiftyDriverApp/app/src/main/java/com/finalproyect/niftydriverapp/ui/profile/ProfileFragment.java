@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,20 +24,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.finalproyect.niftydriverapp.MainActivity;
 import com.finalproyect.niftydriverapp.ui.functions.ImageResizer;
 import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.ui.functions.StaticContextFactory;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.User;
-import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView;
+import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView_Profile;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 
 public class ProfileFragment extends Fragment {
@@ -217,7 +213,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Graph View View", Toast.LENGTH_LONG).show();
-                GraphView graphView = new GraphView();
+                GraphView_Profile graphView = new GraphView_Profile();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_profile_view, graphView);
                 fragmentTransaction.commit();

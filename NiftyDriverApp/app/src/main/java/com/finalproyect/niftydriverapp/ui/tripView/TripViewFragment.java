@@ -24,9 +24,9 @@ import com.finalproyect.niftydriverapp.databinding.FragmentTripviewBinding;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.Trip;
-import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView;
+import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView_Profile;
+import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView_Tripview;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreViewTripView;
-import com.finalproyect.niftydriverapp.ui.settings.Settings_Activity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -193,7 +193,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Graph View View", Toast.LENGTH_LONG).show();
-                GraphView graphView = new GraphView();
+                GraphView_Tripview graphView = new GraphView_Tripview();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_tripView_view, graphView);
                 fragmentTransaction.commit();
