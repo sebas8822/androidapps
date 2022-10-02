@@ -67,49 +67,11 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
         holder.tv_dateTripRow.setText(getDateFromMillis(this.tripList.get(position).getStartDate()));
         holder.tv_startTripRow.setText(getTimeFromMillis(this.tripList.get(position).getStartTime()));
         holder.tv_endTripRow.setText(getTimeFromMillis(this.tripList.get(position).getEndTime()));
-        holder.tv_startTripLocationRow.setText(getStartAddressLocation(this.tripList.get(position)));
-        holder.tv_endTripLocationRow.setText(getEndAddressLocation(this.tripList.get(position)));//create the methods to convert in readable location
+        holder.tv_startTripLocationRow.setText(this.tripList.get(position).getStartLocationName());
+        holder.tv_endTripLocationRow.setText(this.tripList.get(position).getEndLocationName());//create the methods to convert in readable location
         holder.tv_scoreTripMyTrips.setText(String.valueOf((int)this.tripList.get(position).getScoreTrip()));
     }
     /*****************************Test Data******************************/
-
-    Geocoder geocoder;
-    private List<Address> findGeocoder(Double lat, Double lon) {
-
-        final int maxResults = 1;
-        List<Address> addresses = null;
-        try {
-            addresses = geocoder.getFromLocation(lat, lon, maxResults);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-
-        return addresses;
-    }
-
-    private String getStartAddressLocation(Trip trip) {
-
-        geocoder = new Geocoder(context);
-        List<Address> geoResult = findGeocoder(trip.getStartLocationLAT(), trip.getStartLocationLON());
-        Address thisAddress = geoResult.get(0);
-        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
-        return String.valueOf(thisAddress.getAddressLine(0));
-
-    }
-
-    private String getEndAddressLocation(Trip trip) {
-        geocoder = new Geocoder(context);
-
-        List<Address> geoResult = findGeocoder(trip.getEndLocationLAT(), trip.getEndLocationLON());
-        Address thisAddress = geoResult.get(0);
-        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
-        return String.valueOf(thisAddress.getAddressLine(0));
-    }
-
-
-
 
 
     private String getDateFromMillis(long dateMillis) {
@@ -122,7 +84,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     private String getTimeFromMillis(long timeMillis) {
         Date millis = new Date(timeMillis);
 
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("HH:mm");
 
         return df.format(millis);
     }

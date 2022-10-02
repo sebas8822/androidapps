@@ -24,6 +24,16 @@ public class User {
     public boolean loginState;
     @ColumnInfo(name = "Theme_state")
     public boolean themeState;
+    @ColumnInfo(name = "Temp_Password")
+    public String tempPassword;
+
+    public String getTempPassword() {
+        return tempPassword;
+    }
+
+    public void setTempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
+    }
 
     public boolean isThemeState() {
         return themeState;

@@ -3,10 +3,11 @@ package com.finalproyect.niftydriverapp.ui.tripView;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -23,8 +25,8 @@ import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.databinding.FragmentTripviewBinding;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
+import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.finalproyect.niftydriverapp.db.Trip;
-import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView_Profile;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView_Tripview;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreViewTripView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -32,22 +34,26 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
  * https://www.youtube.com/watch?v=wRDLjUK8nyU    https://www.youtube.com/watch?v=b5U8WZM45aY https://www.youtube.com/watch?v=NOVacL7ZPrc  https://www.youtube.com/watch?v=xl0GwkLNpNI
  */ // to draw the route
 
-public class TripViewFragment extends Fragment implements OnMapReadyCallback {
+public class TripViewFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     Button bt_scoreViewTripView, bt_graphViewTripView;
     ImageButton bt_leftTripButton, bt_rightButton;
@@ -64,11 +70,15 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
     long userId;
     int position;
-
+    Trip lastTrip;
 
 
     GoogleMap mMap;
+    Marker marker;
 
+
+    AppDatabase db;
+    DAO dao;
 
     private FragmentTripviewBinding binding;
 
@@ -114,8 +124,8 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
         Toast.makeText(getContext(), "Position After call from SP: " + position + "User" + userId, Toast.LENGTH_LONG).show();
 
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
-        DAO dao = db.driverDao();
+        db = AppDatabase.getDbInstance(getContext());
+        dao = db.driverDao();
         List<Trip> tripList = dao.getAllTripsByUser(userId);
 
 
@@ -142,7 +152,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
 
             settingViewEMPTY();
         } else {
-            Trip lastTrip = tripList.get(position);
+            lastTrip = tripList.get(position);
 
 
             settingView(lastTrip);
@@ -254,10 +264,10 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         /**Set values*/
         tv_startTrip.setText(getTimeFromMillis(lastTrip.getStartTime()));
         tv_endTrip.setText(getTimeFromMillis(lastTrip.getEndTime()));
-        tv_startTripLocation.setText(getStartAddressLocation(lastTrip));
-        tv_endTripLocation.setText(getEndAddressLocation(lastTrip));
+        tv_startTripLocation.setText(lastTrip.getStartLocationName());
+        tv_endTripLocation.setText(lastTrip.getEndLocationName());
         tv_tripViewData.setText(getDateFromMillis(lastTrip.getStartDate()));
-        tv_totalKilometresTripsview.setText(String.valueOf((int) lastTrip.getKilometers()));
+        tv_totalKilometresTripsview.setText(String.format( "%.1f",lastTrip.getKilometers()));
 
         tv_ScoreTripView.setText(String.valueOf((int) lastTrip.getScoreTrip()));
         float timeTrip = (float) lastTrip.getTimeTrip();
@@ -292,26 +302,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     }
 
     /*****************************Test Data******************************/
-    Geocoder geocoder;
 
-    private String getStartAddressLocation(Trip trip) {
-
-        geocoder = new Geocoder(getContext());
-        List<Address> geoResult = findGeocoder(trip.getStartLocationLAT(), trip.getStartLocationLON());
-        Address thisAddress = geoResult.get(0);
-        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
-        return String.valueOf(thisAddress.getAddressLine(0));
-
-    }
-
-    private String getEndAddressLocation(Trip trip) {
-        geocoder = new Geocoder(getContext());
-
-        List<Address> geoResult = findGeocoder(trip.getEndLocationLAT(), trip.getEndLocationLON());
-        Address thisAddress = geoResult.get(0);
-        Log.d("testAddres", "address: " + thisAddress.getAddressLine(0));
-        return String.valueOf(thisAddress.getAddressLine(0));
-    }
 
 
     private String getDateFromMillis(long dateMillis) {
@@ -330,19 +321,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
         return df.format(millis);
     }
 
-    private List<Address> findGeocoder(Double lat, Double lon) {
-        final int maxResults = 1;
-        List<Address> addresses = null;
-        try {
-            addresses = geocoder.getFromLocation(lat, lon, maxResults);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
 
-        return addresses;
-    }
 
     /**************************************************************/
 
@@ -352,32 +331,158 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
         // Add a marker in Sydney and move the camera
-        LatLng Sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(Sydney).title("Marker in Sydney"));
+        LatLng Start_location = new LatLng(lastTrip.getStartLocationLAT(), lastTrip.getStartLocationLON());
+        LatLng End_location = new LatLng(lastTrip.getEndLocationLAT(), lastTrip.getEndLocationLON());
+        marker = mMap.addMarker(new MarkerOptions().position(Start_location).title("Start Trip"));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(Sydney));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(Sydney, 5);
+
+        marker = mMap.addMarker(new MarkerOptions().position(End_location).title("End Trip").icon(bitmapDescriptorFromVector(getContext(), R.drawable.img_5)));
+
+
+        PolylineOptions rectOption = new PolylineOptions().color(Color.BLUE);
+
+        addPolyLines(rectOption);
+
+        //Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+        //addPolyLines(rectOption);
+
+        Polyline  polyline = mMap.addPolyline(rectOption);
+
+        LatLngBounds trackBound = new LatLngBounds(Start_location,End_location);
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(Start_location));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(trackBound.getCenter(), 13);
         mMap.animateCamera(cameraUpdate);
 
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
-        try {
-            List<Address> listAddress = geocoder.getFromLocationName(empLocation, 1);
-            if (listAddress.size() > 0) {
-                LatLng addressEmp = new LatLng(listAddress.get(0).getLatitude(), listAddress.get(0).getLongitude());
 
-                mMap.addMarker(new MarkerOptions().position(addressEmp).title("Employee Address"));
+        mMap.setOnMarkerClickListener(this);
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(addressEmp));
-                CameraUpdate cameraUpdateemp = CameraUpdateFactory.newLatLngZoom(addressEmp, 15);
-                mMap.animateCamera(cameraUpdateemp);
-            } else {
-                Toast.makeText(getContext(), "Address no found", Toast.LENGTH_LONG).show();
+
+    }
+
+    public void addPolyLines(PolylineOptions rectOption){
+
+
+
+        boolean acceleration;
+        boolean braking;
+        boolean left;
+        boolean right;
+        boolean speed;
+        int count;
+        int count2 = 0;
+        int accCount = 0;
+        int brakingCount = 0;
+        int LeftCount = 0;
+        int RightCount = 0;
+
+        List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
+
+        for(FusionSensor fusionSensor: fusionSensors) {
+
+            acceleration = fusionSensor.isHardAcc();
+            braking = fusionSensor.isHardDes();
+            left = fusionSensor.isSharpLeft();
+            right = fusionSensor.isSharpRight();
+
+            if (acceleration == true) {
+                accCount++;
+                LatLng braking_point = new LatLng(fusionSensor.getCurLocationLAT(), fusionSensor.getCurLocationLON());
+                marker = mMap.addMarker(new MarkerOptions().position(braking_point).title("Hard Acceleration").icon(bitmapDescriptorFromVector(getContext(), R.drawable.img_2)));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            if (braking == true) {
+                LatLng braking_point = new LatLng(fusionSensor.getCurLocationLAT(), fusionSensor.getCurLocationLON());
+                marker = mMap.addMarker(new MarkerOptions().position(braking_point).title("Hard Brake").icon(bitmapDescriptorFromVector(getContext(),R.drawable.img_3)));
+                //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_baseline_gps_fixed_24));
+            }
+
+            if (left == true) {
+                LeftCount++;
+                LatLng braking_point = new LatLng(fusionSensor.getCurLocationLAT(), fusionSensor.getCurLocationLON());
+                marker = mMap.addMarker(new MarkerOptions().position(braking_point).title("Hard Cornering").icon(bitmapDescriptorFromVector(getContext(), R.drawable.img_4)));
+            }
+
+            if (right == true) {
+                RightCount++;
+                LatLng braking_point = new LatLng(fusionSensor.getCurLocationLAT(), fusionSensor.getCurLocationLON());
+                marker = mMap.addMarker(new MarkerOptions().position(braking_point).title("Hard Cornering").icon(bitmapDescriptorFromVector(getContext(), R.drawable.img_4)));
+            }
+
+
+
+            LatLng location = new LatLng(fusionSensor.getCurLocationLAT(), fusionSensor.getCurLocationLON());
+
+
+            rectOption.add(location);
         }
+
+
+
+    }
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+       //Toast.makeText(getContext(),"hola from marker",Toast.LENGTH_LONG).show();
+
+        if(marker.getTitle().equals("Hard Brake"))
+        {
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Hard Brake");
+            builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        if(marker.getTitle().equals("Hard Acceleration"))
+        {
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Hard Acceleration");
+            builder.setMessage("Try to accelerate soft you can avoid accidents and reduce petrol consume");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        if(marker.getTitle().equals("Hard Cornering"))
+        {
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Hard Cornering");
+            builder.setMessage("anticipate corners with the correct speed to turn smoothly or change the line smoothly you can avoid accidents");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        return false;
+    }
+
+
+
+
+    // method definition
+    public BitmapDescriptor getMarkerIcon(String color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(Color.parseColor(color), hsv);
+        return BitmapDescriptorFactory.defaultMarker(hsv[0]);
+    }
+
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResID ){
+        Drawable vectorDrawable= ContextCompat.getDrawable(context,vectorResID);
+        vectorDrawable.setBounds(0,0,vectorDrawable.getIntrinsicWidth(),vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),vectorDrawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+
+
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
 }

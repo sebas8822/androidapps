@@ -21,11 +21,17 @@ public class Trip {
     @ColumnInfo(name = "Start_LocationLON")
     public double startLocationLON;
 
+    @ColumnInfo(name = "StartName_Location")
+    public String StartLocationName;
+
 
     @ColumnInfo(name = "End_LocationLAT")
     public double endLocationLAT;
     @ColumnInfo(name = "End_LocationLON")
     public double endLocationLON;
+
+    @ColumnInfo(name = "EndName_Location")
+    public String EndLocationName;
 
 
     @ColumnInfo(name = "Kilometres")
@@ -50,6 +56,21 @@ public class Trip {
     @ColumnInfo(name = "Ave_speed")
     public double AveSpeed; // need be checked
 
+    public String getStartLocationName() {
+        return StartLocationName;
+    }
+
+    public void setStartLocationName(String startLocationName) {
+        StartLocationName = startLocationName;
+    }
+
+    public String getEndLocationName() {
+        return EndLocationName;
+    }
+
+    public void setEndLocationName(String endLocationName) {
+        EndLocationName = endLocationName;
+    }
 
 
     public double getStartLocationLAT() {

@@ -17,7 +17,7 @@
         android:textAlignment="center"
         android:textColor="@color/blue_sky_200"
         android:textColorHint="@color/blue_sky_200"
-        android:textSize="60dp"
+        android:textSize="50dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,14 +59,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Wen,14-Aug-2022"
-        android:textColor="@color/black"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="25dp"
 
 
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -84,7 +84,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_ScoreTripView" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_ScoreTripView"
+        app:layout_constraintVertical_bias="0.833" />
 
     <TextView
         android:id="@+id/tv_titleTripsView"
@@ -99,7 +100,7 @@
         app:layout_constraintEnd_toEndOf="@+id/tv_totalTimeView"
         app:layout_constraintStart_toStartOf="@+id/tv_totalTimeView"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalTimeView"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/tv_titleKilometresView"
@@ -112,6 +113,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/include3"
         app:layout_constraintEnd_toEndOf="@+id/tv_totalKilometresTripsview"
+        app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="@+id/tv_totalKilometresTripsview"
         app:layout_constraintTop_toBottomOf="@+id/tv_totalKilometresTripsview"
         app:layout_constraintVertical_bias="0.0" />
@@ -121,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="45dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="52dp"
         android:hint="##"
         android:textAlignment="center"
         android:textColor="@color/blue_sky_200"
@@ -138,9 +140,9 @@
         layout="@layout/current_trip_view2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="112dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_tripViewData" />
 
@@ -150,8 +152,8 @@
         android:layout_width="100dp"
         android:layout_height="32dp"
 
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="248dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="240dp"
         android:text="Score View"
         android:textAlignment="center"
         android:textColor="@color/black"
@@ -165,7 +167,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="100dp"
         android:layout_height="32dp"
-        android:layout_marginTop="248dp"
+        android:layout_marginTop="240dp"
         android:layout_marginEnd="45dp"
         android:text="Graph View"
         android:textAlignment="center"
@@ -181,13 +183,13 @@
         android:id="@+id/fragment_tripView_view"
         android:name="com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreViewTripView"
         android:layout_width="match_parent"
-        android:layout_height="212dp"
+        android:layout_height="215dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include3"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintTop_toBottomOf="@+id/bt_graphViewTripView"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

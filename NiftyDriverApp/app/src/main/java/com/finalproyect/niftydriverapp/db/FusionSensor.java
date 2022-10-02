@@ -29,8 +29,11 @@ public class FusionSensor {
     public float carSpeed;
     @ColumnInfo(name = "Google_Speed")
     public float googleCurSpeed;
-    @ColumnInfo(name = "Current_Location")
-    public String curLocation;
+    @ColumnInfo(name = "Current_LocationLAT")
+    public double curLocationLAT;
+    @ColumnInfo(name = "Current_LocationLON")
+    public double curLocationLON;
+
     @ColumnInfo(name = "Val_Speed")
     public boolean valSpeed;
     @ColumnInfo(name = "Safe_acceleration")
@@ -106,15 +109,21 @@ public class FusionSensor {
         this.yaw = yaw;
     }
 
-    public String getCurLocation() {
-        return curLocation;
+    public double getCurLocationLAT() {
+        return curLocationLAT;
     }
 
-    public void setCurLocation(String curLocation) {
-        this.curLocation = curLocation;
+    public void setCurLocationLAT(double curLocationLAT) {
+        this.curLocationLAT = curLocationLAT;
     }
 
+    public double getCurLocationLON() {
+        return curLocationLON;
+    }
 
+    public void setCurLocationLON(double curLocationLON) {
+        this.curLocationLON = curLocationLON;
+    }
 
     public float getCarSpeed() {
         return carSpeed;

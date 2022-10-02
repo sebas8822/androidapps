@@ -235,6 +235,20 @@
                 android:text="SRC"
                 android:textColor="@color/blue_sky_200"/>
 
+            <TextView
+                android:id="@+id/tv_locationStatus"
+                android:text="No Location"
+                android:textColor="@color/StateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
+
+            <ImageView
+                android:id="@+id/image_location"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_baseline_gps_off_24" />
+
         </TableRow>
 
         <TableRow
@@ -338,7 +352,7 @@
 
                     android:hint="P:#.#-#.#"
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="11dp"
+                    android:textSize="10dp"
 
                     android:textAlignment="center" />
 
@@ -351,7 +365,7 @@
 
                     android:hint="R:#.#-#.#"
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="11dp"
+                    android:textSize="10dp"
 
                     android:textAlignment="center" />
 
@@ -364,7 +378,7 @@
 
                     android:hint="Y:#.#-#.#"
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="11dp"
+                    android:textSize="10dp"
 
                     android:textAlignment="center" />
                 <TextView
@@ -375,7 +389,7 @@
                     android:hint="X:#.#-#.#"
 
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="11dp"
+                    android:textSize="10dp"
 
                     android:textAlignment="center" />
 

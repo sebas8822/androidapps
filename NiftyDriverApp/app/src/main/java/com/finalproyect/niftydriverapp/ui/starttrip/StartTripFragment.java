@@ -15,6 +15,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -28,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +52,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,11 +67,12 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_Xaxis, tv_Yaxis, tv_pith, tv_yaw, tv_distance, tv_title2, tv_title1, textView9, textView8,
             tv_totalHours, tv_total_Current, tv_aveSpeed, tv_finalScore, tv_safeAccel,
             tv_safeDesa, tv_safeLeft, tv_safeRight, tv_hardAccel, tv_hardDes, tv_sharpLeft,
-            tv_sharpRight, tv_fusionDB, tv_tripsDB, tv_threshold_Y, tv_threshold_X, tv_threshold_P, tv_threshold_R;
+            tv_sharpRight, tv_fusionDB, tv_tripsDB, tv_threshold_Y, tv_threshold_X, tv_threshold_P, tv_threshold_R, tv_locationStatus;
 
 
     private Button bt_startTrip, bt_resetFusionDatabase, bt_UP_threshold, bt_DOWN_threshold, bt_OPEN_threshold, bt_CLOSE_threshold, bt_Reset_Thresholds;
     private Switch switch_DEV;
+    private ImageView image_location;
 
     private static final String unit = "km/h";
     private int unitType;
@@ -127,6 +132,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
         view = inflater.inflate(R.layout.start_trip_test_fragment_dev, container, false);
 
+
+        image_location= (ImageView) view.findViewById(R.id.image_location);
+        tv_locationStatus= (TextView) view.findViewById(R.id.tv_locationStatus);
 
         tvSpeed = (TextView) view.findViewById(R.id.tvSpeed);
         tvMaxSpeed = (TextView) view.findViewById(R.id.tvMaxSpeed);
@@ -530,6 +538,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     float currentSpeed;
     boolean statusLocation = false;
 
+    Location location1;
+
     //THIS CLASS PROVIDE THE VARIABLES SPEED lONGITUD AND lATITUD
     private class SpeedTask extends AsyncTask<String, Void, String> {
         Context context;
@@ -560,8 +570,13 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
                 @Override
                 public void onLocationChanged(Location location) {
+                    location1 = location;
                     speed = location.getSpeed();
                     statusLocation = true;
+                    image_location.setImageResource(R.drawable.ic_baseline_gps_fixed_24);
+                    tv_locationStatus.setText("Enable");
+
+
 
                     //multiplaer to show the units standar Km/h
                     float multiplier = 3.6f;
@@ -1300,16 +1315,16 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
         X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
         X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
-        P1 = 0.8 + thresholdUPDOWN - thresholdOPENCLOSE;
-        P2 = 0.12 + thresholdUPDOWN + thresholdOPENCLOSE;
-        R1 = 0.10 + thresholdUPDOWN - thresholdOPENCLOSE;
-        R2 = 0.30 + thresholdUPDOWN + thresholdOPENCLOSE;
+        P1 = 0.08 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
+        P2 = 0.12 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
+        R1 = 0.10 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
+        R2 = 0.30 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
 
+        tv_threshold_P.setText("P:" + String.format("%.2f", P1) + "-" + String.format("%.2f", P2));
+        tv_threshold_R.setText("R:" + String.format("%.2f", R1) + "-" + String.format("%.2f", R2));
+        tv_threshold_Y.setText("Y:" + String.format("%.2f", Y1) + "-" + String.format("%.2f", Y2));
+        tv_threshold_X.setText("X:" + String.format("%.2f", X1) + "-" + String.format("%.2f", X2));
 
-        tv_threshold_Y.setText("Y:" + String.format("%.1f", Y1) + "-" + String.format("%.1f", Y2));
-        tv_threshold_X.setText("X:" + String.format("%.1f", X1) + "-" + String.format("%.1f", X2));
-        tv_threshold_P.setText("P:" + String.format("%.1f", P1) + "-" + String.format("%.1f", P2));
-        tv_threshold_R.setText("R:" + String.format("%.1f", R1) + "-" + String.format("%.1f", R2));
 
     }
 
@@ -1321,15 +1336,16 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
         X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
         X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
-        P1 = 0.8 + thresholdUPDOWN - thresholdOPENCLOSE;
-        P2 = 0.12 + thresholdUPDOWN + thresholdOPENCLOSE;
-        R1 = 0.10 + thresholdUPDOWN - thresholdOPENCLOSE;
-        R2 = 0.30 + thresholdUPDOWN + thresholdOPENCLOSE;
+        P1 = 0.08 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
+        P2 = 0.12 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
+        R1 = 0.10 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
+        R2 = 0.30 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
 
-        tv_threshold_Y.setText("Y:" + String.format("%.1f", Y1) + "-" + String.format("%.1f", Y2));
-        tv_threshold_X.setText("X:" + String.format("%.1f", X1) + "-" + String.format("%.1f", X2));
-        tv_threshold_P.setText("P:" + String.format("%.1f", P1) + "-" + String.format("%.1f", P2));
-        tv_threshold_R.setText("R:" + String.format("%.1f", R1) + "-" + String.format("%.1f", R2));
+        tv_threshold_P.setText("P:" + String.format("%.2f", P1) + "-" + String.format("%.2f", P2));
+        tv_threshold_R.setText("R:" + String.format("%.2f", R1) + "-" + String.format("%.2f", R2));
+        tv_threshold_Y.setText("Y:" + String.format("%.2f", Y1) + "-" + String.format("%.2f", Y2));
+        tv_threshold_X.setText("X:" + String.format("%.2f", X1) + "-" + String.format("%.2f", X2));
+
 
 
     }
@@ -1444,7 +1460,11 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     double elapse;
     double aveSpeedKM;
 
-    public void startTrip() {
+    Timer t = new Timer();
+
+
+
+        public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
 
         Log.d("StartTrip", "statusLocation" + statusLocation);
@@ -1462,6 +1482,23 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 previousLocation = null;
                 StartTime = System.currentTimeMillis();
                 finalScoreTrip = 0;
+
+                if(lat==0.0 && lon ==0.0){
+                    Log.d("locationExeption", "**********its happening***************" + "lat: " + lat + "Lon" + lon);
+                    Toast.makeText(getContext(),"Please wait while trip is creating", Toast.LENGTH_LONG).show();
+                    /**this while is to solve the problem of 0.0 coordenates I can not explaind why is producing 0.0 I guess that inside the function reset the coordinates
+                     every time that change coordinates*/
+                    do{
+                        Log.d("locationExeption", "inside do while save Start" + "lat: " + lat + "Lon" + lon);
+
+                        lon = location1.getLongitude();
+                        lat = location1.getLatitude();
+
+                    }while (lat==0.0 && lon ==0.0);
+
+                }
+
+
                 saveTripInitial(userId, trip);
                 //trip.getTripId();
                 Log.d("saveTripInitial", "TripID" + trip.getTripId());
@@ -1516,7 +1553,25 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
                 tv_aveSpeed.setText(String.format("%.2f", aveSpeedKM) + " ASp ");
 
+                if(lat==0.0 && lon ==0.0){
+                    Log.d("locationExeption", "**********its happening***************" + "lat: " + lat + "Lon" + lon);
+                    Toast.makeText(getContext(),"Please wait while is Saving ......", Toast.LENGTH_LONG).show();
+                    /**this while is to solve the problem of 0.0 coordinates I can not explained why is producing 0.0 I guess that inside the function reset the coordinates
+                     every time that change coordinates*/
+                    do{
+                        Log.d("locationExeption", "inside do while save end" + "lat: " + lat + "Lon" + lon);
+
+                        lon = location1.getLongitude();
+                        lat = location1.getLatitude();
+
+                    }while (lat==0.0 && lon ==0.0);
+
+                }
+
+
                 saveTripEnd();
+
+
 
 
                 /**SAVE VALUES fuction*///Save values
@@ -1539,6 +1594,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         trip.setUserCreatorId(userId);
         trip.setStartLocationLAT(lat);
         trip.setStartLocationLON(lon);
+
+        trip.setStartLocationName(getAddressLocationName(lat,lon));
         trip.setStartDate(StartTime);
         trip.setStartTime(StartTime);
         dao.insertTrip(trip);
@@ -1553,21 +1610,33 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
     public void saveTripEnd() {
 
+
         Trip trip = dao.getTripById(tripID);
-        ; //bring 0 require the last number list could be de las
+         //bring 0 require the last number list could be de las
         trip.setEndLocationLAT(lat);
         trip.setEndLocationLON(lon);
+
+        trip.setEndLocationName(getAddressLocationName(lat,lon));
         trip.setKilometers((float) (distanceTraveled / 1000.0)); // save it in Km/s
         trip.setTimeTrip(elapse);
         trip.setScoreTrip(finalScoreTrip);
         trip.setEndDate(EndTime);
         trip.setEndTime(EndTime);
-        trip.setAveSpeed(aveSpeedKM*100);
+        trip.setAveSpeed(1+aveSpeedKM*100);
         dao.updateTrip(trip);
+        lat = 0;
+        lon = 0;
+        distanceTraveled=0;
+        elapse=0;
+        finalScoreTrip=0;
+        EndTime=0;
+        aveSpeedKM=0;
 
     }
 
     public void saveFusionSensor() {
+
+
 
         FusionSensor fusionSensor = new FusionSensor();
 
@@ -1579,8 +1648,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         fusionSensor.setYaw(newYawOut);
         fusionSensor.setCarSpeed(currentSpeed);
         //fusionSensor.setGoogleCurSpeed();
-        fusionSensor.setCurLocation(lat + ", " + lon);
-
+        fusionSensor.setCurLocationLAT(lat);
+        fusionSensor.setCurLocationLON(lon);
         //fusionSensor.setValSpeed();
         fusionSensor.setSafeAcc(SA);
         fusionSensor.setSafeDes(SD);
@@ -1596,6 +1665,34 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         dao.insertFusionSensor(fusionSensor);
 
     }
+
+    Geocoder geocoder;
+    private List<Address> findGeocoder(Double lat, Double lon) {
+
+        final int maxResults = 5;
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(lat, lon, maxResults);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return addresses;
+    }
+
+    private String getAddressLocationName(Double lat, Double lon) {
+
+        geocoder = new Geocoder(getContext());
+        List<Address> geoResult = findGeocoder(lat,lon);
+
+        Address thisAddress = geoResult.get(0);
+        return String.valueOf(thisAddress.getAddressLine(0));
+
+    }
+
+
 
 
     @Override

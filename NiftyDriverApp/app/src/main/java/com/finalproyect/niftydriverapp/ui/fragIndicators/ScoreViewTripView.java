@@ -26,7 +26,7 @@ import java.util.List;
 public class ScoreViewTripView  extends Fragment {
 
 
-    private int currentProgress = 0;
+
     private ProgressBar pg_accelerationTripView, pg_brakingTripView, pg_corneringTripView, pg_speedTripView;
     private TextView tv_proAccelerationTripView, tv_proBrakingTripView, tv_proCorneringTripView, tv_proSpeedTripView;
     private long userId;
@@ -96,13 +96,11 @@ public class ScoreViewTripView  extends Fragment {
         int RightCount = 0;
 
         float totalAccCount = 0;
-
-        AppDatabase db = AppDatabase.getDbInstance(getContext());
-        DAO dao = db.driverDao();
-        List<Trip> tripList = dao.getAllTripsByUser(userId);
-        lastTrip= tripList.get(position);
-
-
+        if(position>0) {
+            AppDatabase db = AppDatabase.getDbInstance(getContext());
+            DAO dao = db.driverDao();
+            List<Trip> tripList = dao.getAllTripsByUser(userId);
+            lastTrip = tripList.get(position);
 
 
             List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
@@ -132,30 +130,39 @@ public class ScoreViewTripView  extends Fragment {
                 }
 
 
-
             }
 
-        Log.d("onResumeSTripView", "accCount" + accCount);
-        Log.d("onResumeSTripView", "brakingCount" + brakingCount);
-        Log.d("onResumeSTripView", "LeftCount" + LeftCount);
-        Log.d("onResumeSTripView", "RightCount" + RightCount);
+            Log.d("onResumeSTripView", "accCount" + accCount);
+            Log.d("onResumeSTripView", "brakingCount" + brakingCount);
+            Log.d("onResumeSTripView", "LeftCount" + LeftCount);
+            Log.d("onResumeSTripView", "RightCount" + RightCount);
 
 
-
-
-
-
-            pg_accelerationTripView.setProgress(100 - 5 * accCount );// require the sum of sussion sensor  average
+            pg_accelerationTripView.setProgress(100 - 5 * accCount);// require the sum of sussion sensor  average
             pg_brakingTripView.setProgress(100 - 5 * brakingCount);
-            pg_corneringTripView.setProgress(100 - (5 * LeftCount) - (5 * RightCount ));
-            pg_speedTripView.setProgress((int)lastTrip.getAveSpeed());
-            tv_proAccelerationTripView.setText(String.valueOf(100 - 5 * (accCount )));
-            tv_proBrakingTripView.setText(String.valueOf(100 - 5 * (brakingCount )));
-            tv_proCorneringTripView.setText(String.valueOf(100 - 5 * (LeftCount ) - 5 * (RightCount )));;
-            tv_proSpeedTripView.setText(String.valueOf((int)lastTrip.getAveSpeed()));
-            Toast.makeText(getContext(),"Current score"+lastTrip.getScoreTrip(),Toast.LENGTH_LONG).show();
+            pg_corneringTripView.setProgress(100 - (5 * LeftCount) - (5 * RightCount));
+            pg_speedTripView.setProgress((int) lastTrip.getAveSpeed());
+            tv_proAccelerationTripView.setText(String.valueOf(100 - 5 * (accCount)));
+            tv_proBrakingTripView.setText(String.valueOf(100 - 5 * (brakingCount)));
+            tv_proCorneringTripView.setText(String.valueOf(100 - 5 * (LeftCount) - 5 * (RightCount)));
+
+            tv_proSpeedTripView.setText(String.valueOf((int) lastTrip.getAveSpeed()));
+            Toast.makeText(getContext(), "Current score" + lastTrip.getScoreTrip(), Toast.LENGTH_LONG).show();
+
+        }else{
+
+            pg_accelerationTripView.setProgress(100);// require the sum of sussion sensor  average
+            pg_brakingTripView.setProgress(100);
+            pg_corneringTripView.setProgress(100 );
+            pg_speedTripView.setProgress(0);
+            tv_proAccelerationTripView.setText(String.valueOf(100));
+            tv_proBrakingTripView.setText(String.valueOf(100));
+            tv_proCorneringTripView.setText(String.valueOf(100 ));
+
+            tv_proSpeedTripView.setText(String.valueOf(0));
 
 
+        }
 
 
 

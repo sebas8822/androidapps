@@ -126,12 +126,13 @@ public class ScoreView extends Fragment {
 
         }
 
-        float accel = 100 - 5 * accCount / trips.size();
-        float desace = 100 - 5 * brakingCount / trips.size();
-        float corne = 100 - 5 * LeftCount / trips.size() - 5 * RightCount / trips.size();
+
 
 
         if (trips.size() > 0 && accCount > 0 || brakingCount > 0 || LeftCount > 0 || RightCount > 0) {
+            float accel = 100 - 5 * accCount / trips.size();
+            float desace = 100 - 5 * brakingCount / trips.size();
+            float corne = 100 - 5 * LeftCount / trips.size() - 5 * RightCount / trips.size();
             pg_acceleration.setProgress((int)accel);
             pg_braking.setProgress((int)desace);
             pg_cornering.setProgress((int)corne);
