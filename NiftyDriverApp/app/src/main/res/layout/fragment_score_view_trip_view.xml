@@ -23,7 +23,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/bt_infoAcceleration"
+                android:id="@+id/bt_infoAccelerationTripView"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="19dp"
                 android:layout_height="match_parent"
@@ -76,7 +76,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/bt_infoBraking"
+                android:id="@+id/bt_infoBrakingTripView"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="19dp"
                 android:layout_height="match_parent"
@@ -128,7 +128,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/bt_infoCornering"
+                android:id="@+id/bt_infoCorneringTripView"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="19dp"
                 android:layout_height="match_parent"
@@ -180,7 +180,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/bt_infoSpeed"
+                android:id="@+id/bt_infoSpeedTripView"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="19dp"
                 android:layout_height="match_parent"

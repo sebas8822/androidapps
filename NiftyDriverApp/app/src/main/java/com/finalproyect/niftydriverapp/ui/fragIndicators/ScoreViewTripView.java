@@ -1,5 +1,6 @@
 package com.finalproyect.niftydriverapp.ui.fragIndicators;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ public class ScoreViewTripView  extends Fragment {
 
     private ProgressBar pg_accelerationTripView, pg_brakingTripView, pg_corneringTripView, pg_speedTripView;
     private TextView tv_proAccelerationTripView, tv_proBrakingTripView, tv_proCorneringTripView, tv_proSpeedTripView;
+    private ImageButton bt_infoAccelerationTripView,bt_infoBrakingTripView,bt_infoCorneringTripView,bt_infoSpeedTripView;
     private long userId;
     private int position;
 
@@ -74,6 +77,62 @@ public class ScoreViewTripView  extends Fragment {
         tv_proBrakingTripView = (TextView) view.findViewById(R.id.tv_proBrakingTripView);
         tv_proCorneringTripView = (TextView) view.findViewById(R.id.tv_proCorneringTripView);
         tv_proSpeedTripView = (TextView) view.findViewById(R.id.tv_proSpeedTripView);
+
+        bt_infoAccelerationTripView = (ImageButton) view.findViewById(R.id.bt_infoAccelerationTripView);
+        bt_infoBrakingTripView = (ImageButton) view.findViewById(R.id.bt_infoBrakingTripView);
+        bt_infoCorneringTripView = (ImageButton) view.findViewById(R.id.bt_infoCorneringTripView);
+        bt_infoSpeedTripView = (ImageButton) view.findViewById(R.id.bt_infoSpeedTripView);
+
+
+
+        bt_infoAccelerationTripView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Acceleration");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+        bt_infoBrakingTripView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Braking");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+        bt_infoCorneringTripView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Cornering");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+        bt_infoSpeedTripView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Speed");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+            }
+        });
+
 
 
 

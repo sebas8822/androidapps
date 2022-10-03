@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -147,6 +149,10 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         bt_rightButton = view.findViewById(R.id.bt_rightButton);
         bt_graphViewTripView = (Button) view.findViewById(R.id.bt_graphViewTripView);
         bt_scoreViewTripView = (Button) view.findViewById(R.id.bt_scoreViewTripView);
+        bt_scoreViewTripView.setBackgroundColor(getResources().getColor(R.color.blue_sky_200));
+        bt_scoreViewTripView.setTextColor(getResources().getColor(R.color.white));
+
+
 
         if (tripList.isEmpty()) {
 
@@ -190,6 +196,10 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         bt_scoreViewTripView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bt_scoreViewTripView.setBackgroundColor(getResources().getColor(R.color.blue_sky_200));
+                bt_scoreViewTripView.setTextColor(getResources().getColor(R.color.white));
+                bt_graphViewTripView.setBackgroundColor(getResources().getColor(R.color.background_color));
+                bt_graphViewTripView.setTextColor(getResources().getColor(R.color.black));
                 Toast.makeText(getContext(), "Score View", Toast.LENGTH_LONG).show();
                 ScoreViewTripView scoreView = new ScoreViewTripView();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
@@ -202,6 +212,10 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         bt_graphViewTripView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bt_graphViewTripView.setBackgroundColor(getResources().getColor(R.color.blue_sky_200));
+                bt_graphViewTripView.setTextColor(getResources().getColor(R.color.white));
+                bt_scoreViewTripView.setBackgroundColor(getResources().getColor(R.color.background_color));
+                bt_scoreViewTripView.setTextColor(getResources().getColor(R.color.black));
                 Toast.makeText(getContext(), "Graph View View", Toast.LENGTH_LONG).show();
                 GraphView_Tripview graphView = new GraphView_Tripview();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
@@ -330,7 +344,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        LatLngBounds trackBound;
         List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
         // Add a marker in Sydney and move the camera
         LatLng Start_location = new LatLng(lastTrip.getStartLocationLAT(), lastTrip.getStartLocationLON());
@@ -351,7 +365,17 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
 
         Polyline  polyline = mMap.addPolyline(rectOption);
 
-        LatLngBounds trackBound = new LatLngBounds(Start_location,End_location);
+
+
+        try {
+            trackBound = new LatLngBounds(End_location,Start_location);
+
+        } catch (Exception e) {
+            trackBound = new LatLngBounds(Start_location,End_location);
+        }
+
+
+
 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Start_location));

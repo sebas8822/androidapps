@@ -1,5 +1,6 @@
 package com.finalproyect.niftydriverapp.ui.fragIndicators;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.finalproyect.niftydriverapp.db.Trip;
 import com.finalproyect.niftydriverapp.db.User;
 
+import java.security.PrivateKey;
 import java.util.List;
 
 
@@ -28,6 +32,7 @@ public class ScoreView extends Fragment {
     private int currentProgress = 0;
     private ProgressBar pg_acceleration, pg_braking, pg_cornering, pg_speed;
     private TextView tv_proAcceleration, tv_proBraking, tv_proCornering, tv_proSpeed;
+    private ImageButton bt_infoAcceleration, bt_infoBraking, bt_infoCornering, bt_infoSpeed;
     private long userId;
 
     public long getUserId() {
@@ -64,6 +69,63 @@ public class ScoreView extends Fragment {
         tv_proBraking = (TextView) view.findViewById(R.id.tv_proBraking);
         tv_proCornering = (TextView) view.findViewById(R.id.tv_proCornering);
         tv_proSpeed = (TextView) view.findViewById(R.id.tv_proSpeed);
+
+        bt_infoAcceleration = (ImageButton) view.findViewById(R.id.bt_infoAcceleration);
+        bt_infoBraking = (ImageButton) view.findViewById(R.id.bt_infoBraking);
+        bt_infoCornering = (ImageButton) view.findViewById(R.id.bt_infoCornering);
+        bt_infoSpeed = (ImageButton) view.findViewById(R.id.bt_infoSpeed);
+
+
+
+        bt_infoAcceleration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Acceleration");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+        bt_infoBraking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Braking");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+        bt_infoCornering.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Cornering");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+        bt_infoSpeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Speed");
+                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+            }
+        });
+
+
 
 
         return view;
@@ -127,28 +189,25 @@ public class ScoreView extends Fragment {
         }
 
 
-
-
         if (trips.size() > 0 && accCount > 0 || brakingCount > 0 || LeftCount > 0 || RightCount > 0) {
             float accel = 100 - 5 * accCount / trips.size();
             float desace = 100 - 5 * brakingCount / trips.size();
             float corne = 100 - 5 * LeftCount / trips.size() - 5 * RightCount / trips.size();
-            pg_acceleration.setProgress((int)accel);
-            pg_braking.setProgress((int)desace);
-            pg_cornering.setProgress((int)corne);
+            pg_acceleration.setProgress((int) accel);
+            pg_braking.setProgress((int) desace);
+            pg_cornering.setProgress((int) corne);
             pg_speed.setProgress(dao.getAverageSpeedByUser(userId));
 
 
-            tv_proAcceleration.setText(String.valueOf((int)accel));
-            tv_proBraking.setText(String.valueOf((int)desace));
-            tv_proCornering.setText(String.valueOf((int)corne));
+            tv_proAcceleration.setText(String.valueOf((int) accel));
+            tv_proBraking.setText(String.valueOf((int) desace));
+            tv_proCornering.setText(String.valueOf((int) corne));
 
             tv_proSpeed.setText(String.valueOf(dao.getAverageSpeedByUser(userId)));
 
 
-
         } else {
-            Log.d("CheckProgressSpeed","NO data");
+            Log.d("CheckProgressSpeed", "NO data");
             pg_acceleration.setProgress(100);// require the sum of sussion sensor  average
             pg_braking.setProgress(100);
             pg_cornering.setProgress(100);

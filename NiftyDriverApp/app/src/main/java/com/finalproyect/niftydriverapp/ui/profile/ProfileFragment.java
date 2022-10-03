@@ -196,10 +196,17 @@ public class ProfileFragment extends Fragment {
         });
 
         bt_scoreView = (Button) view.findViewById(R.id.bt_scoreView);
+        bt_scoreView.setBackgroundColor(getResources().getColor(R.color.blue_sky_200));
+        bt_scoreView.setTextColor(getResources().getColor(R.color.white));
+
 
         bt_scoreView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bt_scoreView.setBackgroundColor(getResources().getColor(R.color.blue_sky_200));
+                bt_scoreView.setTextColor(getResources().getColor(R.color.white));
+                bt_graphView.setBackgroundColor(getResources().getColor(R.color.background_color));
+                bt_graphView.setTextColor(getResources().getColor(R.color.black));
                 Toast.makeText(getContext(), "Score View", Toast.LENGTH_LONG).show();
                 ScoreView scoreView = new ScoreView();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
@@ -212,6 +219,10 @@ public class ProfileFragment extends Fragment {
         bt_graphView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bt_graphView.setBackgroundColor(getResources().getColor(R.color.blue_sky_200));
+                bt_graphView.setTextColor(getResources().getColor(R.color.white));
+                bt_scoreView.setBackgroundColor(getResources().getColor(R.color.background_color));
+                bt_scoreView.setTextColor(getResources().getColor(R.color.black));
                 Toast.makeText(getContext(), "Graph View View", Toast.LENGTH_LONG).show();
                 GraphView_Profile graphView = new GraphView_Profile();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();

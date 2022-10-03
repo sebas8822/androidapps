@@ -67,10 +67,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_Xaxis, tv_Yaxis, tv_pith, tv_yaw, tv_distance, tv_title2, tv_title1, textView9, textView8,
             tv_totalHours, tv_total_Current, tv_aveSpeed, tv_finalScore, tv_safeAccel,
             tv_safeDesa, tv_safeLeft, tv_safeRight, tv_hardAccel, tv_hardDes, tv_sharpLeft,
-            tv_sharpRight, tv_fusionDB, tv_tripsDB, tv_threshold_Y, tv_threshold_X, tv_threshold_P, tv_threshold_R, tv_locationStatus;
+            tv_sharpRight, tv_fusionDB, tv_tripsDB, tv_threshold_Y, tv_threshold_X, tv_threshold_P, tv_threshold_R, tv_mode;
 
 
-    private Button bt_startTrip, bt_resetFusionDatabase, bt_UP_threshold, bt_DOWN_threshold, bt_OPEN_threshold, bt_CLOSE_threshold, bt_Reset_Thresholds;
+    private Button bt_startTrip, bt_resetFusionDatabase, bt_UP_threshold, bt_DOWN_threshold, bt_OPEN_threshold, bt_CLOSE_threshold, bt_Reset_Thresholds, bt_mode_left, bt_mode_right;
     private Switch switch_DEV;
     private ImageView image_location;
 
@@ -111,6 +111,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
     View view;
 
+    int mode;
+
     boolean switchDevState;
 
     public void setSwitchDevState(boolean switchDevState) {
@@ -133,8 +135,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         view = inflater.inflate(R.layout.start_trip_test_fragment_dev, container, false);
 
 
-        image_location= (ImageView) view.findViewById(R.id.image_location);
-        tv_locationStatus= (TextView) view.findViewById(R.id.tv_locationStatus);
+        image_location = (ImageView) view.findViewById(R.id.image_location);
+
 
         tvSpeed = (TextView) view.findViewById(R.id.tvSpeed);
         tvMaxSpeed = (TextView) view.findViewById(R.id.tvMaxSpeed);
@@ -178,6 +180,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tv_threshold_X = (TextView) view.findViewById(R.id.tv_threshold_X);
         tv_threshold_P = (TextView) view.findViewById(R.id.tv_threshold_P);
         tv_threshold_R = (TextView) view.findViewById(R.id.tv_threshold_R);
+        tv_mode = (TextView) view.findViewById(R.id.tv_mode);
+
 
         //Buttons
         bt_Reset_Thresholds = (Button) view.findViewById(R.id.bt_Reset_Thresholds);
@@ -187,6 +191,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         bt_CLOSE_threshold = (Button) view.findViewById(R.id.bt_CLOSE_threshold);
         bt_resetFusionDatabase = (Button) view.findViewById(R.id.bt_resetFusionDatabase);
         bt_startTrip = (Button) view.findViewById(R.id.bt_startTrip);
+        bt_mode_left = (Button) view.findViewById(R.id.bt_mode_left);
+        bt_mode_right = (Button) view.findViewById(R.id.bt_mode_right);
+
+
         thresholds();
         setVisibility(switchDevState);
 
@@ -305,12 +313,40 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             }
         });
 
+        tv_mode.setText(String.valueOf(mode) + " Both");
 
-        previousTime = System.currentTimeMillis();
+        bt_mode_left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mode <= 2 && mode > 0) {
+                    mode--;
+                    setTextMode();
+                } else {
+                    Toast.makeText(getContext(), "no more mode available", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        bt_mode_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mode < 2 && mode >= 0) {
+                    mode++;
+                    setTextMode();
+                } else {
+                    Toast.makeText(getContext(), "no more mode available", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
         //FOR SAVE REFERENCES
+        previousTime = System.currentTimeMillis();
 
 
-        //SET UP UNITS PREFERENCES
+        //SET UP UNITS PREFERENCES - can be change in the future
 
         tvUnit.setText(unit);
 
@@ -355,9 +391,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
         //keep the screen on
         // getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
-
 
 
         // Add graphs set up
@@ -426,8 +459,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         // data is initialised then scedule the complementary filter task
         fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
                 2000, TIME_CONSTANT);
-        // analysing behavior every 2 sec
-        // fuseTimer.scheduleAtFixedRate(new BehaviorAnalysis(), 1000, 2000);
+
 
         //resetting the sensor values every 30 sec
         fuseTimer.scheduleAtFixedRate(new ResetSensorValues(), 1000, 30000);
@@ -436,6 +468,18 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         new SpeedTask(getActivity()).execute("string");
 
         return view;
+    }
+
+    private void setTextMode() {
+        if (mode == 0) {
+            tv_mode.setText(String.valueOf(mode) + " Both");
+        } else if (mode == 1) {
+            tv_mode.setText(String.valueOf(mode) + " X&Y");
+        } else {
+            tv_mode.setText(String.valueOf(mode) + " P&R");
+        }
+
+
     }
 
     private void setVisibility(boolean state) {
@@ -452,7 +496,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_Yaxis.setVisibility(View.VISIBLE);
             tv_pith.setVisibility(View.VISIBLE);
             tv_yaw.setVisibility(View.VISIBLE);
-            tv_title1.setVisibility(View.VISIBLE);
+
 
             tvLat.setVisibility(View.VISIBLE);
             tvLon.setVisibility(View.VISIBLE);
@@ -479,6 +523,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_sharpLeft.setVisibility(View.VISIBLE);
             tv_sharpRight.setVisibility(View.VISIBLE);
             bt_resetFusionDatabase.setVisibility(View.VISIBLE);
+            bt_mode_left.setVisibility(View.VISIBLE);
+            bt_mode_right.setVisibility(View.VISIBLE);
+            tv_mode.setVisibility(View.VISIBLE);
             tv_tripsDB.setVisibility(View.VISIBLE);
             tv_fusionDB.setVisibility(View.VISIBLE);
 
@@ -494,8 +541,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_Yaxis.setVisibility(View.GONE);
             tv_pith.setVisibility(View.GONE);
             tv_yaw.setVisibility(View.GONE);
-            tv_title1.setVisibility(View.GONE);
 
+            bt_mode_left.setVisibility(View.GONE);
+            bt_mode_right.setVisibility(View.GONE);
+            tv_mode.setVisibility(View.GONE);
             tvLat.setVisibility(View.GONE);
             tvLon.setVisibility(View.GONE);
             tv_total_Current.setVisibility(View.GONE);
@@ -574,8 +623,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                     speed = location.getSpeed();
                     statusLocation = true;
                     image_location.setImageResource(R.drawable.ic_baseline_gps_fixed_24);
-                    tv_locationStatus.setText("Enable");
-
 
 
                     //multiplaer to show the units standar Km/h
@@ -838,7 +885,21 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             //drivingAnalysisWithYaw(xAccCalibrated,newPitchOut,yAccCalibrated,newYawOut);
             //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
             drawGraphSpecific();
-            drivingAnalysisWithRoll();
+
+            switch (mode) {
+                case 0:
+                    drivingAnalysisBoth();
+                    break;
+                case 1:
+                    drivingAnalysisAccelerometer();
+                    break;
+                case 2:
+                    drivingAnalysisPitchRoll();
+                    break;
+
+
+            }
+
 
             /**No necesesary just o display the current time runing*/
             long currentTime = System.currentTimeMillis();
@@ -1315,10 +1376,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
         X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
         X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
-        P1 = 0.08 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
-        P2 = 0.12 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
-        R1 = 0.10 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
-        R2 = 0.30 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
+        P1 = 0.08 + thresholdUPDOWN / 10 - thresholdOPENCLOSE / 10;
+        P2 = 0.12 + thresholdUPDOWN / 10 + thresholdOPENCLOSE / 10;
+        R1 = 0.10 + thresholdUPDOWN / 10 - thresholdOPENCLOSE / 10;
+        R2 = 0.30 + thresholdUPDOWN / 10 + thresholdOPENCLOSE / 10;
 
         tv_threshold_P.setText("P:" + String.format("%.2f", P1) + "-" + String.format("%.2f", P2));
         tv_threshold_R.setText("R:" + String.format("%.2f", R1) + "-" + String.format("%.2f", R2));
@@ -1336,10 +1397,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
         X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
         X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
-        P1 = 0.08 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
-        P2 = 0.12 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
-        R1 = 0.10 + thresholdUPDOWN/10 - thresholdOPENCLOSE/10;
-        R2 = 0.30 + thresholdUPDOWN/10 + thresholdOPENCLOSE/10;
+        P1 = 0.08 + thresholdUPDOWN / 10 - thresholdOPENCLOSE / 10;
+        P2 = 0.12 + thresholdUPDOWN / 10 + thresholdOPENCLOSE / 10;
+        R1 = 0.10 + thresholdUPDOWN / 10 - thresholdOPENCLOSE / 10;
+        R2 = 0.30 + thresholdUPDOWN / 10 + thresholdOPENCLOSE / 10;
 
         tv_threshold_P.setText("P:" + String.format("%.2f", P1) + "-" + String.format("%.2f", P2));
         tv_threshold_R.setText("R:" + String.format("%.2f", R1) + "-" + String.format("%.2f", R2));
@@ -1347,38 +1408,37 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tv_threshold_X.setText("X:" + String.format("%.2f", X1) + "-" + String.format("%.2f", X2));
 
 
-
     }
 
 
-    public void drivingAnalysisWithRoll() {
+    public void drivingAnalysisBoth() {
 
         if (startTripState == true) {
 
             //Safe Driving
             if (yAccCalibrated > Y1 && yAccCalibrated < Y2) {
-                if (newPitchOut < -0.08 && newPitchOut > -0.12) {
+                if (newPitchOut < -P1 && newPitchOut > -P2) {
                     SAC++;
                     SA = true;
                     Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
                 }
             }
             if (yAccCalibrated < -Y1 && yAccCalibrated > -Y2) {
-                if (newPitchOut > 0.08 && newPitchOut < 0.12) {
+                if (newPitchOut > P1 && newPitchOut < P2) {
                     SDC++;
                     SD = true;
                     Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
                 }
             }
             if (xAccCalibrated < -X1 && xAccCalibrated > -X2) {
-                if (newRollOut > 0.10 && newRollOut < 0.30) {
+                if (newRollOut > R1 && newRollOut < R2) {
                     SLC++;
                     SL = true;
                     Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
             if (xAccCalibrated > X1 && xAccCalibrated < X2) {
-                if (newRollOut < -0.10 && newRollOut > -0.30) {
+                if (newRollOut < -R1 && newRollOut > -R2) {
                     SRC++;
                     SR = true;
                     Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
@@ -1386,7 +1446,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             }
             //Hard Driving
             if (yAccCalibrated > Y2) {
-                if (newPitchOut < -0.12) {
+                if (newPitchOut < -P2) {
                     HAC++;
                     HA = true;
                     Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
@@ -1395,26 +1455,194 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
             if (yAccCalibrated < -Y2) {
-                if (newPitchOut > 0.12) {
+                if (newPitchOut > P2) {
                     HDC++;
                     HD = true;
                     Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
                 }
             }
             if (xAccCalibrated < -X2) {
-                if (newRollOut > 0.30) {
+                if (newRollOut > R2) {
                     SHLC++;
                     SHL = true;
                     Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
             if (xAccCalibrated > X2) {
-                if (newRollOut < -0.30) {
+                if (newRollOut < -R2) {
                     SHRC++;
                     SHR = true;
                     Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
             }
+
+            // to create the the google maps marks
+            if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
+                saveFusionSensor();
+                SA = false;
+                SD = false;
+                HA = false;
+                HD = false;
+                SL = false;
+                SR = false;
+                SHL = false;
+                SHR = false;
+            }
+
+        }
+
+        //tv_finalScore.setText("FSC: "+finaScoreCounter);
+        tv_safeAccel.setText("SAC: " + SAC);
+        tv_safeDesa.setText("SDC: " + SDC);
+        tv_safeLeft.setText("SLC: " + SLC);
+        tv_safeRight.setText("SRC: " + SRC);
+        tv_hardAccel.setText(" HAC: " + HAC);
+        tv_hardDes.setText(" HDC: " + HDC);
+        tv_sharpLeft.setText(" SHLC: " + SHLC);
+        tv_sharpRight.setText(" SHRC: " + SHRC);
+
+
+    }
+
+    public void drivingAnalysisAccelerometer() {
+
+        if (startTripState == true) {
+
+            //Safe Driving
+            if (yAccCalibrated > Y1 && yAccCalibrated < Y2) {
+                SAC++;
+                SA = true;
+                Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
+            }
+            if (yAccCalibrated < -Y1 && yAccCalibrated > -Y2) {
+                SDC++;
+                SD = true;
+                Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+            }
+            if (xAccCalibrated < -X1 && xAccCalibrated > -X2) {
+                SLC++;
+                SL = true;
+                Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+            if (xAccCalibrated > X1 && xAccCalibrated < X2) {
+                SRC++;
+                SR = true;
+                Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+            //Hard Driving
+            if (yAccCalibrated > Y2) {
+                HAC++;
+                HA = true;
+                Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+            }
+
+
+            if (yAccCalibrated < -Y2) {
+                HDC++;
+                HD = true;
+                Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
+            }
+            if (xAccCalibrated < -X2) {
+                SHLC++;
+                SHL = true;
+                Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+            if (xAccCalibrated > X2) {
+                SHRC++;
+                SHR = true;
+                Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+
+            // to create the the google maps marks
+            if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
+                saveFusionSensor();
+                SA = false;
+                SD = false;
+                HA = false;
+                HD = false;
+                SL = false;
+                SR = false;
+                SHL = false;
+                SHR = false;
+            }
+
+        }
+
+        //tv_finalScore.setText("FSC: "+finaScoreCounter);
+        tv_safeAccel.setText("SAC: " + SAC);
+        tv_safeDesa.setText("SDC: " + SDC);
+        tv_safeLeft.setText("SLC: " + SLC);
+        tv_safeRight.setText("SRC: " + SRC);
+        tv_hardAccel.setText(" HAC: " + HAC);
+        tv_hardDes.setText(" HDC: " + HDC);
+        tv_sharpLeft.setText(" SHLC: " + SHLC);
+        tv_sharpRight.setText(" SHRC: " + SHRC);
+
+
+    }
+
+    public void drivingAnalysisPitchRoll() {
+
+        if (startTripState == true) {
+
+            //Safe Driving
+
+            if (newPitchOut < -P1 && newPitchOut > -P2) {
+                SAC++;
+                SA = true;
+                Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
+            }
+
+
+            if (newPitchOut > P1 && newPitchOut < P2) {
+                SDC++;
+                SD = true;
+                Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+            }
+
+
+            if (newRollOut > R1 && newRollOut < R2) {
+                SLC++;
+                SL = true;
+                Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+
+
+            if (newRollOut < -R1 && newRollOut > -R2) {
+                SRC++;
+                SR = true;
+                Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+
+            //Hard Driving
+
+            if (newPitchOut < -P2) {
+                HAC++;
+                HA = true;
+                Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+            }
+
+
+            if (newPitchOut > P2) {
+                HDC++;
+                HD = true;
+                Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
+            }
+
+
+            if (newRollOut > R2) {
+                SHLC++;
+                SHL = true;
+                Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+
+
+            if (newRollOut < -R2) {
+                SHRC++;
+                SHR = true;
+                Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
+            }
+
 
             // to create the the google maps marks
             if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
@@ -1463,8 +1691,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     Timer t = new Timer();
 
 
-
-        public void startTrip() {
+    public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
 
         Log.d("StartTrip", "statusLocation" + statusLocation);
@@ -1483,18 +1710,18 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 StartTime = System.currentTimeMillis();
                 finalScoreTrip = 0;
 
-                if(lat==0.0 && lon ==0.0){
+                if (lat == 0.0 && lon == 0.0) {
                     Log.d("locationExeption", "**********its happening***************" + "lat: " + lat + "Lon" + lon);
-                    Toast.makeText(getContext(),"Please wait while trip is creating", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Please wait while trip is creating", Toast.LENGTH_LONG).show();
                     /**this while is to solve the problem of 0.0 coordenates I can not explaind why is producing 0.0 I guess that inside the function reset the coordinates
                      every time that change coordinates*/
-                    do{
+                    do {
                         Log.d("locationExeption", "inside do while save Start" + "lat: " + lat + "Lon" + lon);
 
                         lon = location1.getLongitude();
                         lat = location1.getLatitude();
 
-                    }while (lat==0.0 && lon ==0.0);
+                    } while (lat == 0.0 && lon == 0.0);
 
                 }
 
@@ -1553,25 +1780,23 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
                 tv_aveSpeed.setText(String.format("%.2f", aveSpeedKM) + " ASp ");
 
-                if(lat==0.0 && lon ==0.0){
+                if (lat == 0.0 && lon == 0.0) {
                     Log.d("locationExeption", "**********its happening***************" + "lat: " + lat + "Lon" + lon);
-                    Toast.makeText(getContext(),"Please wait while is Saving ......", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Please wait while is Saving ......", Toast.LENGTH_LONG).show();
                     /**this while is to solve the problem of 0.0 coordinates I can not explained why is producing 0.0 I guess that inside the function reset the coordinates
                      every time that change coordinates*/
-                    do{
+                    do {
                         Log.d("locationExeption", "inside do while save end" + "lat: " + lat + "Lon" + lon);
 
                         lon = location1.getLongitude();
                         lat = location1.getLatitude();
 
-                    }while (lat==0.0 && lon ==0.0);
+                    } while (lat == 0.0 && lon == 0.0);
 
                 }
 
 
                 saveTripEnd();
-
-
 
 
                 /**SAVE VALUES fuction*///Save values
@@ -1595,7 +1820,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         trip.setStartLocationLAT(lat);
         trip.setStartLocationLON(lon);
 
-        trip.setStartLocationName(getAddressLocationName(lat,lon));
+        trip.setStartLocationName(getAddressLocationName(lat, lon));
         trip.setStartDate(StartTime);
         trip.setStartTime(StartTime);
         dao.insertTrip(trip);
@@ -1612,30 +1837,29 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
         Trip trip = dao.getTripById(tripID);
-         //bring 0 require the last number list could be de las
+        //bring 0 require the last number list could be de las
         trip.setEndLocationLAT(lat);
         trip.setEndLocationLON(lon);
 
-        trip.setEndLocationName(getAddressLocationName(lat,lon));
+        trip.setEndLocationName(getAddressLocationName(lat, lon));
         trip.setKilometers((float) (distanceTraveled / 1000.0)); // save it in Km/s
         trip.setTimeTrip(elapse);
         trip.setScoreTrip(finalScoreTrip);
         trip.setEndDate(EndTime);
         trip.setEndTime(EndTime);
-        trip.setAveSpeed(1+aveSpeedKM*100);
+        trip.setAveSpeed(1 + aveSpeedKM * 100);
         dao.updateTrip(trip);
         lat = 0;
         lon = 0;
-        distanceTraveled=0;
-        elapse=0;
-        finalScoreTrip=0;
-        EndTime=0;
-        aveSpeedKM=0;
+        distanceTraveled = 0;
+        elapse = 0;
+        finalScoreTrip = 0;
+        EndTime = 0;
+        aveSpeedKM = 0;
 
     }
 
     public void saveFusionSensor() {
-
 
 
         FusionSensor fusionSensor = new FusionSensor();
@@ -1667,6 +1891,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     }
 
     Geocoder geocoder;
+
     private List<Address> findGeocoder(Double lat, Double lon) {
 
         final int maxResults = 5;
@@ -1685,14 +1910,12 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     private String getAddressLocationName(Double lat, Double lon) {
 
         geocoder = new Geocoder(getContext());
-        List<Address> geoResult = findGeocoder(lat,lon);
+        List<Address> geoResult = findGeocoder(lat, lon);
 
         Address thisAddress = geoResult.get(0);
         return String.valueOf(thisAddress.getAddressLine(0));
 
     }
-
-
 
 
     @Override

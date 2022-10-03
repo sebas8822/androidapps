@@ -78,6 +78,12 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
+                <ImageView
+                    android:id="@+id/image_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_baseline_gps_off_24" />
+
             </TableRow>
 
             <TableRow
@@ -235,19 +241,6 @@
                 android:text="SRC"
                 android:textColor="@color/blue_sky_200"/>
 
-            <TextView
-                android:id="@+id/tv_locationStatus"
-                android:text="No Location"
-                android:textColor="@color/StateButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                 />
-
-            <ImageView
-                android:id="@+id/image_location"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_baseline_gps_off_24" />
 
         </TableRow>
 
@@ -300,8 +293,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <Button
@@ -321,19 +314,19 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="CLOSE DOWN"
-                    android:textStyle="bold"
                     android:textAlignment="center"
-                    android:textColor="@color/blue_sky_200" />
+                    android:textColor="@color/blue_sky_200"
+                    android:textStyle="bold" />
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="fill"
-                android:paddingTop="10dp"
-                android:orientation="vertical">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
 
                 <Button
                     android:id="@+id/bt_UP_threshold"
@@ -351,11 +344,10 @@
                     android:layout_height="wrap_content"
 
                     android:hint="P:#.#-#.#"
+                    android:textAlignment="center"
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="10dp"
 
-                    android:textAlignment="center" />
-
+                    android:textSize="10dp" />
 
 
                 <TextView
@@ -364,11 +356,10 @@
                     android:layout_height="wrap_content"
 
                     android:hint="R:#.#-#.#"
+                    android:textAlignment="center"
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="10dp"
 
-                    android:textAlignment="center" />
-
+                    android:textSize="10dp" />
 
 
                 <TextView
@@ -377,10 +368,11 @@
                     android:layout_height="wrap_content"
 
                     android:hint="Y:#.#-#.#"
+                    android:textAlignment="center"
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="10dp"
 
-                    android:textAlignment="center" />
+                    android:textSize="10dp" />
+
                 <TextView
                     android:id="@+id/tv_threshold_X"
                     android:layout_width="match_parent"
@@ -388,10 +380,10 @@
 
                     android:hint="X:#.#-#.#"
 
+                    android:textAlignment="center"
                     android:textColor="@color/blue_sky_200"
-                    android:textSize="10dp"
 
-                    android:textAlignment="center" />
+                    android:textSize="10dp" />
 
                 <Button
                     android:id="@+id/bt_DOWN_threshold"
@@ -402,6 +394,7 @@
                     android:drawableLeft="@drawable/ic_baseline_arrow_drop_down"
 
                     android:textAlignment="center" />
+
                 <Button
                     android:id="@+id/bt_Reset_Thresholds"
                     style="@style/Widget.Material3.Button.IconButton"
@@ -417,8 +410,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
@@ -426,10 +419,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:text="UP OPEN"
                     android:textAlignment="center"
                     android:textColor="@color/blue_sky_200"
-                    android:textStyle="bold"
-                    android:text="UP OPEN" />
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/bt_OPEN_threshold"
@@ -475,16 +468,13 @@
         </LinearLayout>
 
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingLeft="20dp"
+            android:orientation="vertical"
 
-            android:orientation="vertical">
-
+            android:paddingLeft="20dp">
 
 
             <Switch
@@ -511,8 +501,8 @@
                         android:layout_height="wrap_content"
                         android:text="Distance: ### Km"
                         android:textAlignment="center"
-                        android:textSize="12dp"
                         android:textColor="@color/blue_sky_200"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -523,13 +513,14 @@
                         android:textColor="@color/blue_sky_200"
                         android:textSize="12dp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/tvMaxSpeed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Max Speed: ### km/h"
-                        android:textSize="12dp"
                         android:textColor="@color/blue_sky_200"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -540,14 +531,15 @@
                         android:textColor="@color/blue_sky_200"
                         android:textSize="12dp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/tv_total_Current"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="TTimeApp"
+                        android:textColor="@color/blue_sky_200"
                         android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/blue_sky_200" />
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
@@ -595,6 +587,45 @@
 
                 </LinearLayout>
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/bt_mode_left"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+
+                    android:drawableLeft="@drawable/ic_baseline_arrow_left"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/tv_mode"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="11dp"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/bt_mode_right"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+
+                    android:drawableLeft="@drawable/ic_baseline_arrow_right"
+                    android:textAlignment="center" />
 
             </LinearLayout>
 
