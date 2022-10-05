@@ -84,6 +84,8 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
 
     private FragmentTripviewBinding binding;
 
+    List<Trip> tripList;
+
 
     String empLocation = "9 Seaview Avenue, port macquarie ";
     //String empLocation = "Colombia";
@@ -128,7 +130,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
 
         db = AppDatabase.getDbInstance(getContext());
         dao = db.driverDao();
-        List<Trip> tripList = dao.getAllTripsByUser(userId);
+        tripList = dao.getAllTripsByUser(userId);
 
 
         /**Set the views*/
@@ -339,12 +341,19 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
 
     /**************************************************************/
 
-
+    LatLngBounds trackBound=null;
     //Maps implementation
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLngBounds trackBound;
+
+        if (tripList.isEmpty()) {
+            LatLng emptyView = new LatLng(-44, 113);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(emptyView,13));
+        } else {
+
+
+
         List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
         // Add a marker in Sydney and move the camera
         LatLng Start_location = new LatLng(lastTrip.getStartLocationLAT(), lastTrip.getStartLocationLON());
@@ -366,27 +375,33 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         Polyline  polyline = mMap.addPolyline(rectOption);
 
 
+        LatLng midle = new LatLng(fusionSensors.get((fusionSensors.size())/2).getCurLocationLAT(),fusionSensors.get((fusionSensors.size())/2).getCurLocationLON());
 
+
+
+
+
+
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Start_location,13));
+        /**
         try {
-            trackBound = new LatLngBounds(End_location,Start_location);
+
+                    trackBound = new LatLngBounds(Start_location,End_location);
+
 
         } catch (Exception e) {
-            trackBound = new LatLngBounds(Start_location,End_location);
-        }
-
-
-
-
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(Start_location));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(trackBound.getCenter(), 13);
+            trackBound = new LatLngBounds(End_location,End_location);
+        }*/
+        CameraUpdate cameraUpdate=CameraUpdateFactory.newLatLngZoom(midle,13);
         mMap.animateCamera(cameraUpdate);
 
 
 
         mMap.setOnMarkerClickListener(this);
 
-
+        }
     }
 
     public void addPolyLines(PolylineOptions rectOption){

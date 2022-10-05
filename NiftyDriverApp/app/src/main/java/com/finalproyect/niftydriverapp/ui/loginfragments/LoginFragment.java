@@ -68,6 +68,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Forget Password button", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getContext() , ForgetPassword.class));
             }
         });
 

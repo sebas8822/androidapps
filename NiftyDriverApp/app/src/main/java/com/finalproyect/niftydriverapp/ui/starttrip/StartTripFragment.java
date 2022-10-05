@@ -655,7 +655,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                     Log.d("onChange", "Speed " + localspeed + "latitude: " + lat + " longitude: " + lon + " Distance: " + distanceTraveled / 1000);
                     tvSpeed.setText(numberFormat.format(filtSpeed));
                     /************************Distance and MAX speed*******************************/
-                    tv_distance.setText("Distance " + numberFormat.format(+distanceTraveled / 1000.0) + " km");
+                    tv_distance.setText("Distance: " + numberFormat.format(+distanceTraveled / 1000.0) + " km");
                     tvMaxSpeed.setText("Max Speed: " + numberFormat.format(maxSpeed * multiplier));
 
 
@@ -1778,7 +1778,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                     aveSpeedKM = 0;
                 }
 
-                tv_aveSpeed.setText(String.format("%.2f", aveSpeedKM) + " ASp ");
+                tv_aveSpeed.setText("Avg Speed: "+ String.format("%.1f", aveSpeedKM));
 
                 if (lat == 0.0 && lon == 0.0) {
                     Log.d("locationExeption", "**********its happening***************" + "lat: " + lat + "Lon" + lon);
