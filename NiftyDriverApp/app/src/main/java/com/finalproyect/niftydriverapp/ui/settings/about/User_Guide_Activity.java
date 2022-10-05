@@ -22,6 +22,7 @@ public class User_Guide_Activity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_guide);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 

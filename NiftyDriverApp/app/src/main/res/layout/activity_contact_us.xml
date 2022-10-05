@@ -70,7 +70,7 @@
             android:ems="10"
             android:gravity="top"
             android:hint="Message"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:paddingStart="12dp"
             android:paddingTop="12dp"
             android:paddingEnd="12dp"

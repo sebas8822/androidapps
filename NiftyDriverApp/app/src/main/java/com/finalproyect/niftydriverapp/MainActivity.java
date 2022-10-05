@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
 
 
 
+
             Log.d("theme","statetheme"+themeState);
 
             if (themeState){

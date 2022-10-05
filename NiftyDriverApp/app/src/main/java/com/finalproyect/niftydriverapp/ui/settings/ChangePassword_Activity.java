@@ -37,7 +37,7 @@ public class ChangePassword_Activity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit();
         long userId = sp.getLong("userId", 0);
@@ -60,6 +60,7 @@ public class ChangePassword_Activity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String lastPass, newPass, confPass;
+
                 lastPass = et_currentPassChP.getText().toString();
                 newPass = et_PassChP.getText().toString();
                 confPass = et_confirmPassChP.getText().toString();

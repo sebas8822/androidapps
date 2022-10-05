@@ -24,6 +24,7 @@ public class About_Activity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bt_userGuide = findViewById(R.id.bt_userGuide);
         bt_userGuide.setOnClickListener(new View.OnClickListener() {

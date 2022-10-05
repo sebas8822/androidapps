@@ -50,7 +50,7 @@ public class ChangeParameters_Activity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_para);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sp.edit();
         long userId = sp.getLong("userId", 0);

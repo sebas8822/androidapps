@@ -37,6 +37,7 @@ import com.finalproyect.niftydriverapp.ui.profile.ProfileFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 public class SignUpFragment extends Fragment {
@@ -53,20 +54,9 @@ public class SignUpFragment extends Fragment {
     Context context;
 
 
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public void onAttach(@NonNull Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("userProfile",Context.MODE_PRIVATE );
+        SharedPreferences sharedPreferences = context.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit(); // init sharedPreferences
         super.onAttach(context);
     }
@@ -88,11 +78,6 @@ public class SignUpFragment extends Fragment {
                 addUser();
             }
         });
-
-
-
-
-
 
 
         //editor.putString("userEmail",userEmail);
@@ -125,12 +110,12 @@ public class SignUpFragment extends Fragment {
 
             //System.out.println("Input values " + " Name: " + firstName + " Last Name:" + lastName + " Employee ID" + empId + " Email:" + email);
 
-            if (validName(context,firstName, lastName) == true && validEmail(email) == true && validPasswords(context,pass, confPass) == true) {
+            if (validName(context, firstName, lastName) == true && validEmail(email) == true && validPasswords(context, pass, confPass) == true) {
                 // insert values into the data base
                 saveUser(firstName, lastName, email, pass);
                 new AlertDialog.Builder(getContext())
                         .setTitle("Data inserted is correct")
-                        .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Email: " + email )
+                        .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Email: " + email)
                         .show();
 
             } else {
@@ -146,19 +131,37 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    public static boolean validNewPass(Context context,String pass, String confPass) {
+    public static boolean validNewPass(Context context, String newPass, String confPass) {
         boolean val = true;
         String PASSWORD_PATTERN =
                 "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
         //valid with regex if correct check if if equal to confirm pass
-        if(val==true){
-            val = validPasswords(context,pass,confPass);
+
+        if (!(Pattern.matches(PASSWORD_PATTERN, newPass))) {
+            Toast.makeText(context, "Password does not meet the standards", Toast.LENGTH_LONG).show();
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+            builder.setTitle("Password must have: ");
+            builder.setMessage("* At least 8 characters and at most 20 characters.\n" +
+                    "* at least one digit.\n" +
+                    "* at least one upper case alphabet.\n" +
+                    "* at least one lower case alphabet.\n" +
+                    "* at least one special character like !@#$%&*()-+=^.\n" +
+                    "* It doesn’t contain any white space\n");
+            android.app.AlertDialog dialog = builder.create();
+            dialog.show();
+
+            val = false;
+        }
+
+
+        if (val == true) {
+            val = validPasswords(context, newPass, confPass);
 
         }
         return val;
     }
 
-    public static boolean validPasswords(Context context,String pass, String confPass) {
+    public static boolean validPasswords(Context context, String pass, String confPass) {
         boolean val = true;
 
         if (!pass.equals(confPass)) {
@@ -168,7 +171,7 @@ public class SignUpFragment extends Fragment {
         return val;
     }
 
-    public static boolean validName(Context context,String firsName, String lastName) {
+    public static boolean validName(Context context, String firsName, String lastName) {
 
 
         // Variables declaration for regex function
@@ -181,7 +184,7 @@ public class SignUpFragment extends Fragment {
         return val;
     }
 
-    public boolean validEmail( String email) {
+    public boolean validEmail(String email) {
         // Variables declaration for regex function
 
         AppDatabase db = AppDatabase.getDbInstance(getContext());// Init database
@@ -197,12 +200,31 @@ public class SignUpFragment extends Fragment {
             val = false;
         }
         //check if exits this email in the data base
-        if (!(dao.getUserByEmail(email)==null)) {
+        if (!(dao.getUserByEmail(email) == null)) {
             Toast.makeText(context, "email already exits", Toast.LENGTH_LONG).show();
             val = false;
         }
 
         return val;
+    }
+
+
+    public static String getTemporaryPassword() {
+
+        int length = 8;
+        char[] chars = "!@#$%&*()-+=^ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-+=^".toCharArray();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        Random rand = new Random();
+
+        for (int i = 0; i < length; i++) {
+            char c = chars[rand.nextInt(chars.length)];
+            stringBuilder.append(c);
+        }
+
+        return stringBuilder.toString();
+
+
     }
 
 
@@ -217,6 +239,7 @@ public class SignUpFragment extends Fragment {
         user.setLastName(lastName);
         user.setEmail(email);
         user.setPassword(pass);
+        user.setTempPassword(getTemporaryPassword());
         user.setPicture(defaultImage());
         user.setLoginState(false);
         user.setThemeState(false);
@@ -232,18 +255,14 @@ public class SignUpFragment extends Fragment {
     }
 
 
-    private byte[] defaultImage(){
-        Bitmap bitmap= BitmapFactory.decodeResource(getResources(),R.drawable.img_1);
+    private byte[] defaultImage() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_1);
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArray);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArray);
         byte[] image = byteArray.toByteArray();
 
         return image;
     }
-
-
-
-
 
 
 }

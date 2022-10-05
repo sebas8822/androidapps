@@ -25,30 +25,37 @@
             android:value="AIzaSyDJZBug9kRypscYPUOGLQrcPHiEDu2oQyw" />
         <activity
             android:name=".ui.settings.Settings_Activity"
+            android:parentActivityName=".MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.settings.ChangeParameters_Activity"
+            android:parentActivityName=".ui.settings.Settings_Activity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.settings.ChangePassword_Activity"
+            android:parentActivityName=".ui.settings.Settings_Activity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.settings.about.About_Activity"
+            android:parentActivityName=".ui.settings.Settings_Activity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.settings.about.ContactUs_Activity"
+            android:parentActivityName=".ui.settings.about.About_Activity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.settings.about.TermsConditions_Activity"
+            android:parentActivityName=".ui.settings.about.About_Activity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.settings.about.User_Guide_Activity"
+            android:parentActivityName=".ui.settings.about.About_Activity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity

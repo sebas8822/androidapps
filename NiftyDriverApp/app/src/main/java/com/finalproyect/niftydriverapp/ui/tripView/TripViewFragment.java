@@ -155,7 +155,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         bt_scoreViewTripView.setTextColor(getResources().getColor(R.color.white));
 
 
-
         if (tripList.isEmpty()) {
 
             settingViewEMPTY();
@@ -283,7 +282,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         tv_startTripLocation.setText(lastTrip.getStartLocationName());
         tv_endTripLocation.setText(lastTrip.getEndLocationName());
         tv_tripViewData.setText(getDateFromMillis(lastTrip.getStartDate()));
-        tv_totalKilometresTripsview.setText(String.format( "%.1f",lastTrip.getKilometers()));
+        tv_totalKilometresTripsview.setText(String.format("%.1f", lastTrip.getKilometers()));
 
         tv_ScoreTripView.setText(String.valueOf((int) lastTrip.getScoreTrip()));
         float timeTrip = (float) lastTrip.getTimeTrip();
@@ -320,7 +319,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     /*****************************Test Data******************************/
 
 
-
     private String getDateFromMillis(long dateMillis) {
         Date startDate = new Date(dateMillis);
         DateFormat df = new SimpleDateFormat("E, dd MMM yyyy HH:mm");
@@ -338,10 +336,10 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
 
-
     /**************************************************************/
 
-    LatLngBounds trackBound=null;
+
+
     //Maps implementation
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -349,63 +347,78 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
 
         if (tripList.isEmpty()) {
             LatLng emptyView = new LatLng(-44, 113);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(emptyView,13));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(emptyView, 13));
         } else {
 
 
-
-        List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
-        // Add a marker in Sydney and move the camera
-        LatLng Start_location = new LatLng(lastTrip.getStartLocationLAT(), lastTrip.getStartLocationLON());
-        LatLng End_location = new LatLng(lastTrip.getEndLocationLAT(), lastTrip.getEndLocationLON());
-        marker = mMap.addMarker(new MarkerOptions().position(Start_location).title("Start Trip"));
-
-
-        marker = mMap.addMarker(new MarkerOptions().position(End_location).title("End Trip").icon(bitmapDescriptorFromVector(getContext(), R.drawable.img_5)));
+            List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
+            // Add a marker in Sydney and move the camera
+            LatLng Start_location = new LatLng(lastTrip.getStartLocationLAT(), lastTrip.getStartLocationLON());
+            LatLng End_location = new LatLng(lastTrip.getEndLocationLAT(), lastTrip.getEndLocationLON());
+            marker = mMap.addMarker(new MarkerOptions().position(Start_location).title("Start Trip"));
 
 
-        PolylineOptions rectOption = new PolylineOptions().color(Color.BLUE);
-
-        addPolyLines(rectOption);
-
-        //Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-
-        //addPolyLines(rectOption);
-
-        Polyline  polyline = mMap.addPolyline(rectOption);
+            marker = mMap.addMarker(new MarkerOptions().position(End_location).title("End Trip").icon(bitmapDescriptorFromVector(getContext(), R.drawable.img_5)));
 
 
-        LatLng midle = new LatLng(fusionSensors.get((fusionSensors.size())/2).getCurLocationLAT(),fusionSensors.get((fusionSensors.size())/2).getCurLocationLON());
+            PolylineOptions rectOption = new PolylineOptions().color(Color.BLUE);
 
+            addPolyLines(rectOption);
 
+            //Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
+            //addPolyLines(rectOption);
+
+            Polyline polyline = mMap.addPolyline(rectOption);
+
+            LatLng starMarker = new LatLng(fusionSensors.get(0).getCurLocationLAT(), fusionSensors.get(0).getCurLocationLON());
+            LatLng endMarker = new LatLng(fusionSensors.get(fusionSensors.size()-1).getCurLocationLAT(), fusionSensors.get(fusionSensors.size()-1).getCurLocationLON());
+
+            //LatLng midle = new LatLng(fusionSensors.get((fusionSensors.size())/2).getCurLocationLAT(),fusionSensors.get((fusionSensors.size())/2).getCurLocationLON());
 
 
 
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Start_location, 13));
+            //LatLngBounds bounds=starMarker;
+
+            LatLngBounds bounds = null;
 
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Start_location,13));
-        /**
-        try {
+             try {
 
-                    trackBound = new LatLngBounds(Start_location,End_location);
-
-
-        } catch (Exception e) {
-            trackBound = new LatLngBounds(End_location,End_location);
-        }*/
-        CameraUpdate cameraUpdate=CameraUpdateFactory.newLatLngZoom(midle,13);
-        mMap.animateCamera(cameraUpdate);
+                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                 builder.include(starMarker);
+                 builder.include(endMarker);
+                 bounds = builder.build();
 
 
+             } catch (Exception e) {
+                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                 builder.include(endMarker);
+                 builder.include(starMarker);
+                 bounds = builder.build();
+             }
+           // CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(midle, 13);
+            LatLngBounds finalBounds = bounds;
+            mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                                            @Override
+                                            public void onMapLoaded() {
+                                                int padding = 200; // padding around start and end marker
+                                                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(finalBounds.getCenter(), padding);
+                                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(finalBounds, padding);
+                                                mMap.animateCamera(cameraUpdate);
+                                            }
 
-        mMap.setOnMarkerClickListener(this);
+
+            });
+
+
+            mMap.setOnMarkerClickListener(this);
 
         }
     }
 
-    public void addPolyLines(PolylineOptions rectOption){
-
+    public void addPolyLines(PolylineOptions rectOption) {
 
 
         boolean acceleration;
@@ -422,7 +435,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
 
         List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
 
-        for(FusionSensor fusionSensor: fusionSensors) {
+        for (FusionSensor fusionSensor : fusionSensors) {
 
             acceleration = fusionSensor.isHardAcc();
             braking = fusionSensor.isHardDes();
@@ -437,7 +450,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
 
             if (braking == true) {
                 LatLng braking_point = new LatLng(fusionSensor.getCurLocationLAT(), fusionSensor.getCurLocationLON());
-                marker = mMap.addMarker(new MarkerOptions().position(braking_point).title("Hard Brake").icon(bitmapDescriptorFromVector(getContext(),R.drawable.img_3)));
+                marker = mMap.addMarker(new MarkerOptions().position(braking_point).title("Hard Brake").icon(bitmapDescriptorFromVector(getContext(), R.drawable.img_3)));
                 //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_baseline_gps_fixed_24));
             }
 
@@ -454,7 +467,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
             }
 
 
-
             LatLng location = new LatLng(fusionSensor.getCurLocationLAT(), fusionSensor.getCurLocationLON());
 
 
@@ -462,14 +474,13 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         }
 
 
-
     }
+
     @Override
     public boolean onMarkerClick(final Marker marker) {
-       //Toast.makeText(getContext(),"hola from marker",Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(),"hola from marker",Toast.LENGTH_LONG).show();
 
-        if(marker.getTitle().equals("Hard Brake"))
-        {
+        if (marker.getTitle().equals("Hard Brake")) {
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -478,8 +489,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
             AlertDialog dialog = builder.create();
             dialog.show();
         }
-        if(marker.getTitle().equals("Hard Acceleration"))
-        {
+        if (marker.getTitle().equals("Hard Acceleration")) {
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -488,8 +498,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
             AlertDialog dialog = builder.create();
             dialog.show();
         }
-        if(marker.getTitle().equals("Hard Cornering"))
-        {
+        if (marker.getTitle().equals("Hard Cornering")) {
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -502,8 +511,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
 
-
-
     // method definition
     public BitmapDescriptor getMarkerIcon(String color) {
         float[] hsv = new float[3];
@@ -512,13 +519,12 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
 
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResID ){
-        Drawable vectorDrawable= ContextCompat.getDrawable(context,vectorResID);
-        vectorDrawable.setBounds(0,0,vectorDrawable.getIntrinsicWidth(),vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),vectorDrawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResID) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResID);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
-
 
 
         return BitmapDescriptorFactory.fromBitmap(bitmap);
