@@ -1,6 +1,8 @@
 package com.finalproyect.niftydriverapp.ui.mytrips;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
@@ -8,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.RecyclerViewInterface;
+import com.finalproyect.niftydriverapp.db.AppDatabase;
+import com.finalproyect.niftydriverapp.db.DAO;
+import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.finalproyect.niftydriverapp.db.Trip;
 
 import java.io.IOException;
@@ -59,7 +65,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        //Obtaind specific employee to also cast to other methods
+        //Obtaind specific trip to also cast to other methods
         Trip tripfl = tripList.get(position);
         int pot = position ;
         // get the info in determine position in the specific item in the employee array
@@ -121,6 +127,56 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
 
 
                     }
+                }
+            });
+
+
+            // delete the item holding the item pressed
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Do you want to delete this trip?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            int pos = getAdapterPosition();
+                            AppDatabase db = AppDatabase.getDbInstance(context);
+                            DAO dao = db.driverDao();
+
+                            Trip trip = tripList.get(pos);
+
+                            List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(trip.getTripId());
+                            for (FusionSensor fusionSensor : fusionSensors) {
+                                dao.deleteFusionSensor(fusionSensor);
+
+                            }
+                            dao.deleteTrip(trip);
+
+
+                            //Update the recyclerview
+                            tripList.remove(pos);
+                            notifyDataSetChanged();
+
+
+
+
+                            Toast.makeText(context, "Trip deleted",Toast.LENGTH_LONG).show();
+
+
+
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    return false;
                 }
             });
 

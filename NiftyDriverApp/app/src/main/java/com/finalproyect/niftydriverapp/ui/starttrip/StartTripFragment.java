@@ -408,6 +408,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         Rseries.setColor(Color.WHITE);
         graph.addSeries(Rseries);
 
+
         //Thresholds
         yUPsafe1.setColor(Color.RED);
         graph.addSeries(yUPsafe1);
@@ -425,14 +426,25 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         graph.addSeries(XDownsafe1);
         XDownsafe2.setColor(Color.RED);
         graph.addSeries(XDownsafe2);
-        yUPHard.setColor(Color.RED);
-        graph.addSeries(yUPHard);
-        yDownHard.setColor(Color.RED);
-        graph.addSeries(yDownHard);
-        XUPHard.setColor(Color.RED);
-        graph.addSeries(XUPHard);
-        XDownHard.setColor(Color.RED);
-        graph.addSeries(XDownHard);
+
+
+        pUPHard1.setColor(Color.RED);
+        graph.addSeries(pUPHard1);
+        pDownHard1.setColor(Color.RED);
+        graph.addSeries(pDownHard1);
+        pUPHard2.setColor(Color.RED);
+        graph.addSeries(pUPHard2);
+        pDownHard2.setColor(Color.RED);
+        graph.addSeries(pDownHard2);
+        rUPHard1.setColor(Color.RED);
+        graph.addSeries(rUPHard1);
+        rDownHard1.setColor(Color.RED);
+        graph.addSeries(rDownHard1);
+        rUPHard2.setColor(Color.RED);
+        graph.addSeries(rUPHard2);
+        rDownHard2.setColor(Color.RED);
+        graph.addSeries(rDownHard2);
+
 
 
         // computing sensor values
@@ -528,6 +540,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_mode.setVisibility(View.VISIBLE);
             tv_tripsDB.setVisibility(View.VISIBLE);
             tv_fusionDB.setVisibility(View.VISIBLE);
+
+
+
+
 
 
         } else {
@@ -831,10 +847,16 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     LineGraphSeries<DataPoint> XUPsafe2 = new LineGraphSeries<DataPoint>();
     LineGraphSeries<DataPoint> XDownsafe1 = new LineGraphSeries<DataPoint>();
     LineGraphSeries<DataPoint> XDownsafe2 = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> yUPHard = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> yDownHard = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> XUPHard = new LineGraphSeries<DataPoint>();
-    LineGraphSeries<DataPoint> XDownHard = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> pUPHard1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> pDownHard1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> pUPHard2 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> pDownHard2 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> rUPHard1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> rDownHard1 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> rUPHard2 = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> rDownHard2 = new LineGraphSeries<DataPoint>();
+
+
 
 
     private int pointsPlotted = 10;
@@ -953,20 +975,43 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             XUPsafe2.resetData(new DataPoint[]{new DataPoint(1, 0)});
             XDownsafe1.resetData(new DataPoint[]{new DataPoint(1, 0)});
             XDownsafe2.resetData(new DataPoint[]{new DataPoint(1, 0)});
-            yUPHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
-            yDownHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
-            XUPHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
-            XDownHard.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            pUPHard1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            pDownHard1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            pUPHard2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            pDownHard2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            rUPHard1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            rDownHard1.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            rUPHard2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+            rDownHard2.resetData(new DataPoint[]{new DataPoint(1, 0)});
+
+
+        }
+
+        switch (mode) {
+            case 0:
+                plotYandX();
+                plotPandR();
+                break;
+            case 1:
+                plotYandX();
+                break;
+            case 2:
+                plotPandR();
+                break;
 
 
         }
 
 
+
+
+
+
+    }
+
+    public void plotYandX(){
         Xseries.appendData(new DataPoint(pointsPlotted, xAccCalibrated), true, pointsPlotted);
         Yseries.appendData(new DataPoint(pointsPlotted, yAccCalibrated), true, pointsPlotted);
-        Pseries.appendData(new DataPoint(pointsPlotted, newPitchOut), true, pointsPlotted);
-        Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
-
 
         yUPsafe1.appendData(new DataPoint(pointsPlotted, Y1), true, pointsPlotted);
         yUPsafe2.appendData(new DataPoint(pointsPlotted, Y2), true, pointsPlotted);
@@ -976,13 +1021,25 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         XUPsafe2.appendData(new DataPoint(pointsPlotted, -X2), true, pointsPlotted);
         XDownsafe1.appendData(new DataPoint(pointsPlotted, X1), true, pointsPlotted);
         XDownsafe2.appendData(new DataPoint(pointsPlotted, X2), true, pointsPlotted);
-        yUPHard.appendData(new DataPoint(pointsPlotted, -0.12), true, pointsPlotted);
-        yDownHard.appendData(new DataPoint(pointsPlotted, 0.12), true, pointsPlotted);
-        XUPHard.appendData(new DataPoint(pointsPlotted, 0.30), true, pointsPlotted);
-        XDownHard.appendData(new DataPoint(pointsPlotted, -0.30), true, pointsPlotted);
-
 
     }
+
+    public void plotPandR(){
+        Pseries.appendData(new DataPoint(pointsPlotted, newPitchOut), true, pointsPlotted);
+        Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
+
+        pUPHard1.appendData(new DataPoint(pointsPlotted, P1), true, pointsPlotted);
+        pDownHard1.appendData(new DataPoint(pointsPlotted, P2), true, pointsPlotted);
+        pUPHard2.appendData(new DataPoint(pointsPlotted, -P1), true, pointsPlotted);
+        pDownHard2.appendData(new DataPoint(pointsPlotted, -P2), true, pointsPlotted);
+        rUPHard1.appendData(new DataPoint(pointsPlotted, R1), true, pointsPlotted);
+        rDownHard1.appendData(new DataPoint(pointsPlotted, R2), true, pointsPlotted);
+        rUPHard2.appendData(new DataPoint(pointsPlotted, -R1), true, pointsPlotted);
+        rDownHard2.appendData(new DataPoint(pointsPlotted, -R2), true, pointsPlotted);
+
+    }
+
+
 
     float xPreviousAcc;
     float yPreviousAcc;
