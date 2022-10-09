@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+
     tools:context=".ui.profile.ProfileFragment">
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_marginBottom="52dp"
         android:text="Min"
         android:textAlignment="center"
-        android:textColor="@color/black"
+
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
@@ -47,7 +47,7 @@
         android:layout_marginBottom="4dp"
         android:text="Kilometres"
         android:textAlignment="center"
-        android:textColor="@color/black"
+
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
@@ -80,7 +80,7 @@
         android:layout_marginBottom="60dp"
         android:text="Trips"
         android:textAlignment="center"
-        android:textColor="@color/black"
+
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
@@ -125,7 +125,7 @@
         android:layout_marginTop="4dp"
         android:text="Total Score"
         android:textAlignment="center"
-        android:textColor="@color/black"
+
         android:textSize="26dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

@@ -5,7 +5,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color">
+    >
 
 
     <LinearLayout
@@ -25,27 +25,33 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="406dp"
 
             >
 
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawablePadding="12dp"
+                android:gravity="left"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="15dp"
+                android:text="@string/terms"
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:drawablePadding="12dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="15dp"
-                    android:paddingLeft="15dp"
-                    android:gravity="center"
-                    android:text="@string/terms"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="14dp" />
+
+                android:textSize="14dp" />
+
 
         </ScrollView>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/img_6" />
 
     </LinearLayout>
 

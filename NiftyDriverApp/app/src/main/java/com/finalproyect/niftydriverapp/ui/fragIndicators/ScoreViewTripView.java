@@ -155,12 +155,14 @@ public class ScoreViewTripView  extends Fragment {
         int RightCount = 0;
 
         float totalAccCount = 0;
-        if(position>0) {
+
             AppDatabase db = AppDatabase.getDbInstance(getContext());
             DAO dao = db.driverDao();
             List<Trip> tripList = dao.getAllTripsByUser(userId);
-            lastTrip = tripList.get(position);
 
+
+        if(tripList.size()>0) {
+            lastTrip = tripList.get(position);
 
             List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(lastTrip.getTripId());
             count = fusionSensors.size();

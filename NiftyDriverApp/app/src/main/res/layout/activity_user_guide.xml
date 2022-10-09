@@ -5,7 +5,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color">
+    >
 
 
     <LinearLayout
@@ -32,20 +32,9 @@
             android:layout_marginEnd="35dp"
             android:layout_marginBottom="41dp"
             android:drawablePadding="12dp"
-            android:text="Indicators
-
-    Acceleration: it is a score that indicates how hard you accelerate. To keep the score high, you must accelerate in pace way.
-
-    Breaking: it is a score that indicates how hard you press the break. To keep the score high, you must press the break in pace way.
-
-    Cornering: it is a score that indicates how hard you turn in a corner. To keep the score high, you must turn in pace way.
-
-    Speed: It is a score that shows how the current speed compares to the posted speed limit for a particular area. It also serves as a score for the entire trip.
-
-
-    Target: 80-100 Points "
+            android:text=""
             android:textAlignment="center"
-            android:textColor="@color/black"
+
             android:textSize="14dp" />
     </LinearLayout>
 

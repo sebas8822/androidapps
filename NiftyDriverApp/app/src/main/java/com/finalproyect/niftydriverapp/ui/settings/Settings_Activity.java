@@ -148,7 +148,7 @@ public class Settings_Activity extends AppCompatActivity {
 
         //Theme
         sw_themeDarkMode = (Switch) findViewById(R.id.sw_themeDarkMode);
-        sw_themeDarkMode.setChecked(switchThemeState);
+        sw_themeDarkMode.setChecked(user.isThemeState());
 
         sw_themeDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

@@ -3,6 +3,7 @@ package com.finalproyect.niftydriverapp.ui.mytrips;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.finalproyect.niftydriverapp.R;
@@ -21,6 +23,8 @@ import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.finalproyect.niftydriverapp.db.Trip;
+import com.finalproyect.niftydriverapp.ui.profile.ProfileFragment;
+import com.finalproyect.niftydriverapp.ui.tripView.TripViewFragment;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -35,6 +39,9 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     private Context context;
     private List<Trip> tripList;
     LayoutInflater layoutInflater;
+
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
 
     // determine the context
 
@@ -57,6 +64,9 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
     @Override
     public TripListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.recycler_maps_view,parent, false);
+        sp = context.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        editor = sp.edit();
+
 
         return new MyViewHolder(view, recyclerViewInterface);
     }
@@ -158,6 +168,11 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
                             //Update the recyclerview
                             tripList.remove(pos);
                             notifyDataSetChanged();
+                            //Update the Fragment
+                            recyclerViewInterface.refreshData();
+                            //update last position in trips view
+                            editor.putInt("position", tripList.size()-1);
+                            editor.commit();
 
 
 
@@ -184,6 +199,9 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.MyView
 
         }
     }
+
+
+
 
 
 

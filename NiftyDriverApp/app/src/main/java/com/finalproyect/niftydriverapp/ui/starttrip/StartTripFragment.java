@@ -20,9 +20,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.provider.Settings;
 import android.util.Log;
 
 import android.view.LayoutInflater;
@@ -446,7 +448,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         graph.addSeries(rDownHard2);
 
 
-
         // computing sensor values
         gyroOrientation[0] = 0.0f;
         gyroOrientation[1] = 0.0f;
@@ -467,17 +468,40 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         /**Init Sensors*/// get sensorManager and initialise sensor listeners
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         initListeners();
+
+
+        /**
+         * Parameters:
+         * command - the task to execute
+         * initialDelay - the time to delay first execution
+         * period - the period between successive executions
+         * unit - the time unit of the initialDelay and period parameters
+         *
+         * */
         // wait for one second until gyroscope and magnetometer/accelerometer
         // data is initialised then scedule the complementary filter task
-        fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
-                2000, TIME_CONSTANT);
+        //fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(), 2000, TIME_CONSTANT);
+        fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(), 1000, 500);
+        //Swith mode for the mode selected
+
+
+        // analysing behavior every 1 sec
+        fuseTimer.scheduleAtFixedRate(new DrivingAnalysisBoth(), 1000, 1000);
+
+
+        // analysing behavior every 1 sec
+        fuseTimer.scheduleAtFixedRate(new DrivingAnalysisAccelerometer(), 1000, 1000);
+
+
+        // analysing behavior every  sec
+        fuseTimer.scheduleAtFixedRate(new DrivingAnalysisPitchRoll(), 1000, 1000);
 
 
         //resetting the sensor values every 30 sec
         fuseTimer.scheduleAtFixedRate(new ResetSensorValues(), 1000, 30000);
 
 
-        new SpeedTask(getActivity()).execute("string");
+        new SpeedTask(getActivity()).execute("String");
 
         return view;
     }
@@ -540,10 +564,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_mode.setVisibility(View.VISIBLE);
             tv_tripsDB.setVisibility(View.VISIBLE);
             tv_fusionDB.setVisibility(View.VISIBLE);
-
-
-
-
 
 
         } else {
@@ -857,8 +877,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     LineGraphSeries<DataPoint> rDownHard2 = new LineGraphSeries<DataPoint>();
 
 
-
-
     private int pointsPlotted = 10;
 
     @Override
@@ -908,15 +926,20 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             //drawGraph(xAccCalibrated, newPitchOut, yAccCalibrated,newRollOut);
             drawGraphSpecific();
 
+            //Swith mode for the mode selected
+
             switch (mode) {
                 case 0:
-                    drivingAnalysisBoth();
+                    new DrivingAnalysisBoth();
+                    setCounters();
                     break;
                 case 1:
-                    drivingAnalysisAccelerometer();
+                    new DrivingAnalysisAccelerometer();
+                    setCounters();
                     break;
                 case 2:
-                    drivingAnalysisPitchRoll();
+                    new DrivingAnalysisPitchRoll();
+                    setCounters();
                     break;
 
 
@@ -926,7 +949,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             /**No necesesary just o display the current time runing*/
             long currentTime = System.currentTimeMillis();
             int totalMinutes = (int) (((currentTime - previousTime) / (1000 * 60)) % 60);
-            int hours = (int) (((currentTime - previousTime) / (1000 * 60 * 60)) % 24);
+            //int hours = (int) (((currentTime - previousTime) / (1000 * 60 * 60)) % 24);// just in case
             int seconds = (int) ((currentTime - previousTime) / 1000) % 60;
             tv_total_Current.setText(String.valueOf(totalMinutes) + " Min " + String.valueOf(seconds) + " sec");
         }
@@ -1003,13 +1026,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         }
 
 
-
-
-
-
     }
 
-    public void plotYandX(){
+    public void plotYandX() {
         Xseries.appendData(new DataPoint(pointsPlotted, xAccCalibrated), true, pointsPlotted);
         Yseries.appendData(new DataPoint(pointsPlotted, yAccCalibrated), true, pointsPlotted);
 
@@ -1024,7 +1043,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
     }
 
-    public void plotPandR(){
+    public void plotPandR() {
         Pseries.appendData(new DataPoint(pointsPlotted, newPitchOut), true, pointsPlotted);
         Rseries.appendData(new DataPoint(pointsPlotted, newRollOut), true, pointsPlotted);
 
@@ -1038,7 +1057,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         rDownHard2.appendData(new DataPoint(pointsPlotted, -R2), true, pointsPlotted);
 
     }
-
 
 
     float xPreviousAcc;
@@ -1468,255 +1486,277 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     }
 
 
-    public void drivingAnalysisBoth() {
+    public class DrivingAnalysisBoth extends TimerTask {
 
-        if (startTripState == true) {
 
-            //Safe Driving
-            if (yAccCalibrated > Y1 && yAccCalibrated < Y2) {
+        @Override
+        public void run() {
+            if (startTripState == true) {
+
+                //Safe Driving
+                if (yAccCalibrated > Y1 && yAccCalibrated < Y2) {
+                    if (newPitchOut < -P1 && newPitchOut > -P2) {
+                        SAC++;
+                        SA = true;
+                        Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
+                    }
+                }
+                if (yAccCalibrated < -Y1 && yAccCalibrated > -Y2) {
+                    if (newPitchOut > P1 && newPitchOut < P2) {
+                        SDC++;
+                        SD = true;
+                        Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+                    }
+                }
+                if (xAccCalibrated < -X1 && xAccCalibrated > -X2) {
+                    if (newRollOut > R1 && newRollOut < R2) {
+                        SLC++;
+                        SL = true;
+                        Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+                    }
+                }
+                if (xAccCalibrated > X1 && xAccCalibrated < X2) {
+                    if (newRollOut < -R1 && newRollOut > -R2) {
+                        SRC++;
+                        SR = true;
+                        Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+                    }
+                }
+                //Hard Driving
+                if (yAccCalibrated > Y2) {
+                    if (newPitchOut < -P2) {
+                        HAC++;
+                        HA = true;
+                        playSound();
+                        Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+                    }
+                }
+
+
+                if (yAccCalibrated < -Y2) {
+                    if (newPitchOut > P2) {
+                        HDC++;
+                        HD = true;
+                        playSound();
+                        Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
+                    }
+                }
+                if (xAccCalibrated < -X2) {
+                    if (newRollOut > R2) {
+                        SHLC++;
+                        SHL = true;
+                        playSound();
+                        Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+                    }
+                }
+                if (xAccCalibrated > X2) {
+                    if (newRollOut < -R2) {
+                        SHRC++;
+                        SHR = true;
+                        playSound();
+                        Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
+                    }
+                }
+
+                // to create the the google maps marks
+                if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
+                    saveFusionSensor();
+                    SA = false;
+                    SD = false;
+                    HA = false;
+                    HD = false;
+                    SL = false;
+                    SR = false;
+                    SHL = false;
+                    SHR = false;
+                }
+
+
+            }
+
+
+        }
+
+
+    }
+
+    public class DrivingAnalysisAccelerometer extends TimerTask {
+
+        @Override
+        public void run() {
+            if (startTripState == true) {
+
+                //Safe Driving
+                if (yAccCalibrated > Y1 && yAccCalibrated < Y2) {
+                    SAC++;
+                    SA = true;
+                    Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
+                }
+                if (yAccCalibrated < -Y1 && yAccCalibrated > -Y2) {
+                    SDC++;
+                    SD = true;
+                    Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+                }
+                if (xAccCalibrated < -X1 && xAccCalibrated > -X2) {
+                    SLC++;
+                    SL = true;
+                    Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+                }
+                if (xAccCalibrated > X1 && xAccCalibrated < X2) {
+                    SRC++;
+                    SR = true;
+                    Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+                }
+                //Hard Driving
+                if (yAccCalibrated > Y2) {
+                    HAC++;
+                    HA = true;
+                    playSound();
+                    Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
+                }
+
+
+                if (yAccCalibrated < -Y2) {
+                    HDC++;
+                    HD = true;
+                    playSound();
+                    Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
+                }
+                if (xAccCalibrated < -X2) {
+                    SHLC++;
+                    SHL = true;
+                    playSound();
+                    Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
+                }
+                if (xAccCalibrated > X2) {
+                    SHRC++;
+                    SHR = true;
+                    playSound();
+                    Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
+                }
+
+                // to create the the google maps marks
+                if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
+                    saveFusionSensor();
+                    SA = false;
+                    SD = false;
+                    HA = false;
+                    HD = false;
+                    SL = false;
+                    SR = false;
+                    SHL = false;
+                    SHR = false;
+                }
+
+            }
+
+        }
+    }
+
+    public class DrivingAnalysisPitchRoll extends TimerTask {
+
+
+        @Override
+        public void run() {
+            if (startTripState == true) {
+
+                //Safe Driving
+
                 if (newPitchOut < -P1 && newPitchOut > -P2) {
                     SAC++;
                     SA = true;
                     Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
                 }
-            }
-            if (yAccCalibrated < -Y1 && yAccCalibrated > -Y2) {
+
+
                 if (newPitchOut > P1 && newPitchOut < P2) {
                     SDC++;
                     SD = true;
                     Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
                 }
-            }
-            if (xAccCalibrated < -X1 && xAccCalibrated > -X2) {
+
+
                 if (newRollOut > R1 && newRollOut < R2) {
                     SLC++;
                     SL = true;
                     Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
-            }
-            if (xAccCalibrated > X1 && xAccCalibrated < X2) {
+
+
                 if (newRollOut < -R1 && newRollOut > -R2) {
                     SRC++;
                     SR = true;
                     Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
-            }
-            //Hard Driving
-            if (yAccCalibrated > Y2) {
+
+                //Hard Driving
+
                 if (newPitchOut < -P2) {
                     HAC++;
                     HA = true;
+                    playSound();
                     Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
                 }
-            }
 
 
-            if (yAccCalibrated < -Y2) {
                 if (newPitchOut > P2) {
                     HDC++;
                     HD = true;
+                    playSound();
                     Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
                 }
-            }
-            if (xAccCalibrated < -X2) {
+
+
                 if (newRollOut > R2) {
                     SHLC++;
                     SHL = true;
+                    playSound();
                     Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
-            }
-            if (xAccCalibrated > X2) {
+
+
                 if (newRollOut < -R2) {
                     SHRC++;
                     SHR = true;
+                    playSound();
                     Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
                 }
-            }
 
-            // to create the the google maps marks
-            if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
-                saveFusionSensor();
-                SA = false;
-                SD = false;
-                HA = false;
-                HD = false;
-                SL = false;
-                SR = false;
-                SHL = false;
-                SHR = false;
-            }
 
+                // to create the the google maps marks
+                if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
+                    saveFusionSensor();
+                    SA = false;
+                    SD = false;
+                    HA = false;
+                    HD = false;
+                    SL = false;
+                    SR = false;
+                    SHL = false;
+                    SHR = false;
+                }
+
+            }
         }
-
-        //tv_finalScore.setText("FSC: "+finaScoreCounter);
-        tv_safeAccel.setText("SAC: " + SAC);
-        tv_safeDesa.setText("SDC: " + SDC);
-        tv_safeLeft.setText("SLC: " + SLC);
-        tv_safeRight.setText("SRC: " + SRC);
-        tv_hardAccel.setText(" HAC: " + HAC);
-        tv_hardDes.setText(" HDC: " + HDC);
-        tv_sharpLeft.setText(" SHLC: " + SHLC);
-        tv_sharpRight.setText(" SHRC: " + SHRC);
-
 
     }
-
-    public void drivingAnalysisAccelerometer() {
-
-        if (startTripState == true) {
-
-            //Safe Driving
-            if (yAccCalibrated > Y1 && yAccCalibrated < Y2) {
-                SAC++;
-                SA = true;
-                Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
+    private void playSound() {
+        MediaPlayer player = MediaPlayer.create(getContext(),
+                Settings.System.DEFAULT_NOTIFICATION_URI);
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.reset();
+                mediaPlayer.release();
             }
-            if (yAccCalibrated < -Y1 && yAccCalibrated > -Y2) {
-                SDC++;
-                SD = true;
-                Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
-            }
-            if (xAccCalibrated < -X1 && xAccCalibrated > -X2) {
-                SLC++;
-                SL = true;
-                Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-            if (xAccCalibrated > X1 && xAccCalibrated < X2) {
-                SRC++;
-                SR = true;
-                Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-            //Hard Driving
-            if (yAccCalibrated > Y2) {
-                HAC++;
-                HA = true;
-                Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
-            }
-
-
-            if (yAccCalibrated < -Y2) {
-                HDC++;
-                HD = true;
-                Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
-            }
-            if (xAccCalibrated < -X2) {
-                SHLC++;
-                SHL = true;
-                Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-            if (xAccCalibrated > X2) {
-                SHRC++;
-                SHR = true;
-                Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-
-            // to create the the google maps marks
-            if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
-                saveFusionSensor();
-                SA = false;
-                SD = false;
-                HA = false;
-                HD = false;
-                SL = false;
-                SR = false;
-                SHL = false;
-                SHR = false;
-            }
-
-        }
-
-        //tv_finalScore.setText("FSC: "+finaScoreCounter);
-        tv_safeAccel.setText("SAC: " + SAC);
-        tv_safeDesa.setText("SDC: " + SDC);
-        tv_safeLeft.setText("SLC: " + SLC);
-        tv_safeRight.setText("SRC: " + SRC);
-        tv_hardAccel.setText(" HAC: " + HAC);
-        tv_hardDes.setText(" HDC: " + HDC);
-        tv_sharpLeft.setText(" SHLC: " + SHLC);
-        tv_sharpRight.setText(" SHRC: " + SHRC);
-
-
+        });
+        player.start();
     }
 
-    public void drivingAnalysisPitchRoll() {
 
-        if (startTripState == true) {
+    public void setCounters() {
 
-            //Safe Driving
-
-            if (newPitchOut < -P1 && newPitchOut > -P2) {
-                SAC++;
-                SA = true;
-                Log.d("drivingAnalysis", "SAC: " + SAC + " yAc: " + yAccCalibrated + " Pi: " + newPitchOut);
-            }
-
-
-            if (newPitchOut > P1 && newPitchOut < P2) {
-                SDC++;
-                SD = true;
-                Log.d("drivingAnalysis", "SDC: " + SDC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
-            }
-
-
-            if (newRollOut > R1 && newRollOut < R2) {
-                SLC++;
-                SL = true;
-                Log.d("drivingAnalysis", "SLC: " + SLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-
-
-            if (newRollOut < -R1 && newRollOut > -R2) {
-                SRC++;
-                SR = true;
-                Log.d("drivingAnalysis", "SRC: " + SRC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-
-            //Hard Driving
-
-            if (newPitchOut < -P2) {
-                HAC++;
-                HA = true;
-                Log.d("drivingAnalysis", "HAC: " + HAC + " yAc: " + yAccCalibrated + " Pi:" + newPitchOut);
-            }
-
-
-            if (newPitchOut > P2) {
-                HDC++;
-                HD = true;
-                Log.d("drivingAnalysis", "HDC: " + HDC + " yAc: " + yAccCalibrated + "Pi: " + newPitchOut);
-            }
-
-
-            if (newRollOut > R2) {
-                SHLC++;
-                SHL = true;
-                Log.d("drivingAnalysis", "SHLC: " + SHLC + " xAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-
-
-            if (newRollOut < -R2) {
-                SHRC++;
-                SHR = true;
-                Log.d("drivingAnalysis", "SHRC: " + SHRC + " XAc: " + xAccCalibrated + " RO: " + newRollOut);
-            }
-
-
-            // to create the the google maps marks
-            if (SA == true || SD == true || HA == true || HD == true || SL == true || SR == true || SHL == true || SHR == true) {
-                saveFusionSensor();
-                SA = false;
-                SD = false;
-                HA = false;
-                HD = false;
-                SL = false;
-                SR = false;
-                SHL = false;
-                SHR = false;
-            }
-
-        }
-
-        //tv_finalScore.setText("FSC: "+finaScoreCounter);
+        //Set Counters
         tv_safeAccel.setText("SAC: " + SAC);
         tv_safeDesa.setText("SDC: " + SDC);
         tv_safeLeft.setText("SLC: " + SLC);
@@ -1725,8 +1765,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tv_hardDes.setText(" HDC: " + HDC);
         tv_sharpLeft.setText(" SHLC: " + SHLC);
         tv_sharpRight.setText(" SHRC: " + SHRC);
-
-
     }
 
 
@@ -1759,7 +1797,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 //DURING THE TRIP
                 // during the start of a trip, values are initialized
                 // change the button to display "End" to end the trip
-                startTripState = true;
+
 
                 bt_startTrip.setText("End Trip");
                 bt_startTrip.setBackgroundColor(getResources().getColor(R.color.StateButton));
@@ -1784,6 +1822,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
                 saveTripInitial(userId, trip);
+                startTripState = true;
                 //trip.getTripId();
                 Log.d("saveTripInitial", "TripID" + trip.getTripId());
 
@@ -1792,7 +1831,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 Log.d("Score", "finalScoreTrip" + finalScoreTrip);
             } else {
                 // END OF THE TRIP
-                startTripState = false;
+
                 // Time,Score,AverageScore, is compute after finish trip
                 bt_startTrip.setText("Start Trip");
                 bt_startTrip.setBackgroundColor(getResources().getColor(R.color.blue_sky_500));
@@ -1835,25 +1874,28 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                     aveSpeedKM = 0;
                 }
 
-                tv_aveSpeed.setText("Avg Speed: "+ String.format("%.1f", aveSpeedKM));
+                tv_aveSpeed.setText("Avg Speed: " + String.format("%.1f", aveSpeedKM));
 
-                if (lat == 0.0 && lon == 0.0) {
-                    Log.d("locationExeption", "**********its happening***************" + "lat: " + lat + "Lon" + lon);
-                    Toast.makeText(getContext(), "Please wait while is Saving ......", Toast.LENGTH_LONG).show();
-                    /**this while is to solve the problem of 0.0 coordinates I can not explained why is producing 0.0 I guess that inside the function reset the coordinates
-                     every time that change coordinates*/
-                    do {
-                        Log.d("locationExeption", "inside do while save end" + "lat: " + lat + "Lon" + lon);
 
-                        lon = location1.getLongitude();
-                        lat = location1.getLatitude();
+                /**
+                 if (lat == 0.0 && lon == 0.0) {
+                 Log.d("locationExeption", "**********its happening***************" + "lat: " + lat + "Lon" + lon);
+                 Toast.makeText(getContext(), "Please wait while is Saving ......", Toast.LENGTH_LONG).show();
+                 /**this while is to solve the problem of 0.0 coordinates I can not explained why is producing 0.0 I guess that inside the function reset the coordinates
+                 every time that change coordinates*//**
+                 do {
+                 Log.d("locationExeption", "inside do while save end" + "lat: " + lat + "Lon" + lon);
 
-                    } while (lat == 0.0 && lon == 0.0);
+                 lon = location1.getLongitude();
+                 lat = location1.getLatitude();
 
-                }
+                 } while (lat == 0.0 && lon == 0.0);
+
+                 }*/
 
 
                 saveTripEnd();
+                startTripState = false;
 
 
                 /**SAVE VALUES fuction*///Save values
@@ -1873,14 +1915,36 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
     public void saveTripInitial(long userId, Trip trip) {
-        trip.setUserCreatorId(userId);
-        trip.setStartLocationLAT(lat);
-        trip.setStartLocationLON(lon);
+        try {
+            trip.setUserCreatorId(userId);
+            trip.setStartLocationLAT(lat);
+            trip.setStartLocationLON(lon);
 
-        trip.setStartLocationName(getAddressLocationName(lat, lon));
-        trip.setStartDate(StartTime);
-        trip.setStartTime(StartTime);
-        dao.insertTrip(trip);
+            trip.setStartLocationName(getAddressLocationName(lat, lon));
+            trip.setStartDate(StartTime);
+            trip.setStartTime(StartTime);
+
+
+            //bring 0 require the last number list could be de las
+            trip.setEndLocationLAT(1);
+            trip.setEndLocationLON(1);
+
+            trip.setEndLocationName(getAddressLocationName(lat, lon));
+            trip.setKilometers(1); // save it in Km/s
+            trip.setTimeTrip(1);
+            trip.setScoreTrip(33);
+            trip.setEndDate(1);
+            trip.setEndTime(1);
+
+            trip.setAveSpeed(1);
+            dao.insertTrip(trip);
+
+
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Something went wrong Please start again the trip", Toast.LENGTH_LONG).show();
+        }
+
+
         List<Trip> tripList = dao.getAllTripsByUser(userId);
         Trip lastTrip = tripList.get(dao.getAllTripsByUser(userId).size() - 1);
 
@@ -1891,9 +1955,8 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     }
 
     public void saveTripEnd() {
-
-
         Trip trip = dao.getTripById(tripID);
+
         //bring 0 require the last number list could be de las
         trip.setEndLocationLAT(lat);
         trip.setEndLocationLON(lon);
@@ -1906,6 +1969,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         trip.setEndTime(EndTime);
         trip.setAveSpeed(1 + aveSpeedKM * 100);
         dao.updateTrip(trip);
+
+        //Toast.makeText(getContext(), "Something went wrong Please try to end the trip again", Toast.LENGTH_LONG).show();
+
+
         lat = 0;
         lon = 0;
         distanceTraveled = 0;
@@ -1913,6 +1980,13 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         finalScoreTrip = 0;
         EndTime = 0;
         aveSpeedKM = 0;
+
+        //access control for trip view
+        List<Trip> tripList = dao.getAllTripsByUser(userId);
+        editor.putInt("position", tripList.size()-1);
+        editor.commit();
+
+
 
     }
 
@@ -1951,16 +2025,16 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
     private List<Address> findGeocoder(Double lat, Double lon) {
 
-        final int maxResults = 5;
+        final int maxResults = 10;
         List<Address> addresses = null;
+
         try {
             addresses = geocoder.getFromLocation(lat, lon, maxResults);
-
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         }
+
+
         return addresses;
     }
 
@@ -1968,6 +2042,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
         geocoder = new Geocoder(getContext());
         List<Address> geoResult = findGeocoder(lat, lon);
+        Log.d("getAddressLocationName", "geoResult.size()" + geoResult.size());
+        if (geoResult.size() == 0) {
+            Log.d("getAddressLocationName", "inside if" + geoResult.size());
+        }
 
         Address thisAddress = geoResult.get(0);
         return String.valueOf(thisAddress.getAddressLine(0));

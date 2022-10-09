@@ -247,18 +247,24 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
         //editor.putBoolean("userState", false);
         //editor.commit();
         long userId = sp.getLong("userId", 0);
-        boolean userState = sp.getBoolean("userState", false);
+        boolean switchThemeState = sp.getBoolean("switchThemeState", false);
         Toast.makeText(this, "Logout selected", Toast.LENGTH_LONG).show();
         AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());// Init database
         DAO dao = db.driverDao();
         User user = dao.getUserById(userId);
 
+
+
         user.setLoginState(false);
         dao.updateUser(user);
+
         editor.clear();
         editor.commit();
         editor.apply();
-        Toast.makeText(getApplicationContext(), "Save preferences " + user.isLoginState(), Toast.LENGTH_LONG).show();
+
+
+
+        //Toast.makeText(getApplicationContext(), "Save preferences " + user.isLoginState(), Toast.LENGTH_LONG).show();
 
         this.finish();
         System.exit(0);

@@ -87,8 +87,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     List<Trip> tripList;
 
 
-    String empLocation = "9 Seaview Avenue, port macquarie ";
-    //String empLocation = "Colombia";
+
 
 
     @Override
@@ -118,19 +117,27 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        //get th data from data base
+        db = AppDatabase.getDbInstance(getContext());
+        dao = db.driverDao();
+
+
         //Init shared preferences
         sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         long userId = sp.getLong("userId", 0);
-        int position = sp.getInt("position", 0);
+        tripList = dao.getAllTripsByUser(userId);
+
+
+        position = sp.getInt("position", 0);
+
 
         setUserId(userId);
         setPosition(position);
 
         Toast.makeText(getContext(), "Position After call from SP: " + position + "User" + userId, Toast.LENGTH_LONG).show();
 
-        db = AppDatabase.getDbInstance(getContext());
-        dao = db.driverDao();
-        tripList = dao.getAllTripsByUser(userId);
+
 
 
         /**Set the views*/

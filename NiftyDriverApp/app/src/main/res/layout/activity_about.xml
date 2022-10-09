@@ -5,7 +5,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color">
+    >
 
 
     <LinearLayout
@@ -35,9 +35,9 @@
             android:layout_height="161dp"
             android:layout_marginTop="10dp"
             android:drawablePadding="12dp"
-            android:text="NiftyDriver is a powerful tool to who is starting to learn to drive. This application provides useful information about your driver's performance. It combines artificial intelligence to read your driving style and score every trip you do. You will be able to check and compare trips in order to learn and get feedback about your performance."
+            android:text="NiftyDriver is a powerful tool to who is starting to learn to drive. This application provides useful information about your driver's performance. It combines artificial intelligence to read your driving behaviour and score every trip you do. You will be able to check and compare trips in order to learn and get feedback about your performance."
             android:textAlignment="center"
-            android:textColor="@color/black"
+
             android:textSize="14dp" />
 
         <Button

@@ -4,6 +4,7 @@ public interface RecyclerViewInterface {
 
     //responds to the clicks into the items
     void onItemClick(int position);
+    void refreshData();
 
 
 }

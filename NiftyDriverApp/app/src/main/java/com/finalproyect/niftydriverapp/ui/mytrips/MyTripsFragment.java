@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,30 +65,36 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_trips, container, false);
-
+        Log.d("ActivityLyfeCycle", "onCreate");
         //Init shared preferences
         sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         long userId = sp.getLong("userId", 0);
         setUserid(userId);
 
         //Main score
-
         tv_mainScore = (TextView) view.findViewById(R.id.tv_mainScore);
-        tv_mainScore.setText(ProfileFragment.mainScore(userId));
-
         // Number of trips
-
         tv_totalTrips = (TextView) view.findViewById(R.id.tv_totalTrips);
-        tv_totalTrips.setText(ProfileFragment.numTrips(userId));
-
         //Number Kilometers
-
         tv_totalKilometres = (TextView) view.findViewById(R.id.tv_totalKilometres);
-        tv_totalKilometres.setText(ProfileFragment.numKilometres(userId));
-
         // Total Hours
         tv_titleHours = (TextView) view.findViewById(R.id.tv_titleHours);
         tv_totalHours = (TextView) view.findViewById(R.id.tv_totalHours);
+        //Date first and last date trip
+        tv_dateFirstTrip = (TextView) view.findViewById(R.id.tv_dateFirstTrip);
+        tv_lastTrip = (TextView) view.findViewById(R.id.tv_lastTrip);
+        data();
+
+        initRecyclerview(view);
+        loadTrip();
+
+        return view;
+    }
+
+    public void data() {
+        tv_mainScore.setText(ProfileFragment.mainScore(userId));
+        tv_totalTrips.setText(ProfileFragment.numTrips(userId));
+        tv_totalKilometres.setText(ProfileFragment.numKilometres(userId));
         float totalTime = ProfileFragment.totalTripHours(userId);
 
         if (totalTime > 60) {
@@ -96,23 +103,12 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
         }
 
         tv_totalHours.setText(String.format("%.1f", totalTime));
-
-        //Date first and last date trip
-        tv_dateFirstTrip = (TextView) view.findViewById(R.id.tv_dateFirstTrip);
         tv_dateFirstTrip.setText(getDateFirstTrip());
-
-
-        tv_lastTrip = (TextView) view.findViewById(R.id.tv_lastTrip);
         tv_lastTrip.setText(getDateLastTrip());
-
-
-        initRecyclerview(view);
-        loadTrip();
-
-        return view;
     }
 
     private void initRecyclerview(View view) {
+        Log.d("ActivityLyfeCycle", "init RecyclerView");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -124,15 +120,19 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
 
 
     private void loadTrip() {
+        Log.d("ActivityLyfeCycle", "loadTrip");
         //get the record from database
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
+        Log.d("ActivityLyfeCycle", "loadTrip");
         tripListAdapter.setTripList(tripList);
+        Log.d("ActivityLyfeCycle", "loadTrip");
 
 
     }
 
     private String getDateFirstTrip() {
+
         //get the record from database
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
@@ -151,7 +151,7 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
 
     }
 
-    private String getDateLastTrip() {
+    public String getDateLastTrip() {
         //get the record from database
         AppDatabase db = AppDatabase.getDbInstance(getContext());
         List<Trip> tripList = db.driverDao().getAllTripsByUser(userId);
@@ -182,6 +182,11 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
                 .commit();
 
 
+    }
+
+    //Used when is deleted a item in recycle view
+    public void refreshData() {
+        data();
 
 
     }

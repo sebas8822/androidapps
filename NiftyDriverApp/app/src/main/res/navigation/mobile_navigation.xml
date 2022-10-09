@@ -15,7 +15,7 @@
         android:id="@+id/navigation_startTrip"
         android:name="com.finalproyect.niftydriverapp.ui.starttrip.StartTripFragment"
         android:label="@string/title_StartTrip"
-        tools:layout="@layout/fragment_starttrip" />
+        tools:layout="@layout/start_trip_test_fragment_dev" />
 
     <fragment
         android:id="@+id/navigation_tripView"
