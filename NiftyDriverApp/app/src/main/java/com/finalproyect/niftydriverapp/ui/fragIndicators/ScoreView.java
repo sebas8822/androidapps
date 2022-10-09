@@ -82,7 +82,7 @@ public class ScoreView extends Fragment {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Acceleration");
-                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                builder.setMessage("It is the average of your total hard acceleration check user guide for improvement, aim to have this score close to 100%");
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -94,7 +94,7 @@ public class ScoreView extends Fragment {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Braking");
-                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                builder.setMessage("It is the average of your total hard Braking check user guide for improvement,aim to have this score close to 100%");
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -106,7 +106,7 @@ public class ScoreView extends Fragment {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Cornering");
-                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                builder.setMessage("It is the average of your total sharp Cornering or hard change line check user guide for improvement,aim to have this score close to 100%");
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -118,7 +118,7 @@ public class ScoreView extends Fragment {
             public void onClick(View view){
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Speed");
-                builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+                builder.setMessage("It is the average speed of your total trips");
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -190,9 +190,9 @@ public class ScoreView extends Fragment {
 
 
         if (trips.size() > 0 && accCount > 0 || brakingCount > 0 || LeftCount > 0 || RightCount > 0) {
-            float accel = 100 - 5 * accCount / trips.size();
-            float desace = 100 - 5 * brakingCount / trips.size();
-            float corne = 100 - 5 * LeftCount / trips.size() - 5 * RightCount / trips.size();
+            float accel = 100- 5 * accCount / trips.size();
+            float desace = 100- 5 * brakingCount / trips.size();
+            float corne = 100- 5 * LeftCount / trips.size() - 5 * RightCount / trips.size();
             pg_acceleration.setProgress((int) accel);
             pg_braking.setProgress((int) desace);
             pg_cornering.setProgress((int) corne);

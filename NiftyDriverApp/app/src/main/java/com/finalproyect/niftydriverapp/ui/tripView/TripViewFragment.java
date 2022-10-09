@@ -87,9 +87,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     List<Trip> tripList;
 
 
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,8 +133,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
         setPosition(position);
 
         Toast.makeText(getContext(), "Position After call from SP: " + position + "User" + userId, Toast.LENGTH_LONG).show();
-
-
 
 
         /**Set the views*/
@@ -346,7 +341,6 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     /**************************************************************/
 
 
-
     //Maps implementation
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -379,10 +373,9 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
             Polyline polyline = mMap.addPolyline(rectOption);
 
             LatLng starMarker = new LatLng(fusionSensors.get(0).getCurLocationLAT(), fusionSensors.get(0).getCurLocationLON());
-            LatLng endMarker = new LatLng(fusionSensors.get(fusionSensors.size()-1).getCurLocationLAT(), fusionSensors.get(fusionSensors.size()-1).getCurLocationLON());
+            LatLng endMarker = new LatLng(fusionSensors.get(fusionSensors.size() - 1).getCurLocationLAT(), fusionSensors.get(fusionSensors.size() - 1).getCurLocationLON());
 
             //LatLng midle = new LatLng(fusionSensors.get((fusionSensors.size())/2).getCurLocationLAT(),fusionSensors.get((fusionSensors.size())/2).getCurLocationLON());
-
 
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Start_location, 13));
@@ -391,30 +384,30 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
             LatLngBounds bounds = null;
 
 
-             try {
+            try {
 
-                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                 builder.include(starMarker);
-                 builder.include(endMarker);
-                 bounds = builder.build();
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                builder.include(starMarker);
+                builder.include(endMarker);
+                bounds = builder.build();
 
 
-             } catch (Exception e) {
-                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                 builder.include(endMarker);
-                 builder.include(starMarker);
-                 bounds = builder.build();
-             }
-           // CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(midle, 13);
+            } catch (Exception e) {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                builder.include(endMarker);
+                builder.include(starMarker);
+                bounds = builder.build();
+            }
+            // CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(midle, 13);
             LatLngBounds finalBounds = bounds;
             mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                                            @Override
-                                            public void onMapLoaded() {
-                                                int padding = 200; // padding around start and end marker
-                                                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(finalBounds.getCenter(), padding);
-                                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(finalBounds, padding);
-                                                mMap.animateCamera(cameraUpdate);
-                                            }
+                @Override
+                public void onMapLoaded() {
+                    int padding = 200; // padding around start and end marker
+                    //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(finalBounds.getCenter(), padding);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(finalBounds, padding);
+                    mMap.animateCamera(cameraUpdate);
+                }
 
 
             });
@@ -487,31 +480,57 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     public boolean onMarkerClick(final Marker marker) {
         //Toast.makeText(getContext(),"hola from marker",Toast.LENGTH_LONG).show();
 
-        if (marker.getTitle().equals("Hard Brake")) {
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Hard Brake");
-            builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
         if (marker.getTitle().equals("Hard Acceleration")) {
 
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Hard Acceleration");
-            builder.setMessage("Try to accelerate soft you can avoid accidents and reduce petrol consume");
-            AlertDialog dialog = builder.create();
+            // open Dialog
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View view = inflater.inflate(R.layout.dialog_hard_acceleration, null);
+            builder.setView(view);
+
+
+            // show activity
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+
+
+            /**
+             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+             builder.setTitle("Hard Brake");
+             builder.setMessage("Please anticipate where you are going to stop an press the brake soft with enough distance from another car");
+             AlertDialog dialog = builder.create();
+             dialog.show();*/
+        }
+        if (marker.getTitle().equals("Hard Brake")) {
+
+
+            // open Dialog
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View view = inflater.inflate(R.layout.dialog_hard_braking, null);
+            builder.setView(view);
+
+
+            // show activity
+            final AlertDialog dialog = builder.create();
             dialog.show();
         }
         if (marker.getTitle().equals("Hard Cornering")) {
 
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Hard Cornering");
-            builder.setMessage("anticipate corners with the correct speed to turn smoothly or change the line smoothly you can avoid accidents");
-            AlertDialog dialog = builder.create();
+            // open Dialog
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View view = inflater.inflate(R.layout.dialog_hard_cornering, null);
+            builder.setView(view);
+
+
+            // show activity
+            final AlertDialog dialog = builder.create();
             dialog.show();
         }
         return false;

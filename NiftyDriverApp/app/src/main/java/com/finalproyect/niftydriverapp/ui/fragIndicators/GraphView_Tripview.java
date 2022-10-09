@@ -16,11 +16,13 @@ import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.FusionSensor;
 import com.finalproyect.niftydriverapp.db.Trip;
+import com.finalproyect.niftydriverapp.db.User;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.util.List;
 
@@ -50,11 +52,14 @@ public class GraphView_Tripview extends Fragment {
 
     //variable for view port
     private Viewport viewport;
-    BarGraphSeries<DataPoint> Acceleration = new BarGraphSeries<DataPoint>();
-    BarGraphSeries<DataPoint> Braking = new BarGraphSeries<DataPoint>();
-    BarGraphSeries<DataPoint> Cornering = new BarGraphSeries<DataPoint>();
+
     LineGraphSeries<DataPoint> Speeding = new LineGraphSeries<DataPoint>();
     LineGraphSeries<DataPoint> Scoring = new LineGraphSeries<DataPoint>();
+    PointsGraphSeries<DataPoint> Acceleration = new PointsGraphSeries<DataPoint>();
+    PointsGraphSeries<DataPoint> Braking = new PointsGraphSeries<DataPoint>();
+    PointsGraphSeries<DataPoint> Cornering = new PointsGraphSeries<DataPoint>();
+
+    GraphView graph;
 
 
     @Override
@@ -70,8 +75,10 @@ public class GraphView_Tripview extends Fragment {
         setUserId(userId);
         setPosition(position);
 
+        User user = dao.getUserById(userId);
+
         // Add graphs set up
-        GraphView graph = (GraphView) view.findViewById(R.id.graphview_tripView);
+        graph = (GraphView) view.findViewById(R.id.graphview_tripView);
         //to set some properties to use the graph
         viewport = graph.getViewport();// the variable is declare to be used in whole app
         viewport.setScrollable(false);
@@ -79,32 +86,44 @@ public class GraphView_Tripview extends Fragment {
         viewport.setXAxisBoundsManual(false);
         viewport.setYAxisBoundsManual(true);
 
+        if (user.isThemeState()==false){
+            graph.setBackgroundColor(getResources().getColor(android.R.color.background_light));
+        }else {
+            graph.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
+        }
+
+        Speeding.setColor(Color.MAGENTA);
+        graph.addSeries(Speeding);
+
+        Scoring.setColor(Color.CYAN);
+        graph.addSeries(Scoring);
+
 //        Acceleration.setBackgroundColor(Color.GREEN);
 //        Acceleration.setDrawBackground(true);
 
         Acceleration.setColor(Color.GREEN);
         graph.addSeries(Acceleration);
-        // draw values on top
-        Acceleration.setDrawValuesOnTop(true);
-        Acceleration.setValuesOnTopColor(Color.RED);
+        Acceleration.setShape(PointsGraphSeries.Shape.POINT);
+        Acceleration.setSize(16);
+        //draw values on top
+//        Acceleration.setDrawValuesOnTop(true);
+//        Acceleration.setValuesOnTopColor(Color.RED);
 
 
         Braking.setColor(Color.RED);
         graph.addSeries(Braking);
-        Braking.setDrawValuesOnTop(true);
-        Braking.setValuesOnTopColor(Color.RED);
+        Braking.setShape(PointsGraphSeries.Shape.TRIANGLE);
+        Braking.setSize(16);
+//        Braking.setDrawValuesOnTop(true);
+//        Braking.setValuesOnTopColor(Color.RED);
 
-        Cornering.setColor(Color.WHITE);
+        Cornering.setColor(Color.GRAY);
         graph.addSeries(Cornering);
-        // draw values on top
-        Cornering.setDrawValuesOnTop(true);
-        Cornering.setValuesOnTopColor(Color.RED);
-
-
-        Speeding.setColor(Color.YELLOW);
-        graph.addSeries(Speeding);
-        Scoring.setColor(Color.MAGENTA);
-        graph.addSeries(Scoring);
+        Cornering.setShape(PointsGraphSeries.Shape.RECTANGLE);
+        Cornering.setSize(16);
+        //draw values on top
+//        Cornering.setDrawValuesOnTop(true);
+//        Cornering.setValuesOnTopColor(Color.RED);
 
 
         addValuesGraph();
@@ -119,6 +138,7 @@ public class GraphView_Tripview extends Fragment {
         boolean braking;
         boolean left;
         boolean right;
+        int score = 100;
 
         int count;
         int i = 0;
@@ -163,23 +183,49 @@ public class GraphView_Tripview extends Fragment {
             }
 
 
-
-
+            score = score - (accCount * 5) - (brakingCount * 5) - (LeftCount * 5) - (RightCount * 5);
 //            Braking.appendData(new DataPoint(i + 1, desace), true, trips.size());
 //            Cornering.appendData(new DataPoint(i + 1, corne), true, trips.size());
-            Speeding.appendData(new DataPoint(i + 1, (int)fusionSensor.getCarSpeed()), true, fusionSensors.size());
+            Speeding.appendData(new DataPoint(i, (int) fusionSensor.getCarSpeed()), true, fusionSensors.size() - 1);
             //Scoring.appendData(new DataPoint(i + 1, trip.getScoreTrip()), true, trips.size());
 
+
+            if (accCount > 0) {
+
+                Acceleration.appendData(new DataPoint(i, score), true, fusionSensors.size() - 1);
+
+
+            } else if (brakingCount > 0) {
+
+                Braking.appendData(new DataPoint(i, score), true, fusionSensors.size() - 1);
+
+
+            }
+
+
+            if (LeftCount > 0 || RightCount > 0) {
+
+                Cornering.appendData(new DataPoint(i, score), true, fusionSensors.size() - 1);
+
+
+            }
+
+
+            Scoring.appendData(new DataPoint(i, score), true, fusionSensors.size() - 1);
+
+
+            //Braking.appendData(new DataPoint( i, score - brakingCount*5), true, fusionSensors.size()-1);
+            //Cornering.appendData(new DataPoint( i, score - LeftCount*5-RightCount*5), true, fusionSensors.size()-1);
+
+
+            accCount = 0;
+            brakingCount = 0;
+            LeftCount = 0;
+            RightCount = 0;
             Log.d("GrapViewProfileACCEL", " i: " + i + " Accel: " + accCount);
             i++;
 
         }
-        Acceleration.appendData(new DataPoint( 1, accCount*5), true, 1);
-        Braking.appendData(new DataPoint( 2, brakingCount*5), true, 2);
-        Cornering.appendData(new DataPoint( 3, LeftCount*5+RightCount*5), true, 3);
-
-
-
 
 
     }

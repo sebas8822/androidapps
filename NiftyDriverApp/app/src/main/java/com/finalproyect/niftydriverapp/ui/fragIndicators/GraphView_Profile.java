@@ -72,17 +72,30 @@ public class GraphView_Profile extends Fragment  {
         View view = inflater.inflate(R.layout.fragment_graph_view, container, false);
         sp = getActivity().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         long userid = sp.getLong("userId", 0);
+        User user = dao.getUserById(userid);
+
 
         setUserid(userid);
 
         // Add graphs set up
         GraphView graph = (GraphView) view.findViewById(R.id.graphview_Profile);
+
+
+
+
+
         //to set some properties to use the graph
         viewport = graph.getViewport();// the variable is declare to be used in whole app
         viewport.setScrollable(false);
         viewport.setMaxY(110);
         viewport.setXAxisBoundsManual(false);
         viewport.setYAxisBoundsManual(true);
+        if (user.isThemeState()==false){
+            graph.setBackgroundColor(getResources().getColor(android.R.color.background_light));
+        }else {
+            graph.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
+        }
+
 
 //        Acceleration.setBackgroundColor(Color.GREEN);
 //        Acceleration.setDrawBackground(true);
@@ -91,11 +104,11 @@ public class GraphView_Profile extends Fragment  {
         graph.addSeries(Acceleration);
         Braking.setColor(Color.RED);
         graph.addSeries(Braking);
-        Cornering.setColor(Color.WHITE);
+        Cornering.setColor(Color.GRAY);
         graph.addSeries(Cornering);
-        Speeding.setColor(Color.YELLOW);
+        Speeding.setColor(Color.MAGENTA);
         graph.addSeries(Speeding);
-        Scoring.setColor(Color.MAGENTA);
+        Scoring.setColor(Color.CYAN);
         graph.addSeries(Scoring);
 
 
@@ -122,11 +135,13 @@ public class GraphView_Profile extends Fragment  {
         boolean right;
 
         int count;
-        int i=0;
+        int i=1;
         int accCount = 0;
         int brakingCount = 0;
         int LeftCount = 0;
         int RightCount = 0;
+
+
 
 
 
@@ -135,6 +150,9 @@ public class GraphView_Profile extends Fragment  {
 
         List<Trip> trips = dao.getAllTripsByUser(userId);
         Log.d("GrapViewProfile", "tripSize: " + trips.size());
+
+
+
         for (Trip trip : trips) {
             Log.d("GrapViewProfile", "tripScore: " + trip.getScoreTrip());
             List<FusionSensor> fusionSensors = dao.getAllFusionSensorByTrip(trip.getTripId());
@@ -171,11 +189,11 @@ public class GraphView_Profile extends Fragment  {
             float corne = 100 - 5 * LeftCount / trips.size() - 5 * RightCount / trips.size();
 
 
-            Acceleration.appendData(new DataPoint(i+1, accel), true, trips.size());
-            Braking.appendData(new DataPoint(i+1, desace), true, trips.size());
-            Cornering.appendData(new DataPoint(i+1, corne), true, trips.size());
-            Speeding.appendData(new DataPoint(i+1, trip.getAveSpeed()), true, trips.size());
-            Scoring.appendData(new DataPoint(i+1, trip.getScoreTrip()), true, trips.size());
+            Acceleration.appendData(new DataPoint(i, accel), true, trips.size());
+            Braking.appendData(new DataPoint(i, desace), true, trips.size());
+            Cornering.appendData(new DataPoint(i, corne), true, trips.size());
+            Speeding.appendData(new DataPoint(i, trip.getAveSpeed()), true, trips.size());
+            Scoring.appendData(new DataPoint(i, trip.getScoreTrip()), true, trips.size());
 
             Log.d("GrapViewProfileACCEL"," i: "+i+" Accel: "+ accel);
             i++;

@@ -481,7 +481,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         // wait for one second until gyroscope and magnetometer/accelerometer
         // data is initialised then scedule the complementary filter task
         //fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(), 2000, TIME_CONSTANT);
-        fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(), 1000, 500);
+        fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(), 1000, 1000);
         //Swith mode for the mode selected
 
 

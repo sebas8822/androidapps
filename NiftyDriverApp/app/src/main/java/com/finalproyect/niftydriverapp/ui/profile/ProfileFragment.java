@@ -228,6 +228,8 @@ public class ProfileFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_profile_view, graphView);
                 fragmentTransaction.commit();
+
+
             }
         });
 

@@ -9,6 +9,315 @@
 
 
     <string name="terms"><b>AGREEMENT TO TERMS</b>\n\nThese Terms and Conditions constitute a legally binding agreement made between you and the developer.\n\nPlease make sure you drive carefully, follow all traffic laws and speed limits in your nation, and stop in a secure location before you take your measurements. Do not race or use the system for excessive speed. While driving, avoid looking at the display. Nifty Driver App is not liable for any harm done to people or property of any type. The Nifty Driver App Company disclaims responsibility for any smartphone issues or data loss brought on by using the app. You do it at your own risk when using this application. Actual values and measurements may differ. Values can change and fluctuate depending on a variety of factors.\n\n<b>Data privacy information:</b>\n\nThis app only stores data locally and makes it available through the app or direct access to the phone file store. It does not share driving or performance data with any servers. For the purpose of replaying a driving session to the driver, geographic positions are used to record the session. No dependencies receive the geographic position data.This indicates that all data and login information are wiped along with the application if you remove it.\nFor further information, please send an email to paisa8822@hotmail.com.\n\nThe smart phone should be placed level and well-aligned in the same direction as the car, as seen in the image below. Place your vehicle in a level, flat parking space and change the device orientation. It ought to be flat and facing the same way as the car.\n\nThe Nifty Driver App is developed by a student from Charles Sturt University in Australia. </string>
+
+    <string name="acceleration">
+
+        <p><b>Harsh Acceleration</b>\n\n
+
+There are a few techniques to avoid having to accelerate too quickly, but smooth acceleration largely depends on the decisions you make.\n
+Look at these suggestions to enhance if your acceleration feedback isn\'t performing as effectively as you\'d want. Just keep in mind that you decide whether to accelerate.</p>\n\n
+
+-----------------------------------------------------------------------\n\n
+
+<p><b>1. Allow yourself enough time</b>\n\n
+Part of your observation is assessing whether you have enough time to make your move safely, whether that\'s overtaking, joining the motorway or entering a roundabout.\n\n
+
+If you\'re pulling out in first gear, allow more time to change up to second so you can get up to speed without over-accelerating.</p>\n\n
+-----------------------------------------------------------------------\n\n
+
+<p><b>2. Start your observation early</b>\n\n
+Get in some early observation as you approach a junction, roundabout or any other place you\'ll be. Can you see where a vehicle might cause you to slow down or stop?\n\n
+
+Not doing this observation means you have to take chances - like moving onto a roundabout and having to put your foot down to avoid a crash.</p>\n\n
+
+-----------------------------------------------------------------------\n\n
+
+<p><b>3.Try to use the accelerator smoothly</b>\n\n
+This will:\n
+•	reduce fuel consumption\n
+•	reduce wear and tear on your car\n
+•	make your driving safer\n
+•	reduce the impact your car has on the environment\n\n
+
+Accelerating harshly can cause you to skid so be especially careful in icy or wet conditions.</p>\n\n
+-----------------------------------------------------------------------\n\n
+
+
+<p><b>4. Verify that the driver\'s seat is correctly adjusted.</b>\n\n
+It\'s crucial to be in a position where you can comfortably and easily use the pedals. Before you start driving, make sure your seat is positioned far enough forwards for you to reach the pedals without having to stretch\n\n
+
+You won\'t be able to smoothly depress the accelerator pedal if you\'re too far away from the pedals.</p>\n\n
+
+-----------------------------------------------------------------------\n\n
+
+<p><b>5. When departing, try to avoid revving your engine too high.</b>\n\n
+Avoid pressing the accelerator when your car is stationary or when it takes more than the minimum amount of gas to move the vehicle.\n\n
+
+Although your black box doesn\'t calculate your acceleration feedback in this manner, excessive revving will waste fuel and make it more difficult to control your car. Other drivers are also distracted by it.</p>\n\n
+
+-----------------------------------------------------------------------\n\n
+
+<p><b>6. Get the right gear</b>\n\n
+
+The incorrect gear selection could result in the car accelerating too slowly or too quickly, which could be dangerous for other drivers.\n\n
+
+You are a danger if you calculate that you have enough time to move into traffic but are unable to accelerate at the appropriate rate.</p>\n\n
+-----------------------------------------------------------------------\n\n
+Check User guide for mode information
+
+
+
+
+
+
+   </string>
+
+    <string name="braking"><p>People, animals, and automobiles do the craziest things sometimes, which causes us to brake suddenly, but this should be an uncommon occurrence.\n
+When you have to brake forcefully frequently, there\'s probably a problem with how you\'re recognising and responding to hazards.\n
+These suggestions will assist you in making sure you\'re observing, planning, and making wise decisions so your braking improves if you\'re not performing as well as you\'d like in your ingenie braking feedback.</p>\n
+
+-----------------------------------------------------------------------\n\n
+
+<p><b>My brakes aren’t very responsive, what can I do? </b>\n\n
+
+<b>1. Adjust your driving to your brakes</b>\n
+• You know they’re not very responsive - you need to compensate by applying the brakes earlier\n\n
+
+<b>2. Get your brakes checked</b>\n
+• It\'s dangerous to drive with faulty brakes - get them checked at a garage just in case</p>\n\n
+
+-----------------------------------------------------------------------\n\n
+
+<p><b>How can I avoid harsh braking? </b>\n\n
+
+<b>1. Stay a safe distance from the car in front and behind</b>\n
+• If you are too close to other cars, you can’t allow for them suddenly braking\n\n
+
+<b>2. Keep your eyes scanning ahead not just on the car in front, so you can prepare </b>\n
+• If 1 is the bonnet and 10 is the end of road, where do you focus? Aim for 10!\n
+• Often an event is occurring 3-4 cars ahead\n\n
+
+<b>3. Slow down gradually</b>\n
+• If you’re scanning ahead, you’ll see a junction or roundabout coming up\n
+• Decrease acceleration - this takes away the car’s POWER\n
+
+<b>4. Prepare for potential hazards </b>\n
+• A potential hazard (could happen) is easier to deal with than a developing hazard (is happening)\n
+• If you spot something that COULD turn into a hazard, ease off on the accelerator to lower your car’s power and slow down\n\n
+
+<b>5. Think about the 4 S’s Stop, Slow down, Swerve or Swear</b>\n
+• Anything that has the potential to make you Stop, Slow down, Swerve or Swear should be reacted to earlier to avoid harsh braking</p>\n\n
+
+-----------------------------------------------------------------------\n\n
+Check User guide for mode information
+
+   </string>
+
+
+    <string name="cornering"><p>change the line or turn in a corner also requires follow procedures, and steering the wheel smoothly, check mirrors, and turn on the indicators to advise to other drivers your actions.</p>\n\n
+
+        -----------------------------------------------------------------------\n\n
+
+<p><b>Why am I getting bad cornering messages?</b>\n\n
+
+<b>1.Going around corners too fast - the number 1 reason!</b>\n
+• Taking corners at speed means you won’t have time to react to any unseen hazards you might encounter\n\n
+
+
+<b>2.	Turning too sharply</b>\n
+• Turning sharply means you\'re asking your tyres to suddenly grip in a direction against the power of your car, which is still heading forward - this can happen even at low speeds</p>\n
+
+-----------------------------------------------------------------------\n\n
+
+<p><b>Could anything else affect my cornering?</b>\n\n
+
+<b>1.	Weather </b>\n
+• Rain, snow and ice can make it much easier to skid on corners, so you need to adjust your driving\n
+
+<b>2. Time of day</b>\n
+• Driving at night is statistically more dangerous than driving in the day and your preparation for a corner needs to be much earlier</p>\n\n
+
+-----------------------------------------------------------------------\n\n
+Check User guide for mode information
+
+
+    </string>
+
+
+    <string name="userGuide"> <p><b>Application Functions</b>\n\n
+This application provides feedback on acceleration, desacceleration, cornering, and braking, it is useful to everyone who is starting to learn to drive. The system is based on a scoring system that evaluates your performance for every trip that you do and averages all the performance scores on the profile screen, you can check with the different functions you evolve and feedback when you desire.\n\n
+The app count four screens Profile, Start Trip, Trip View, and My trip to interact.\n\n
+<b>Profile screen:</b>\n\nAverage of all your performance and 2 modes of visualization of Acceleration, Braking, cornering, and Speed, one is a score view with a progress bar that indicates the average performance, and a graph view to visualize the performance in a form of a graph. This screen also counts with the option to change your picture profile. Finally, this also shows your total number of trips, the total number of kilometres travelled, and the total travel time.\n\n
+<b>Start Trip:</b>\n\nThis screen counts with a GPS indicator, you can not start a trip until you allow permissions and get an initial position, this screen counts with a speedometer, Graph maneuver visualization and result section. You may check your volume since it has a sound maneuver detector. So, you will know when you are doing something wrong, avoid checking the smartphone screen, and please check your speed. Once you finalize the trip press the end trip button to end the process, this action gives the results of that trip in terms of Distance, Time travelled, Max Speed, Average Speed, and the score obtained. You can obtain more information on trip view.\n\n
+<b>Trip View Screen:</b>\n\nThis screen shows you the last trip that you did or your trip selected from my trips, this screen counts with the date and time of your trip at the top, score trip, time travelled, and distance travelled, it is flowing with a bar that shows you the start and ends time and addresses location,  this is accompanied with a map fragment that also shows you the start and end trip, optional you can see clickable icons that appear according to your performance, they vary between hard acceleration , hard braking , or sharp cornering or lane , you are able to click on them to see feedback according to this items. You can see also here a score view with a progress bar that indicates the average performance for a specific trip, and a graph view to visualize the performance in a form of a graph for a particular trip.\n\n
+<b>My trips screen:</b>\n\nThis screen summarizes the same values as you see in the profile screen on the top, and show you the start date and last date of all your trip. Finally, you found the list of the trips with the respective score that you got, you can click on any of them to see all the details, or you can click and hold long a specific trip to delete.\n\n
+
+<b>Score and Performance</b>\n\n
+The objective to bring a score is to encourage you to have a better score and recognize your improvement. So, driving is an ability obtained with experience, the control of your car is the most important factor, progressively you will learn the rules that keep everyone safe. As everyone knows there are two types of cars automatic and manual. this may not affect the performance on the road. Therefore, the factors that are evaluated are speed, acceleration, braking, and cornering or changing the line.</p>\n\n
+--------------------------------------------------------------------------------------\n\n
+
+        <p><b>Harsh Acceleration</b>\n\n
+
+There are a few techniques to avoid having to accelerate too quickly, but smooth acceleration largely depends on the decisions you make.\n
+Look at these suggestions to enhance if your acceleration feedback isn\'t performing as effectively as you\'d want. Just keep in mind that you decide whether to accelerate.</p>\n\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<p><b>1. Allow yourself enough time</b>\n\n
+Part of your observation is assessing whether you have enough time to make your move safely, whether that\'s overtaking, joining the motorway or entering a roundabout.\n\n
+
+If you\'re pulling out in first gear, allow more time to change up to second so you can get up to speed without over-accelerating.</p>\n\n
+--------------------------------------------------------------------------------------\n\n
+
+<p><b>2. Start your observation early</b>\n\n
+Get in some early observation as you approach a junction, roundabout or any other place you\'ll be. Can you see where a vehicle might cause you to slow down or stop?\n\n
+
+Not doing this observation means you have to take chances - like moving onto a roundabout and having to put your foot down to avoid a crash.</p>\n\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<p><b>3.Try to use the accelerator smoothly</b>\n\n
+This will:\n
+•	reduce fuel consumption\n
+•	reduce wear and tear on your car\n
+•	make your driving safer\n
+•	reduce the impact your car has on the environment\n\n
+
+Accelerating harshly can cause you to skid so be especially careful in icy or wet conditions.</p>\n\n
+--------------------------------------------------------------------------------------\n\n
+
+
+<p><b>4. Verify that the driver\'s seat is correctly adjusted.</b>\n\n
+It\'s crucial to be in a position where you can comfortably and easily use the pedals. Before you start driving, make sure your seat is positioned far enough forwards for you to reach the pedals without having to stretch\n\n
+
+You won\'t be able to smoothly depress the accelerator pedal if you\'re too far away from the pedals.</p>\n\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<p><b>5. When departing, try to avoid revving your engine too high.</b>\n\n
+Avoid pressing the accelerator when your car is stationary or when it takes more than the minimum amount of gas to move the vehicle.\n\n
+
+Although your black box doesn\'t calculate your acceleration feedback in this manner, excessive revving will waste fuel and make it more difficult to control your car. Other drivers are also distracted by it.</p>\n\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<p><b>6. Get the right gear</b>\n\n
+
+The incorrect gear selection could result in the car accelerating too slowly or too quickly, which could be dangerous for other drivers.\n\n
+
+You are a danger if you calculate that you have enough time to move into traffic but are unable to accelerate at the appropriate rate.</p>\n\n
+--------------------------------------------------------------------------------------\n\n
+
+
+<b>Harsh Braking</b>\n\n
+
+People, animals, and automobiles do the craziest things sometimes, which causes us to brake suddenly, but this should be an uncommon occurrence.\n
+When you have to brake forcefully frequently, there\'s probably a problem with how you\'re recognising and responding to hazards.\n
+These suggestions will assist you in making sure you\'re observing, planning, and making wise decisions so your braking improves if you\'re not performing as well as you\'d like in your ingenie braking feedback.\n
+--------------------------------------------------------------------------------------\n\n
+
+<b>My brakes aren’t very responsive, what can I do? </b>\n\n
+
+<b>1. Adjust your driving to your brakes</b>\n\n
+• You know they’re not very responsive - you need to compensate by applying the brakes earlier\n\n
+
+<b>2. Get your brakes checked</b>\n
+• It\'s dangerous to drive with faulty brakes - get them checked at a garage just in case\n\n
+--------------------------------------------------------------------------------------\n\n
+
+
+<b>How can I avoid harsh braking? </b>\n\n
+
+<b>1. Stay a safe distance from the car in front and behind</b>\n
+• If you are too close to other cars, you can’t allow for them suddenly braking\n
+• You can’t see enough of the road ahead or behind if you’re too close\n
+• You also can’t prepare for upcoming situations that may cause other cars to brake\n
+• When you\'re in slow moving traffic, remember that you need to be able to see tyres and tarmac in front of you, so you have enough reaction time if the car ahead brakes suddenly\n\n
+--------------------------------------------------------------------------------------\n\n
+
+<b>2. Keep your eyes scanning ahead not just on the car in front, so you can prepare</b>\n\n
+• If 1 is the bonnet and 10 is the end of road, where do you focus? Aim for 10!\n
+• Often an event is occurring 3-4 cars ahead\n
+• Brake lights further ahead could mean:\n\n
+- Road works
+- Accident
+- Flood
+- Pedestrian crossing\n\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<b>3. Slow down gradually</b>\n\n
+• If you’re scanning ahead, you’ll see a junction or roundabout coming up\n
+• Decrease acceleration - this takes away the car’s POWER\n
+• This will give you plenty of time to slow naturally, without braking harshly:\n\n
+- Start braking gently\n
+- Brake more firmly to get rid of most of your speed\n
+- Make sure you\'re in second gear (this will help you slow down too)\n
+- As you reach the junction or crossing, press the brake down all the way to come to a complete stop if you need to\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<b>4. Prepare for potential hazards</b>\n\n
+• A potential hazard (could happen) is easier to deal with than a developing hazard (is happening)\n
+• If you spot something that COULD turn into a hazard, ease off on the accelerator to lower your car’s power and slow down\n
+• The potential hazard may resolve itself before you get to it, and you won’t have had to brake harshly\n
+• Don\'t just observe cars - there are lots of clues for what a driver is going to do next, like where they\'re looking and what direction their wheels are pointing\n
+• On a road with parked cars, try to spot wheels turned in the direction of the road - that could mean someone\'s about to pull out\n
+• Remember that if you can\'t see a driver, they can\'t see you - just because you\'ve seen the nose of a car poking out of a drive doesn\'t mean the driver\'s seen you and is going to stop\n\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<b>5. Think about the 4 S’s</b>\n\n
+• Anything that has the potential to make you Stop, Slow down, Swerve or Swear should be reacted to earlier to avoid harsh braking\n
+• When you can see this is going to happen, just take your foot off the gas pedal and put your foot over the brake pedal – by doing this early you’re:\n\n
+- Stopping acceleration, so the power of the engine is naturally reduced and the force needed to then slow down or stop the car is far less\n
+- Saving yourself some reaction time by already having your foot over the brake. You’ll then have more time to assess the risk and avoid harsh braking.\n\n
+--------------------------------------------------------------------------------------\n\n
+
+<b>Sharp Cornering</b>\n\n
+Changing the line or turning in a corner also requires following procedures, steering the wheel smoothly, checking mirrors, and turning on the indicators to advise other drivers of your actions.\n\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<b>Why am I getting bad cornering messages?</b>\n\n
+<b>1. Going around corners too fast - the number 1 reason!</b>\n\n
+
+• Taking corners at speed means you won’t have time to react to any unseen hazards you might encounter\n
+• If you can\'t see around the bend (so you\'ve got mainly bushes and trees filling your windscreen), you\'re taking the corner too fast - reducing the control you have and the grip your car has on the road\n
+• Keep looking up ahead so you have time to slow down gradually before the bend - using your brakes as you corner can make you lose control because your tyres can’t keep their grip on the road\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<b>2. Turning too sharply</b>\n\n
+
+• Turning sharply means you\'re asking your tyres to suddenly grip in a direction against the power of your car, which is still heading forward - this can happen even at low speeds\n
+• When cornering to the right, position your car towards the left of the lane if it is safe to do so - this will give you a clearer view around the corner so you have time to prepare for any potential hazards\n
+• When cornering to the left, position your car towards the right of the lane so you have a good sight of hazards\n
+
+--------------------------------------------------------------------------------------\n\n
+
+<b>Could anything else affect my cornering?</b>\n\n
+1. Weather\n\n
+Rain, snow and ice can make it much easier to skid on corners, so you need to adjust your driving:\n\n
+•	Slow down - you\'ll have much more time to prepare for corners if you\'re not driving too fast\n
+•	Gradually ease off acceleration as you approach the bend to reduce the forward motion you\'re about to steer against\n
+•	Avoid braking harshly, which can cause you to skid\n\n
+--------------------------------------------------------------------------------------\n\n
+
+<b>2. Time of day </b>\n\n
+Driving at night is statistically more dangerous than driving in the day and your preparation for a corner needs to be much earlier:\n\n
+•	Your perception of distance is not as good in the dark so you need to drive slower to allow for upcoming sharp bends\n
+•	Your low beams only light up about 250 feet in front of you, so if you\'re driving too fast you won\'t have time to see and prepare properly for the corner\n
+--------------------------------------------------------------------------------------\n\n
+
+
+
+</string>
+
+
+
+
+
 </resources>
 
 
