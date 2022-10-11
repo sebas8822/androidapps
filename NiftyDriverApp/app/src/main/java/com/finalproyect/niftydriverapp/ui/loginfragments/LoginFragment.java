@@ -55,7 +55,7 @@ public class LoginFragment extends Fragment {
         bt_signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Sign In button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Sign In button", Toast.LENGTH_LONG).show();
                 loginUser();
 
                 //String uName,uPass;
@@ -67,7 +67,7 @@ public class LoginFragment extends Fragment {
         bt_forgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Forget Password button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Forget Password button", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getContext() , ForgetPassword.class));
             }
         });
@@ -76,7 +76,7 @@ public class LoginFragment extends Fragment {
         bt_signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Sign up Button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Sign up Button", Toast.LENGTH_LONG).show();
                 if (callBackFragment!=null){
                     callBackFragment.changeFragmentLogin();
 

@@ -172,7 +172,7 @@ public class MyTripsFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(getContext(), "Item Clicked", Toast.LENGTH_LONG).show();
+        // .makeText(getContext(), "Item Clicked", Toast.LENGTH_LONG).show();
         /**Pass this values to the shared preference*/
         editor.putInt("position", position);
         editor.commit();

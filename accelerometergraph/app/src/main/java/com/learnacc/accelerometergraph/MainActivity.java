@@ -1,7 +1,10 @@
 package com.learnacc.accelerometergraph;
 
+import static android.content.Context.SENSOR_SERVICE;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Sensor mAccelerometer;
     private Sensor mGyro;
 
-
+    Context context;
 
 
 
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         prog_shakebar = findViewById(R.id.prog_shakebar);
 
         // initialization Sensor objects
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);// means get it from service built into the android system
+        mSensorManager = (SensorManager) MainActivity.this.getSystemService(SENSOR_SERVICE);// means get it from service built into the android system
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);// define the default sensor that is looking for "accelerometer"
 
 

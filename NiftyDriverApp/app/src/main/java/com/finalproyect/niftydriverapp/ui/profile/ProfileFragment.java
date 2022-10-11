@@ -31,7 +31,7 @@ import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.User;
 import com.finalproyect.niftydriverapp.ui.fragIndicators.GraphView_Profile;
-import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView;
+import com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView_Profile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -208,9 +208,9 @@ public class ProfileFragment extends Fragment {
                 bt_graphView.setBackgroundColor(getResources().getColor(R.color.background_color));
                 bt_graphView.setTextColor(getResources().getColor(R.color.black));
                 Toast.makeText(getContext(), "Score View", Toast.LENGTH_LONG).show();
-                ScoreView scoreView = new ScoreView();
+                ScoreView_Profile scoreViewProfile = new ScoreView_Profile();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_profile_view, scoreView);
+                fragmentTransaction.replace(R.id.fragment_profile_view, scoreViewProfile);
                 fragmentTransaction.commit();
             }
         });

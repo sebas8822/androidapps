@@ -214,7 +214,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_profile_view"
-        android:name="com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView"
+        android:name="com.finalproyect.niftydriverapp.ui.fragIndicators.ScoreView_Profile"
         android:layout_width="400dp"
         android:layout_height="290dp"
         app:layout_constraintBottom_toBottomOf="parent"

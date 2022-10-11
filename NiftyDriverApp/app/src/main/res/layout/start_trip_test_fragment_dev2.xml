@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
 
-    android:layout_gravity="center_horizontal"
+
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -16,7 +16,6 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/Sensor_layaut"
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -44,6 +43,19 @@
                 android:text="y axis data"
                 android:textColor="@color/blue_sky_200" />
 
+            <TextView
+                android:id="@+id/tv_pith"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="pitch"
+                android:textColor="@color/blue_sky_200" />
+
+            <TextView
+                android:id="@+id/tv_yaw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Roll"
+                android:textColor="@color/blue_sky_200" />
         </LinearLayout>
 
         <TableLayout
@@ -55,13 +67,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
 
-
-                <ImageView
-                    android:id="@+id/image_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/ic_baseline_gps_off_24" />
-
                 <TextView
                     android:id="@+id/tv_title1"
                     android:layout_width="match_parent"
@@ -72,6 +77,12 @@
                     android:textColor="@color/blue_sky_200"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/image_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_baseline_gps_off_24" />
 
             </TableRow>
 
@@ -134,7 +145,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:gravity="center">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -183,8 +194,7 @@
         android:layout_width="wrap_content"
         android:layout_height="282dp"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:id="@+id/graph_layout">
+        android:orientation="vertical">
 
 
         <com.jjoe64.graphview.GraphView
@@ -257,16 +267,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="SHLC"
-                android:textColor="@color/StateButton"
-                android:textSize="13dp" />
+                android:textSize="13dp"
+                android:textColor="@color/StateButton" />
 
             <TextView
                 android:id="@+id/tv_sharpRight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="SHRC"
-                android:textColor="@color/StateButton"
-                android:textSize="13dp" />
+                android:textSize="13dp"
+                android:textColor="@color/StateButton" />
 
 
         </TableRow>
@@ -277,14 +287,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
-
-        android:id="@+id/Start_layout">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/thresholds_layout">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -334,11 +342,34 @@
 
                     android:textAlignment="center" />
 
+                <TextView
+                    android:id="@+id/tv_threshold_P"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:hint="P:#.#-#.#"
+                    android:textAlignment="center"
+                    android:textColor="@color/blue_sky_200"
+
+                    android:textSize="10dp" />
+
+
+                <TextView
+                    android:id="@+id/tv_threshold_R"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:hint="R:#.#-#.#"
+                    android:textAlignment="center"
+                    android:textColor="@color/blue_sky_200"
+
+                    android:textSize="10dp" />
+
 
                 <TextView
                     android:id="@+id/tv_threshold_Y"
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
 
                     android:hint="Y:#.#-#.#"
                     android:textAlignment="center"
@@ -349,7 +380,7 @@
                 <TextView
                     android:id="@+id/tv_threshold_X"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
+                    android:layout_height="wrap_content"
 
                     android:hint="X:#.#-#.#"
 
@@ -413,7 +444,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -447,7 +478,7 @@
             android:gravity="center"
             android:orientation="vertical"
 
-            android:paddingLeft="5dp">
+            android:paddingLeft="20dp">
 
 
             <Switch
@@ -459,13 +490,13 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
@@ -475,7 +506,7 @@
                         android:text="Distance:"
                         android:textAlignment="center"
                         android:textColor="@color/blue_sky_200"
-                        android:textSize="10dp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -484,7 +515,7 @@
                         android:layout_height="wrap_content"
                         android:text="Time Traveled:"
                         android:textColor="@color/blue_sky_200"
-                        android:textSize="10dp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -493,7 +524,7 @@
                         android:layout_height="wrap_content"
                         android:text="Max Speed:"
                         android:textColor="@color/blue_sky_200"
-                        android:textSize="10dp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -502,7 +533,7 @@
                         android:layout_height="wrap_content"
                         android:text="Avg Speed:"
                         android:textColor="@color/blue_sky_200"
-                        android:textSize="10dp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -511,26 +542,58 @@
                         android:layout_height="wrap_content"
                         android:text="TTimeApp"
                         android:textColor="@color/blue_sky_200"
-                        android:textSize="10dp"
+                        android:textSize="12dp"
                         android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_xCal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="X"
+                            android:textColor="@color/blue_sky_200"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tv_yCal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Y"
+                            android:textColor="@color/blue_sky_200"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/bt_resetFusionDatabase"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_baseline_restart_alt_24"
+
+                    android:textAlignment="center" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/bt_resetFusionDatabase"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="36dp"
-                        android:layout_height="39dp"
-                        android:layout_gravity="center"
-                        android:drawableLeft="@drawable/ic_baseline_restart_alt_24"
-
-                        android:textAlignment="center" />
 
                     <TextView
                         android:id="@+id/tv_tripsDB"
@@ -539,7 +602,7 @@
                         android:text="TDB"
                         android:textAlignment="center"
                         android:textColor="@color/blue_sky_200"
-                        android:textSize="10dp" />
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/tv_fusionDB"
@@ -548,17 +611,51 @@
                         android:text="FDB"
                         android:textAlignment="center"
                         android:textColor="@color/blue_sky_200"
-                        android:textSize="10dp" />
-
+                        android:textSize="15dp" />
 
                 </LinearLayout>
 
+
             </LinearLayout>
 
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/graph2"
-                android:layout_width="73dp"
-                android:layout_height="66dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/bt_mode_left"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+
+                    android:drawableLeft="@drawable/ic_baseline_arrow_left"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/tv_mode"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textSize="11dp" />
+
+                <Button
+                    android:id="@+id/bt_mode_right"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+
+                    android:drawableLeft="@drawable/ic_baseline_arrow_right"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
 
 
         </LinearLayout>

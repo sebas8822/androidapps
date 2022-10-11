@@ -176,7 +176,7 @@ public class Settings_Activity extends AppCompatActivity {
         bt_changeImageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "press button to change image", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(), "press button to change image", Toast.LENGTH_LONG).show();
                 imageChooser();
 
             }
@@ -187,7 +187,7 @@ public class Settings_Activity extends AppCompatActivity {
         bt_changeParameterSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Change Parameters button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Change Parameters button", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), ChangeParameters_Activity.class));
             }
         });
@@ -196,7 +196,7 @@ public class Settings_Activity extends AppCompatActivity {
         bt_changePasswordSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Change Password button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Change Password button", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), ChangePassword_Activity.class));
             }
         });
@@ -205,7 +205,7 @@ public class Settings_Activity extends AppCompatActivity {
         bt_aboutAppSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "About Nifty Driver button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "About Nifty Driver button", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), About_Activity.class));
 
 

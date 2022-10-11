@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
         boolean userState = getUserStatefromSP();
         boolean themeState = getThemeState();
         setUserId(userId);
-        Toast.makeText(getApplicationContext(), "UserId " + userid + " userState " + userState, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "UserId " + userid + " userState " + userState, Toast.LENGTH_LONG).show();
 
 
 
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.bt_settings:
-                Toast.makeText(this, "Settings selected", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Settings selected", Toast.LENGTH_LONG).show();
                 intLayout = 2;
                 //setContentView(R.layout.activity_settings);
                 //addFragmentSetting();
@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
         //editor.commit();
         long userId = sp.getLong("userId", 0);
         boolean switchThemeState = sp.getBoolean("switchThemeState", false);
-        Toast.makeText(this, "Logout selected", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Logout selected", Toast.LENGTH_LONG).show();
         AppDatabase db = AppDatabase.getDbInstance(getApplicationContext());// Init database
         DAO dao = db.driverDao();
         User user = dao.getUserById(userId);

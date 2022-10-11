@@ -78,7 +78,7 @@ public class ChangeParameters_Activity extends AppCompatActivity {
         bt_forgetPasswordChParameters.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Forget password", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Forget password", Toast.LENGTH_LONG).show();
 
                 startActivity(new Intent(getApplicationContext(), ForgetPassword.class));
 
@@ -91,7 +91,7 @@ public class ChangeParameters_Activity extends AppCompatActivity {
         bt_UpdateValuesChParameters.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Update Values", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Update Values", Toast.LENGTH_LONG).show();
 
                 String firstName, lastName, email, pass;
                 firstName = et_firstNameChParameters.getText().toString();

@@ -30,7 +30,7 @@ public class About_Activity extends AppCompatActivity {
         bt_userGuide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"User Guide Button", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(),"User Guide Button", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), User_Guide_Activity.class));
             }
         });
@@ -38,7 +38,7 @@ public class About_Activity extends AppCompatActivity {
         bt_ContactUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Contact Us Button", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(),"Contact Us Button", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), ContactUs_Activity.class));
             }
         });
@@ -47,7 +47,7 @@ public class About_Activity extends AppCompatActivity {
         bt_termsAndConditions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Terms an condition Button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Terms an condition Button", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), TermsConditions_Activity.class));
             }
         });
@@ -55,7 +55,7 @@ public class About_Activity extends AppCompatActivity {
         link_github.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Github Button", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Github Button", Toast.LENGTH_LONG).show();
                 golink("https://github.com/sebas8822");
 
             }

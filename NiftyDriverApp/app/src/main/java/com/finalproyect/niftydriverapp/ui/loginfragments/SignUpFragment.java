@@ -110,19 +110,21 @@ public class SignUpFragment extends Fragment {
 
             //System.out.println("Input values " + " Name: " + firstName + " Last Name:" + lastName + " Employee ID" + empId + " Email:" + email);
 
-            if (validName(context, firstName, lastName) == true && validEmail(email) == true && validPasswords(context, pass, confPass) == true) {
+            if (validName(getContext(), firstName, lastName) == true && validEmail(email) == true && validNewPass(getContext(), pass, confPass) == true) {
                 // insert values into the data base
                 saveUser(firstName, lastName, email, pass);
-                new AlertDialog.Builder(getContext())
+                Toast.makeText(getContext(), "Data inserted is correct\n"+" Name: " + firstName + "\n Last Name: " + lastName + "\n Email: " + email, Toast.LENGTH_LONG).show();
+                /**new AlertDialog.Builder(getContext())
                         .setTitle("Data inserted is correct")
                         .setMessage(" Name: " + firstName + "\n Last Name: " + lastName + "\n Email: " + email)
-                        .show();
+                        .show();*/
 
             } else {
-                new AlertDialog.Builder(getContext())
+                /**new AlertDialog.Builder(getContext())
                         .setTitle("Data inserted is invalid ")
-                        .setMessage("check and insert data again")
-                        .show();
+                        .setMessage("Check and insert data again")
+                        .show();*/
+                Toast.makeText(getContext(), "Data inserted is incorrect\n"+"Check and insert data again", Toast.LENGTH_LONG).show();
 
             }
 
@@ -196,12 +198,12 @@ public class SignUpFragment extends Fragment {
         boolean val = true;
 
         if (!(Pattern.matches(valemail, email))) {
-            Toast.makeText(context, "email is invalid", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "email is invalid", Toast.LENGTH_LONG).show();
             val = false;
         }
         //check if exits this email in the data base
         if (!(dao.getUserByEmail(email) == null)) {
-            Toast.makeText(context, "email already exits", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "email already exits", Toast.LENGTH_LONG).show();
             val = false;
         }
 

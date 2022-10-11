@@ -14,10 +14,6 @@ import com.finalproyect.niftydriverapp.R;
 
 public class User_Guide_Activity extends AppCompatActivity {
 
-    Button bt_userGuide;
-
-
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,9 +21,7 @@ public class User_Guide_Activity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
     }
-
 
 
 }

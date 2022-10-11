@@ -73,7 +73,7 @@ public class ContactUs_Activity extends AppCompatActivity {
                 String subject  = "Message from user";
                 String finalMessage = "User Name: "+UserName+"\nUser Email: "+email+"\nMessage: \n"+messageToSend;
 
-                Toast.makeText(getApplicationContext(),"Send Email button",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Send Email button",Toast.LENGTH_LONG).show();
                 ForgetPassword.sendEmail(ContactUs_Activity.this,appEmail,subject,finalMessage);
 
 

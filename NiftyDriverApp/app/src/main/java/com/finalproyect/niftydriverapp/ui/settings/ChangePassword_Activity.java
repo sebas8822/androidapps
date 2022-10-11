@@ -1,6 +1,7 @@
 package com.finalproyect.niftydriverapp.ui.settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,11 +15,12 @@ import com.finalproyect.niftydriverapp.R;
 import com.finalproyect.niftydriverapp.db.AppDatabase;
 import com.finalproyect.niftydriverapp.db.DAO;
 import com.finalproyect.niftydriverapp.db.User;
+import com.finalproyect.niftydriverapp.ui.loginfragments.ForgetPassword;
 import com.finalproyect.niftydriverapp.ui.loginfragments.SignUpFragment;
 
 public class ChangePassword_Activity extends AppCompatActivity {
 
-    Button bt_changePass;
+    Button bt_changePass, bt_forgetPassChP;
     EditText et_confirmPassChP, et_PassChP, et_currentPassChP;
     //Init Sharepreferences
     SharedPreferences sp;
@@ -52,6 +54,19 @@ public class ChangePassword_Activity extends AppCompatActivity {
         et_PassChP = (EditText) findViewById(R.id.et_PassChP);
         et_confirmPassChP = (EditText) findViewById(R.id.et_confirmPassChP);
 
+        bt_forgetPassChP = findViewById(R.id.bt_forgetPassChP);
+        bt_forgetPassChP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getApplicationContext(), "Forget password", Toast.LENGTH_LONG).show();
+
+                startActivity(new Intent(getApplicationContext(), ForgetPassword.class));
+
+
+            }
+        });
+
+
 
 
         bt_changePass = findViewById(R.id.bt_changePass);
@@ -72,7 +87,7 @@ public class ChangePassword_Activity extends AppCompatActivity {
                         //update pass
                         user.setPassword(newPass);
                         dao.updateUser(user);
-                        Toast.makeText(getApplicationContext(),"Password Updated",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Password is Updated",Toast.LENGTH_LONG).show();
                     }
                 }else{
                     Toast.makeText(getApplicationContext(),"Current password is not correct",Toast.LENGTH_LONG).show();

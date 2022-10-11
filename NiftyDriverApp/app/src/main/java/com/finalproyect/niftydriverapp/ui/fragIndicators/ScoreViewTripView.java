@@ -208,7 +208,7 @@ public class ScoreViewTripView  extends Fragment {
             tv_proCorneringTripView.setText(String.valueOf(100 - 5 * (LeftCount) - 5 * (RightCount)));
 
             tv_proSpeedTripView.setText(String.valueOf((int) lastTrip.getAveSpeed()));
-            Toast.makeText(getContext(), "Current score" + lastTrip.getScoreTrip(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), "Current score" + lastTrip.getScoreTrip(), Toast.LENGTH_LONG).show();
 
         }else{
 

@@ -27,7 +27,7 @@ import java.security.PrivateKey;
 import java.util.List;
 
 
-public class ScoreView extends Fragment {
+public class ScoreView_Profile extends Fragment {
 
     private int currentProgress = 0;
     private ProgressBar pg_acceleration, pg_braking, pg_cornering, pg_speed;

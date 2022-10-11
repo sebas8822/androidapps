@@ -138,7 +138,7 @@ public class ForgetPassword extends AppCompatActivity {
                 //generate ramdom pass and save into the perfil
                 //send email
 
-                Toast.makeText(getApplicationContext(), "you are here Send Email", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "you are here Send Email", Toast.LENGTH_SHORT).show();
 
 
             }
