@@ -33,7 +33,8 @@ public class LoginFragment extends Fragment {
     String userEmail, Password;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-
+    //Buttons profile fragment
+    private Button bt_settings,bt_logout;
 
     // for save preferences like user id and user state means open session
     @Override
@@ -46,6 +47,10 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+
+
+
 
         et_userEmail = view.findViewById(R.id.et_userEmail);
         et_Password = view.findViewById(R.id.et_Password);
@@ -127,7 +132,7 @@ public class LoginFragment extends Fragment {
                 editor.putBoolean("themeState", user.isThemeState());
                 editor.commit();
                 //Toast.makeText(getContext(),"Save preferences" + user.isLoginState(), Toast.LENGTH_LONG).show();
-
+                getFragmentManager().beginTransaction().remove(LoginFragment.this).commitAllowingStateLoss();
                 // after save preferencces and update database start new activity
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);

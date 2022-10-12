@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -40,12 +41,13 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
 
     private Button bt_startTrip;
 
-    //Buttons profile fragment
-    private Button bt_scoreView, bt_graphView;
+
 
     //Init Sharepreferences
     SharedPreferences sp;
     SharedPreferences.Editor editor;
+    //
+    Menu optionsMenu;
 
 
     //Global variable
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
 
 
         long userid = getuserIdfromSP();
-        boolean userState = getUserStatefromSP();
+        boolean userState = getUserStatefromSP(getApplicationContext());
         boolean themeState = getThemeState();
         setUserId(userId);
         //Toast.makeText(getApplicationContext(), "UserId " + userid + " userState " + userState, Toast.LENGTH_LONG).show();
@@ -78,6 +80,13 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
 
 
 
+
+
+        Log.d("MenuOncreateOption","number 2"+optionsMenu);
+
+
+        /**MenuItem itemLogout = optionsMenu.findItem(R.id.bt_logout);
+        itemLogout.setVisible(false);*/
 
 
 
@@ -113,10 +122,15 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
 
     }
 
-    private boolean getUserStatefromSP() {
+
+
+
+
+    public static boolean getUserStatefromSP(Context context) {
+
         SharedPreferences sp;
         //Init shared preferences
-        sp = getApplicationContext().getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        sp = context.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         //editor.putBoolean("userState", false);
         //editor.commit();
 
@@ -198,44 +212,59 @@ public class MainActivity extends AppCompatActivity implements CallBackFragment 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_menu, menu);
+        //  store the menu to var when creating options menu
+        optionsMenu = menu;
+        Log.d("MenuOncreateOption",""+optionsMenu);
+        if (MainActivity.getUserStatefromSP(getApplicationContext()) ==false ){
+            MenuItem itemLogout = optionsMenu.findItem(R.id.bt_logout);
+            itemLogout.setVisible(false);
+            MenuItem itemSettings = optionsMenu.findItem(R.id.bt_settings);
+            itemSettings.setVisible(false);
+
+
+        }
+
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.bt_settings:
-                //Toast.makeText(this, "Settings selected", Toast.LENGTH_LONG).show();
-                intLayout = 2;
-                //setContentView(R.layout.activity_settings);
-                //addFragmentSetting();
-                startActivity(new Intent(this, Settings_Activity.class));
+
+            switch (item.getItemId()) {
+                case R.id.bt_settings:
+                    //Toast.makeText(this, "Settings selected", Toast.LENGTH_LONG).show();
+                    intLayout = 2;
+                    //setContentView(R.layout.activity_settings);
+                    //addFragmentSetting();
+                    startActivity(new Intent(this, Settings_Activity.class));
 
 
-                //break;
-                return true;
-            case R.id.bt_logout:
+                    //break;
+                    return true;
+                case R.id.bt_logout:
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Are you sure?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Are you sure?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                        closeApp();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                            closeApp();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
 
-        }
+            }
+
 
         return super.onOptionsItemSelected(item);
     }

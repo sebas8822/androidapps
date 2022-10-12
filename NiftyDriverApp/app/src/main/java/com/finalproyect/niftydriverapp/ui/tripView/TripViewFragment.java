@@ -87,12 +87,7 @@ public class TripViewFragment extends Fragment implements OnMapReadyCallback, Go
     List<Trip> tripList;
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-
-    }
 
     SharedPreferences sp;//Init sharepreferences for user
     SharedPreferences.Editor editor;

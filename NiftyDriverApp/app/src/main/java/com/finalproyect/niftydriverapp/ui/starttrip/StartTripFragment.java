@@ -74,7 +74,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             tv_safeDesa, tv_safeLeft, tv_safeRight, tv_hardAccel, tv_hardDes, tv_sharpLeft,
             tv_sharpRight, tv_fusionDB, tv_tripsDB, tv_threshold_Y, tv_threshold_X, tv_xCal, tv_yCal;
 
-    private LinearLayout Sensor_layaut, graph_layout,Start_layout,thresholds_layout;
+    private LinearLayout Sensor_layaut, graph_layout, Start_layout, thresholds_layout;
 
 
     private Button bt_startTrip, bt_resetFusionDatabase, bt_UP_threshold, bt_DOWN_threshold, bt_OPEN_threshold, bt_CLOSE_threshold, bt_Reset_Thresholds;
@@ -137,9 +137,9 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         view = inflater.inflate(R.layout.start_trip_test_fragment_dev, container, false);
 
         Sensor_layaut = (LinearLayout) view.findViewById(R.id.Sensor_layaut);
-        graph_layout= (LinearLayout) view.findViewById(R.id.graph_layout);
-        Start_layout= (LinearLayout) view.findViewById(R.id.Start_layout);
-        thresholds_layout= (LinearLayout) view.findViewById(R.id.thresholds_layout);
+        graph_layout = (LinearLayout) view.findViewById(R.id.graph_layout);
+        Start_layout = (LinearLayout) view.findViewById(R.id.Start_layout);
+        thresholds_layout = (LinearLayout) view.findViewById(R.id.thresholds_layout);
 
         //varaibles
         image_location = (ImageView) view.findViewById(R.id.image_location);
@@ -156,7 +156,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         tvHeading = (TextView) view.findViewById(R.id.tvHeading);
         tv_Xaxis = (TextView) view.findViewById(R.id.tv_Xaxis);
         tv_Yaxis = (TextView) view.findViewById(R.id.tv_Yaxis);
-
 
 
         tv_distance = (TextView) view.findViewById(R.id.tv_distance);
@@ -386,12 +385,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         graph2.addSeries(ycal);
 
 
-
         Xseries.setColor(Color.MAGENTA);
         graph.addSeries(Xseries);
         Yseries.setColor(Color.GREEN);
         graph.addSeries(Yseries);
-
 
 
         yUPsafe1.setColor(Color.RED);
@@ -450,13 +447,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             thresholds_layout.setVisibility(View.VISIBLE);
 
 
-
-
             bt_UP_threshold.setVisibility(View.VISIBLE);
             tv_title2.setVisibility(View.VISIBLE);
             tv_Xaxis.setVisibility(View.VISIBLE);
             tv_Yaxis.setVisibility(View.VISIBLE);
-
 
 
             tvLat.setVisibility(View.VISIBLE);
@@ -493,7 +487,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
 
         } else {
-
 
 
             Sensor_layaut.setVisibility(View.GONE);
@@ -874,32 +867,29 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         } else {
 
 
-
-         xAccelerometer2 = event.values[0];
-         yAccelerometer2 = event.values[1];
-         //calibrateAccelerometer();
-        viewport2.setMaxY(9);
+            xAccelerometer2 = event.values[0];
+            yAccelerometer2 = event.values[1];
+            //calibrateAccelerometer();
+            viewport2.setMaxY(9);
             viewport2.setMinY(-9);
 
-         //update the graph
-         pointsPlotted2++;
+            //update the graph
+            pointsPlotted2++;
 
-         Log.d("Calibrator","x: "+xAccelerometer2);
-            Log.d("Calibrator","Y: "+yAccelerometer2);
-         if (pointsPlotted2 > 1000) {
-         pointsPlotted2 = 1; // reset the variable
-         xcal.resetData(new DataPoint[]{new DataPoint(0, 0)});
-         ycal.resetData(new DataPoint[]{new DataPoint(0, 0)});
-         target.resetData(new DataPoint[]{new DataPoint(0, 1)});
-         }
-         xcal.appendData(new DataPoint(pointsPlotted2, (int)xAccelerometer2), true, pointsPlotted2);
-         ycal.appendData(new DataPoint(pointsPlotted2, (int)yAccelerometer2), true, pointsPlotted2);
-         target.appendData(new DataPoint(pointsPlotted2, 0), true, pointsPlotted2);
-
-
+            Log.d("Calibrator", "x: " + xAccelerometer2);
+            Log.d("Calibrator", "Y: " + yAccelerometer2);
+            if (pointsPlotted2 > 1000) {
+                pointsPlotted2 = 1; // reset the variable
+                xcal.resetData(new DataPoint[]{new DataPoint(0, 0)});
+                ycal.resetData(new DataPoint[]{new DataPoint(0, 0)});
+                target.resetData(new DataPoint[]{new DataPoint(0, 1)});
+            }
+            xcal.appendData(new DataPoint(pointsPlotted2, (int) xAccelerometer2), true, pointsPlotted2);
+            ycal.appendData(new DataPoint(pointsPlotted2, (int) yAccelerometer2), true, pointsPlotted2);
+            target.appendData(new DataPoint(pointsPlotted2, 0), true, pointsPlotted2);
 
 
-         }
+        }
 
 
     }
@@ -951,7 +941,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
             //now after rotationMatrix and it can be defined the position of the phone
         }
     }
-
 
 
     @Override
@@ -1060,10 +1049,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     float finalScoreTrip;
 
     public void thresholds() {
-        Y1 =  1.3 + thresholdUPDOWN - thresholdOPENCLOSE;
-        Y2 =  2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
-        X1 =  1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
-        X2 =  3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
+        Y1 = 1.3 + thresholdUPDOWN - thresholdOPENCLOSE;
+        Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
+        X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
+        X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
 
 
         tv_threshold_Y.setText("Y:" + String.format("%.2f", Y1) + "-" + String.format("%.2f", Y2));
@@ -1080,10 +1069,10 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
         X1 = 0;
         X2 = 0;
 
-        Y1 =   1.3 + thresholdUPDOWN - thresholdOPENCLOSE;
-        Y2 =  2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
-        X1 =  1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
-        X2 =  3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
+        Y1 = 1.3 + thresholdUPDOWN - thresholdOPENCLOSE;
+        Y2 = 2.5 + thresholdUPDOWN + thresholdOPENCLOSE;
+        X1 = 1.8 + thresholdUPDOWN - thresholdOPENCLOSE;
+        X2 = 3.0 + thresholdUPDOWN + thresholdOPENCLOSE;
 
 
         tv_threshold_Y.setText("Y:" + String.format("%.2f", Y1) + "-" + String.format("%.2f", Y2));
@@ -1211,9 +1200,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
     double elapse;
     double aveSpeedKM;
 
-    Timer t = new Timer();
-
-
     public void startTrip() {
         //----------//get location of the destination ----------------------------------------------
 
@@ -1225,9 +1211,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
                 Trip trip = new Trip();
                 initListenerMagnometer();
-                //DURING THE TRIP
-                // during the start of a trip, values are initialized
-                // change the button to display "End" to end the trip
 
 
                 bt_startTrip.setText("End Trip");
@@ -1251,20 +1234,14 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
 
                 }
 
-
                 saveTripInitial(userId, trip);
                 startTripState = true;
-                //trip.getTripId();
                 Log.d("saveTripInitial", "TripID" + trip.getTripId());
 
-
-                // making changes to the UI
                 Log.d("Score", "finalScoreTrip" + finalScoreTrip);
             } else {
                 // END OF THE TRIP
 
-
-                // Time,Score,AverageScore, is compute after finish trip
                 bt_startTrip.setText("Start Trip");
                 bt_startTrip.setBackgroundColor(getResources().getColor(R.color.blue_sky_500));
                 /*****************************calculating time*********************************/
@@ -1290,6 +1267,7 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 Log.d("Score", "reductionFactor" + reductionFactor);
                 Log.d("Score", "finalScoreTrip" + finalScoreTrip);
                 tv_finalScore.setText(String.valueOf((int) finalScoreTrip));
+                //Reset Values
                 SAC = 0;
                 SDC = 0;
                 HAC = 0;
@@ -1298,21 +1276,15 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 SRC = 0;
                 SHLC = 0;
                 SHRC = 0;
-
-
-
                 aveSpeedKM = distanceKM / totalTimeTraveledMin;
 
                 if (Double.isInfinite(aveSpeedKM)) {
                     aveSpeedKM = 0;
                 }
-
                 tv_aveSpeed.setText("Avg Speed: " + String.format("%.1f", aveSpeedKM));
-
-
                 //reset calibrator
-                xAccelerometer2=0;
-                yAccelerometer2=0;
+                xAccelerometer2 = 0;
+                yAccelerometer2 = 0;
                 xcal.resetData(new DataPoint[]{new DataPoint(0, 0)});
                 ycal.resetData(new DataPoint[]{new DataPoint(0, 0)});
                 target.resetData(new DataPoint[]{new DataPoint(0, 0)});
@@ -1320,9 +1292,6 @@ public class StartTripFragment extends Fragment implements SensorEventListener {
                 initListenerAccelerometer();
                 saveTripEnd();
                 startTripState = false;
-
-
-                //.makeText(getContext(), "Trip End final Trip Score: ", Toast.LENGTH_LONG).show();
 
             }
         } else {
