@@ -1,0 +1,10 @@
+# Driver Behaviour Analysis App
+
+It is an app that provides to the user a driver scores according to the driving events.
+The app capture 3 main driving events such as acceleration, braking, and cornering. 
+The trip results are shown in different modes and graphs including maps. 
+The user is able to navigate to get feedback in order to improve driving skills. 
+The app uses a Room database, clean design, recycle view, intents, fragments, Activity and a Google maps API, this
+project was part of my final research project on Driving behaviour analysis using smartphone sensors and machine learning techniques.
+
+For more detail check the pdf of user manual and research to see the motivations and results.
